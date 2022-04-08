@@ -24,6 +24,9 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @OneToMany
+    private Collection<Ticket> tickets;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     private Nation nation;
 
@@ -91,6 +94,22 @@ public class User extends UuidModel implements UserDetails {
 
     public void setNation(Nation nation){
         this.nation = nation;
+    }
+
+    public Collection<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(Collection<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public Collection<Character> getCharacters() {
+        return characters;
+    }
+
+    public void setCharacters(Collection<Character> characters) {
+        this.characters = characters;
     }
 
     @JsonIgnore
