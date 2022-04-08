@@ -24,6 +24,12 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    private Nation nation;
+
+    @OneToMany
+    private Collection<Character> characters;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE", nullable = false)
     private Role role;
@@ -79,6 +85,12 @@ public class User extends UuidModel implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Nation getNation(){return nation;}
+
+    public void setNation(Nation nation){
+        this.nation = nation;
     }
 
     @JsonIgnore

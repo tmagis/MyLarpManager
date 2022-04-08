@@ -8,12 +8,12 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>be.renaud11232</groupId>
-    <artifactId>warden</artifactId>
+    <groupId>be.tmagis</groupId>
+    <artifactId>mylarpmanager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Warden</name>
-    <description>Warden</description>
+    <name>MyLarpManager</name>
+    <description>MyLarpManager</description>
     <properties>
         <java.version>11</java.version>
     </properties>

@@ -29,7 +29,7 @@ public class FirstSetup implements InitializingBean {
             String username = "admin";
             String password = "changeme";
             User defaultUser = new User();
-            defaultUser.setRole(Role.SUPERADMIN);
+            defaultUser.setRole(Role.ADMIN);
             defaultUser.setUsername(username);
             defaultUser.setPassword(passwordEncoder.encode(password));
             defaultUser.setUuid(UUID.randomUUID().toString());
