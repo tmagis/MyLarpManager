@@ -26,6 +26,14 @@ public class Ticket extends UuidModel {
     @Column(name = "IS_PAYED", nullable = false)
     private String isPayed;
 
+    public User getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(User player) {
+        this.player = player;
+    }
+
     public String getExternalId() {
         return externalId;
     }

@@ -96,6 +96,7 @@ public class User extends UuidModel implements UserDetails {
         this.nation = nation;
     }
 
+    @JsonIgnore
     public Collection<Ticket> getTickets() {
         return tickets;
     }
@@ -104,6 +105,7 @@ public class User extends UuidModel implements UserDetails {
         this.tickets = tickets;
     }
 
+    @JsonIgnore
     public Collection<Character> getCharacters() {
         return characters;
     }
