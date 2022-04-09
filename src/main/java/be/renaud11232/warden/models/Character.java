@@ -2,6 +2,7 @@ package be.renaud11232.warden.models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Entity
 @Table(name = "CHARACTER")
@@ -14,12 +15,15 @@ public class Character extends UuidModel {
     @Column(name="PLAYER", nullable = false)
     private User player;
 
-    @Column(name = "CHARACTER_NAME", nullable = false, unique = true)
-    private String nationName;
+    @Column(name = "NAME", nullable = false, unique = true)
+    private String name;
 
     @Column(name = "PICTURE", nullable = true)
     @Lob
     private byte[] picture;
+
+    @OneToMany
+    private Collection<Skill> skills;
 
     @Column(name = "BACKGROUND", nullable = true)
     private String background;
@@ -46,11 +50,11 @@ public class Character extends UuidModel {
     private LocalDateTime lastModificationTime;
 
     public String getNationName() {
-        return nationName;
+        return name;
     }
 
     public void setNationName(String nationName) {
-        this.nationName = nationName;
+        this.name = nationName;
     }
 
     public byte[] getPicture() {
