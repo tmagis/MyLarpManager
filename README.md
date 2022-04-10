@@ -9,7 +9,7 @@ Requirements:
 - Frontend
 * NodeJS (with NPM)
 
-Build the whole app in the "Warden-dev" directory:
+Build and run the whole app in the "Warden-dev" directory:
 'mvn spring-boot:run'
 
 Build and run only the FrontEnd:
