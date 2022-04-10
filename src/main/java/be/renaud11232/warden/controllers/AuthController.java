@@ -1,7 +1,9 @@
 package be.renaud11232.warden.controllers;
 
+import be.renaud11232.warden.exceptions.BadRequestException;
 import be.renaud11232.warden.models.User;
 import be.renaud11232.warden.repositories.UserRepository;
+import be.renaud11232.warden.requests.ChangePasswordRequest;
 import be.renaud11232.warden.requests.LoginRequest;
 import be.renaud11232.warden.responses.Errors;
 import be.renaud11232.warden.responses.Token;
@@ -14,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +27,13 @@ import javax.validation.Valid;
 public class AuthController extends Controller {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -43,6 +46,30 @@ public class AuthController extends Controller {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         return ResponseEntity.ok(new Token(jwt));
+    }
+
+    @PostMapping("/changepassword")
+    public ResponseEntity<?> reset(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(encoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+            if (changePasswordRequest.getNewPassword().equals(changePasswordRequest.getNewPasswordConfirmation())) {
+                user.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
+                userRepository.saveAndFlush(user);
+                return ResponseEntity.ok().build();
+            }else {
+                throw new BadRequestException("The two passwords don't match.");
+            }
+        }else{
+            throw new BadCredentialsException("The current password is not valid.");
+        }
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public Errors handle(BadRequestException ex) {
+        Errors errors = new Errors();
+        errors.addGlobalError(ex.getMessage());
+        return errors;
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

@@ -10,8 +10,8 @@ public class Nation extends UuidModel {
     @Column(name = "NATION_ID")
     private Long id;
 
-    @Column(name = "NATION_NAME", nullable = false, unique = true)
-    private String nationName;
+    @Column(name = "NAME", nullable = false, unique = true)
+    private String name;
 
     @Column(name = "INTRO_TEXT", nullable = false)
     private String introText;
@@ -19,12 +19,12 @@ public class Nation extends UuidModel {
     @Column(name = "FULL_DESCRIPTION", nullable = false)
     private String fullDescription;
 
-    public String getNationName() {
-        return nationName;
+    public String getName() {
+        return name;
     }
 
-    public void setNationName(String nationName) {
-        this.nationName = nationName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIntroText() {

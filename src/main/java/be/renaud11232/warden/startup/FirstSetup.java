@@ -28,10 +28,12 @@ public class FirstSetup implements InitializingBean {
         if(userRepository.count() == 0) {
             String username = "admin";
             String password = "changeme";
+            String email = "admin@admin.be";
             User defaultUser = new User();
             defaultUser.setRole(Role.ADMIN);
             defaultUser.setUsername(username);
             defaultUser.setPassword(passwordEncoder.encode(password));
+            defaultUser.setEmail(email);
             defaultUser.setUuid(UUID.randomUUID().toString());
             userRepository.saveAndFlush(defaultUser);
             logger.info("============================================================================================================");

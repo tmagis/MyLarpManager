@@ -24,6 +24,9 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @Column(name = "EMAIL", nullable = false, unique = true)
+    private String email;
+
     @OneToMany
     private Collection<Ticket> tickets;
 
@@ -84,6 +87,14 @@ public class User extends UuidModel implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setId(Long id) {
