@@ -1,17 +1,20 @@
 # MyLarpManager
 
-Requirements:
+## Requirements:
 
-- Backend
+### Backend :
 * Maven
 * Javac (11+)
 
-- Frontend
+### Frontend :
 * NodeJS (with NPM)
 
 Build and run the whole app in the "Warden-dev" directory:
-'mvn spring-boot:run'
+
+`mvn spring-boot:run`
 
 Build and run only the FrontEnd:
+
 In the directory "Warden-dev\src\main\js" :
-'npm run start'
+
+`npm run start`
