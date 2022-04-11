@@ -7,7 +7,7 @@
 * Javac (11+)
 
 ### Frontend :
-* NodeJS (with NPM)
+* NodeJS (maven installs it in the project folder)
 
 Build and run the whole app in the "Warden-dev" directory:
 

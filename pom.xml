@@ -78,11 +78,36 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.12.1</version>
                 <configuration>
-                    <nodeVersion>v16.14.0</nodeVersion>
                     <workingDirectory>src/main/js</workingDirectory>
                     <installDirectory>target</installDirectory>
                 </configuration>
                 <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v16.14.2</nodeVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+
+                        <!-- optional: default phase is "generate-resources" -->
+                        <phase>generate-resources</phase>
+
+                        <configuration>
+                            <!-- optional: The default argument is actually
+                            "install", so unless you need to run some other npm command,
+                            you can remove this whole <configuration> section.
+                            -->
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>npm run build</id>
                         <goals>
