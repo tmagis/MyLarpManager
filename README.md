@@ -18,3 +18,5 @@ Build and run only the FrontEnd:
 In the directory "Warden-dev\src\main\js" :
 
 `npm run start`
+
+Platform is accessible on http://localhost:8080/

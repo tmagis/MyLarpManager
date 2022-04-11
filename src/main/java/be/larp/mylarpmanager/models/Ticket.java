@@ -11,7 +11,6 @@ public class Ticket extends UuidModel {
     @Column(name = "TICKET_ID")
     private Long id;
 
-    //TODO determine if one ticket is one player, or if a ticket has a "capacity" of player(s).
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User player;
 
@@ -21,11 +20,17 @@ public class Ticket extends UuidModel {
     @Column(name = "CODE", nullable = false, unique = true)
     private String code;
 
+    @Column(name = "LINKED_EMAIL", nullable = false, unique = true)
+    private String linkedEmail;
+
     @Column(name = "PURCHASE_DATE", nullable = false)
     private LocalDateTime purchaseDate;
 
     @Column(name = "IS_PAYED", nullable = false)
     private String isPayed;
+
+    @Column(name = "IS_CANCELLED", nullable = false)
+    private String isCancelled;
 
     public User getPlayer() {
         return player;
@@ -73,5 +78,21 @@ public class Ticket extends UuidModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(String isCancelled) {
+        this.isCancelled = isCancelled;
+    }
+
+    public String getLinkedEmail() {
+        return linkedEmail;
+    }
+
+    public void setLinkedEmail(String linkedEmail) {
+        this.linkedEmail = linkedEmail;
     }
 }
