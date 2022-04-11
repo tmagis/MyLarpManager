@@ -19,7 +19,7 @@ public class Skill extends UuidModel {
     @Column(name = "COST", nullable = false)
     private int cost;
 
-    @Column(name = "ICON", nullable = true)
+    @Column(name = "ICON")
     @Lob
     private byte[] icon;
 

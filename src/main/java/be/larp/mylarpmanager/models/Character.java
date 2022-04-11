@@ -12,26 +12,26 @@ public class Character extends UuidModel {
     @Column(name = "CHARACTER_ID")
     private Long id;
 
-    @Column(name="PLAYER", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User player;
 
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "PICTURE", nullable = true)
+    @Column(name = "PICTURE")
     @Lob
     private byte[] picture;
 
     @OneToMany
     private Collection<Skill> skills;
 
-    @Column(name = "BACKGROUND", nullable = true)
+    @Column(name = "BACKGROUND")
     private String background;
 
-    @Column(name="AGE", nullable = true)
+    @Column(name="AGE")
     private int age;
 
-    @Column(name="EVENTS_PLAYED", nullable = true)
+    @Column(name="EVENTS_PLAYED")
     private int eventsPlayed;
 
     @Column(name="RACE", nullable = false)
@@ -40,7 +40,7 @@ public class Character extends UuidModel {
     @Column(name="IS_ALIVE", nullable = false)
     private boolean isAlive;
 
-    @Column(name = "REASON_OF_DEATH", nullable=true)
+    @Column(name = "REASON_OF_DEATH")
     private String reasonOfDeath;
 
     @Column(name = "CREATION_TIME", nullable=false)
@@ -127,5 +127,29 @@ public class Character extends UuidModel {
 
     public void setLastModificationTime(LocalDateTime lastModificationTime) {
         this.lastModificationTime = lastModificationTime;
+    }
+
+    public User getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(User player) {
+        this.player = player;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Collection<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Collection<Skill> skills) {
+        this.skills = skills;
     }
 }

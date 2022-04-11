@@ -11,7 +11,8 @@ public class Ticket extends UuidModel {
     @Column(name = "TICKET_ID")
     private Long id;
 
-    @Column(name="PLAYER", nullable = false)
+    //TODO determine if one ticket is one player, or if a ticket has a "capacity" of player(s).
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User player;
 
     @Column(name = "EXTERNAL_ID", nullable = false, unique = true)
