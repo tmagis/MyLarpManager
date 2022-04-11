@@ -63,14 +63,6 @@ public class AuthController extends Controller {
         }
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BadRequestException.class)
-    public Errors handle(BadRequestException ex) {
-        Errors errors = new Errors();
-        errors.addGlobalError(ex.getMessage());
-        return errors;
-    }
-
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)
     public Errors handleLoginException(BadCredentialsException ex) {

@@ -1,5 +1,6 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.responses.Errors;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -24,4 +25,11 @@ public class Controller {
         return errors;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public Errors handle(BadRequestException ex) {
+        Errors errors = new Errors();
+        errors.addGlobalError(ex.getMessage());
+        return errors;
+    }
 }

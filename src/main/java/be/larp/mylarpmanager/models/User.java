@@ -24,13 +24,19 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @Column(name = "FIRST_NAME", nullable = false)
+    private String firstName;
+
+    @Column(name = "LAST_NAME", nullable = false)
+    private String lastName;
+
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
     @OneToMany
     private Collection<Ticket> tickets;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Nation nation;
 
     @OneToMany
@@ -136,5 +142,21 @@ public class User extends UuidModel implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

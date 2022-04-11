@@ -29,11 +29,15 @@ public class FirstSetup implements InitializingBean {
             String username = "admin";
             String password = "changeme";
             String email = "admin@admin.be";
+            String firstName = "Gaspard";
+            String lastName = "Délicieux";
             User defaultUser = new User();
             defaultUser.setRole(Role.ADMIN);
             defaultUser.setUsername(username);
             defaultUser.setPassword(passwordEncoder.encode(password));
             defaultUser.setEmail(email);
+            defaultUser.setLastName(lastName);
+            defaultUser.setFirstName(firstName);
             defaultUser.setUuid(UUID.randomUUID().toString());
             userRepository.saveAndFlush(defaultUser);
             logger.info("============================================================================================================");
