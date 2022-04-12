@@ -26,7 +26,7 @@ public class Skill extends UuidModel {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private SkillTree skillTree;
 
-    @Column(name="ALLOW_MULTIPLE", nullable = false)
+    @Column(name = "ALLOW_MULTIPLE", nullable = false)
     private boolean allowMultiple;
 
     @Column(name = "LEVEL", nullable = false)

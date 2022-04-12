@@ -15,7 +15,7 @@ public class Character extends UuidModel {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User player;
 
-    @Column(name = "NAME", nullable = false, unique = true)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "PICTURE")
@@ -28,25 +28,25 @@ public class Character extends UuidModel {
     @Column(name = "BACKGROUND")
     private String background;
 
-    @Column(name="AGE")
+    @Column(name = "AGE")
     private int age;
 
-    @Column(name="EVENTS_PLAYED")
+    @Column(name = "EVENTS_PLAYED")
     private int eventsPlayed;
 
-    @Column(name="RACE", nullable = false)
+    @Column(name = "RACE", nullable = false)
     private String race;
 
-    @Column(name="IS_ALIVE", nullable = false)
+    @Column(name = "IS_ALIVE", nullable = false)
     private boolean isAlive;
 
     @Column(name = "REASON_OF_DEATH")
     private String reasonOfDeath;
 
-    @Column(name = "CREATION_TIME", nullable=false)
+    @Column(name = "CREATION_TIME", nullable = false)
     private LocalDateTime creationTime;
 
-    @Column(name = "LAST_MODIFICATION_TIME", nullable=false)
+    @Column(name = "LAST_MODIFICATION_TIME", nullable = false)
     private LocalDateTime lastModificationTime;
 
     public String getNationName() {

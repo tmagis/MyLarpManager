@@ -1,7 +1,9 @@
 package be.larp.mylarpmanager.startup;
 
+import be.larp.mylarpmanager.models.Character;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.repositories.CharacterRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 @Component
@@ -21,11 +26,14 @@ public class FirstSetup implements InitializingBean {
     UserRepository userRepository;
 
     @Autowired
+    CharacterRepository characterRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if(userRepository.count() == 0) {
+        if (userRepository.count() == 0) {
             String username = "admin";
             String password = "changeme";
             String email = "admin@admin.be";
@@ -40,6 +48,19 @@ public class FirstSetup implements InitializingBean {
             defaultUser.setFirstName(firstName);
             defaultUser.setUuid(UUID.randomUUID().toString());
             userRepository.saveAndFlush(defaultUser);
+            String chname = "Bobby";
+            String background = "Once upon a time, me.";
+            String race = "Half Human half stupid";
+            Character character = new Character();
+            character.setName(chname);
+            character.setBackground(background);
+            character.setRace(race);
+            character.setAlive(true);
+            character.setCreationTime(LocalDateTime.now());
+            character.setLastModificationTime(LocalDateTime.now());
+            character.setUuid(UUID.randomUUID().toString());
+            character.setPlayer(defaultUser);
+            characterRepository.saveAndFlush(character);
             logger.info("============================================================================================================");
             logger.info(" \\ \\        / /          | |");
             logger.info("  \\ \\  /\\  / /_ _ _ __ __| | ___ _ __");

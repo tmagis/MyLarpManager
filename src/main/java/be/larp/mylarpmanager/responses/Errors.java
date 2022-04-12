@@ -17,7 +17,7 @@ public class Errors {
 
     public void addValidationError(String field, String message) {
         List<String> messageList;
-        if(!validationErrors.containsKey(field)) {
+        if (!validationErrors.containsKey(field)) {
             messageList = new ArrayList<>();
             validationErrors.put(field, messageList);
         } else {

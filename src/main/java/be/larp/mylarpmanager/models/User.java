@@ -6,8 +6,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 
 @Entity
 @Table(name = "USER")
@@ -36,15 +38,20 @@ public class User extends UuidModel implements UserDetails {
     @OneToMany
     private Collection<Ticket> tickets;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Nation nation;
-
     @OneToMany
     private Collection<Character> characters;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Nation nation;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE", nullable = false)
     private Role role;
+
+    public User() {
+        characters = new ArrayList<>();
+        tickets = new ArrayList<>();
+    }
 
     @Override
     public String getUsername() {
@@ -107,9 +114,11 @@ public class User extends UuidModel implements UserDetails {
         this.id = id;
     }
 
-    public Nation getNation(){return nation;}
+    public Nation getNation() {
+        return nation;
+    }
 
-    public void setNation(Nation nation){
+    public void setNation(Nation nation) {
         this.nation = nation;
     }
 

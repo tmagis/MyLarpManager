@@ -1,31 +1,23 @@
 package be.larp.mylarpmanager.controllers;
 
-import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.UserRepository;
-import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.ChangeUserDetailsRequest;
-import be.larp.mylarpmanager.requests.LoginRequest;
-import be.larp.mylarpmanager.responses.Errors;
-import be.larp.mylarpmanager.responses.Token;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/v1/userdetails")
-public class UserDetailsController extends Controller {
+@RequestMapping("/api/v1/user")
+public class UserController extends Controller {
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -42,6 +34,13 @@ public class UserDetailsController extends Controller {
         user.setLastName(changeUserDetailsRequest.getLastName());
         userRepository.saveAndFlush(user);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/getmycharacters")
+    public ResponseEntity<?> get(){
+        User user = userRepository.findByUuid(((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid())
+                .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
+        return ResponseEntity.ok(user.getCharacters());
     }
 
 

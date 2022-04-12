@@ -1,10 +1,10 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadRequestException;
+import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.LoginRequest;
-import be.larp.mylarpmanager.exceptions.BadRequestException;
-import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.responses.Errors;
 import be.larp.mylarpmanager.responses.Token;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;

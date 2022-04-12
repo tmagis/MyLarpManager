@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.NoSuchElementException;
+
 public class Controller {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -15,7 +17,7 @@ public class Controller {
     public Errors handleValidationException(MethodArgumentNotValidException ex) {
         Errors errors = new Errors();
         ex.getBindingResult().getAllErrors().forEach(error -> {
-            if(error instanceof FieldError) {
+            if (error instanceof FieldError) {
                 String field = ((FieldError) error).getField();
                 errors.addValidationError(field, error.getDefaultMessage());
             } else {
@@ -28,6 +30,14 @@ public class Controller {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
     public Errors handle(BadRequestException ex) {
+        Errors errors = new Errors();
+        errors.addGlobalError(ex.getMessage());
+        return errors;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchElementException.class)
+    public Errors handle(NoSuchElementException ex) {
         Errors errors = new Errors();
         errors.addGlobalError(ex.getMessage());
         return errors;
