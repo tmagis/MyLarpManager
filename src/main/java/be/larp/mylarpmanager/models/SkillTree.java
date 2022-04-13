@@ -20,7 +20,7 @@ public class SkillTree extends UuidModel {
     @Column(name = "BLESSING", nullable = false)
     private String blessing;
 
-    @OneToMany
+    @OneToMany(mappedBy = "skillTree")
     private Collection<Skill> skills;
 
     public String getDescription() {

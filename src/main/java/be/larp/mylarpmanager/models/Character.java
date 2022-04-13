@@ -12,7 +12,8 @@ public class Character extends UuidModel {
     @Column(name = "CHARACTER_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "fk_user_characters")
     private User player;
 
     @Column(name = "NAME", nullable = false)
@@ -22,7 +23,7 @@ public class Character extends UuidModel {
     @Lob
     private byte[] picture;
 
-    @OneToMany
+    @ManyToMany
     private Collection<Skill> skills;
 
     @Column(name = "BACKGROUND")

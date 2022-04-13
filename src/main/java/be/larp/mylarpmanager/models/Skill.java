@@ -23,7 +23,7 @@ public class Skill extends UuidModel {
     @Lob
     private byte[] icon;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private SkillTree skillTree;
 
     @Column(name = "ALLOW_MULTIPLE", nullable = false)

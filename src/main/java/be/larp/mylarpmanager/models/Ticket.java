@@ -11,7 +11,8 @@ public class Ticket extends UuidModel {
     @Column(name = "TICKET_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "fk_ticket")
     private User player;
 
     @Column(name = "EXTERNAL_ID", nullable = false, unique = true)

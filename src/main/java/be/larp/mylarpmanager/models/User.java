@@ -6,10 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.*;
 
 @Entity
 @Table(name = "USER")
@@ -35,13 +32,13 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @OneToMany
-    private Collection<Ticket> tickets;
+    @OneToMany(mappedBy = "player")
+    private List<Ticket> tickets;
 
-    @OneToMany
-    private Collection<Character> characters;
+    @OneToMany(mappedBy = "player")
+    private List<Character> characters;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Nation nation;
 
     @Enumerated(EnumType.STRING)
@@ -123,20 +120,20 @@ public class User extends UuidModel implements UserDetails {
     }
 
     @JsonIgnore
-    public Collection<Ticket> getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(Collection<Ticket> tickets) {
+    public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
 
     @JsonIgnore
-    public Collection<Character> getCharacters() {
+    public List<Character> getCharacters() {
         return characters;
     }
 
-    public void setCharacters(Collection<Character> characters) {
+    public void setCharacters(List<Character> characters) {
         this.characters = characters;
     }
 
