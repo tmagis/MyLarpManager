@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -31,7 +30,7 @@ public class CharacterController extends Controller {
         character.setBackground(changeCharacterDetailsRequest.getBackground());
         character.setName(changeCharacterDetailsRequest.getName());
         character.setReasonOfDeath(changeCharacterDetailsRequest.getReasonOfDeath());
-        character.setPicture(changeCharacterDetailsRequest.getPicture());
+        character.setPictureURL(changeCharacterDetailsRequest.getPicture());
         character.setLastModificationTime(LocalDateTime.now());
         characterRepository.saveAndFlush(character);
         return ResponseEntity.ok(character);

@@ -19,9 +19,8 @@ public class Skill extends UuidModel {
     @Column(name = "COST", nullable = false)
     private int cost;
 
-    @Column(name = "ICON")
-    @Lob
-    private byte[] icon;
+    @Column(name = "ICON_URL")
+    private String iconURL;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private SkillTree skillTree;
@@ -56,12 +55,12 @@ public class Skill extends UuidModel {
         this.cost = cost;
     }
 
-    public byte[] getIcon() {
-        return icon;
+    public String getIconURL() {
+        return iconURL;
     }
 
-    public void setIcon(byte[] icon) {
-        this.icon = icon;
+    public void setIconURL(String icon) {
+        this.iconURL = icon;
     }
 
     public SkillTree getSkillTree() {

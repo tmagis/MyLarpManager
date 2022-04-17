@@ -1,5 +1,7 @@
 package be.larp.mylarpmanager.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -19,9 +21,8 @@ public class Character extends UuidModel {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "PICTURE")
-    @Lob
-    private byte[] picture;
+    @Column(name = "PICTURE_URL")
+    private String pictureURL;
 
     @ManyToMany
     private Collection<Skill> skills;
@@ -50,20 +51,12 @@ public class Character extends UuidModel {
     @Column(name = "LAST_MODIFICATION_TIME", nullable = false)
     private LocalDateTime lastModificationTime;
 
-    public String getNationName() {
-        return name;
+    public String getPictureURL() {
+        return pictureURL;
     }
 
-    public void setNationName(String nationName) {
-        this.name = nationName;
-    }
-
-    public byte[] getPicture() {
-        return picture;
-    }
-
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
+    public void setPictureURL(String picture) {
+        this.pictureURL = picture;
     }
 
     public String getBackground() {
@@ -130,6 +123,7 @@ public class Character extends UuidModel {
         this.lastModificationTime = lastModificationTime;
     }
 
+    @JsonIgnore
     public User getPlayer() {
         return player;
     }
@@ -146,6 +140,7 @@ public class Character extends UuidModel {
         this.name = name;
     }
 
+    @JsonIgnore
     public Collection<Skill> getSkills() {
         return skills;
     }
@@ -153,4 +148,6 @@ public class Character extends UuidModel {
     public void setSkills(Collection<Skill> skills) {
         this.skills = skills;
     }
+
+
 }
