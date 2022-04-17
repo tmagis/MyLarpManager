@@ -30,7 +30,7 @@ public class CharacterController extends Controller {
         character.setBackground(changeCharacterDetailsRequest.getBackground());
         character.setName(changeCharacterDetailsRequest.getName());
         character.setReasonOfDeath(changeCharacterDetailsRequest.getReasonOfDeath());
-        character.setPictureURL(changeCharacterDetailsRequest.getPicture());
+        character.setPictureURL(changeCharacterDetailsRequest.getPictureURL());
         character.setLastModificationTime(LocalDateTime.now());
         characterRepository.saveAndFlush(character);
         return ResponseEntity.ok(character);

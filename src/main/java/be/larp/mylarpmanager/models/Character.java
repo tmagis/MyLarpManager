@@ -33,8 +33,8 @@ public class Character extends UuidModel {
     @Column(name = "AGE")
     private int age;
 
-    @Column(name = "EVENTS_PLAYED")
-    private int eventsPlayed;
+    @Column(name = "NUMBER_OF_EVENTS_PLAYED")
+    private int numberOfEventsPlayed;
 
     @Column(name = "RACE", nullable = false)
     private String race;
@@ -75,12 +75,12 @@ public class Character extends UuidModel {
         this.age = age;
     }
 
-    public int getEventsPlayed() {
-        return eventsPlayed;
+    public int getNumberOfEventsPlayed() {
+        return numberOfEventsPlayed;
     }
 
-    public void setEventsPlayed(int eventsPlayed) {
-        this.eventsPlayed = eventsPlayed;
+    public void setNumberOfEventsPlayed(int numberOfEventsPlayed) {
+        this.numberOfEventsPlayed = numberOfEventsPlayed;
     }
 
     public String getRace() {

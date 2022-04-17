@@ -13,18 +13,19 @@ public class ChangeCharacterDetailsRequest {
     @NotBlank(message = "Character race is required.")
     private String race;
 
-    private String picture;
+    private String pictureURL;
 
     private String background;
+
 
     private int age;
 
     private String reasonOfDeath;
 
-    public ChangeCharacterDetailsRequest(String uuid, String name, String picture, String background, int age, String reasonOfDeath, String race) {
+    public ChangeCharacterDetailsRequest(String uuid, String name, String pictureURL, String background, int age, String reasonOfDeath, String race) {
         this.uuid = uuid;
         this.name = name;
-        this.picture = picture;
+        this.pictureURL = pictureURL;
         this.background = background;
         this.age = age;
         this.reasonOfDeath = reasonOfDeath;
@@ -51,16 +52,17 @@ public class ChangeCharacterDetailsRequest {
         return name;
     }
 
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPictureURL() {
+        return pictureURL;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 
     public String getBackground() {
