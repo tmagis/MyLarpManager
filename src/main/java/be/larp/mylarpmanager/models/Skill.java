@@ -31,6 +31,9 @@ public class Skill extends UuidModel {
     @Column(name = "LEVEL", nullable = false)
     private int level;
 
+    @Column(name = "HIDDEN", nullable = false)
+    private boolean hidden;
+
     public String getName() {
         return name;
     }
@@ -85,5 +88,13 @@ public class Skill extends UuidModel {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }
