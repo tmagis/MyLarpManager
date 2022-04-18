@@ -32,7 +32,7 @@ public class NationController extends Controller {
     private NationRepository nationRepository;
 
     @PostMapping("/changedetails")
-    public ResponseEntity<?> reset(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
+    public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
       User user = getRequestUser();
         Nation nation = nationRepository.findByUuid(changeNationDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + changeNationDetailsRequest.getUuid() + " not found."));
@@ -48,7 +48,7 @@ public class NationController extends Controller {
     }
 
     @GetMapping("/getmynationplayers")
-    public ResponseEntity<?> get(){
+    public ResponseEntity<?> getMyNationPlayers(){
         User user = getRequestUser();
         Nation nation = user.getNation();
         if(nation!=null) {
@@ -56,6 +56,11 @@ public class NationController extends Controller {
         }else{
             throw new BadRequestException("You don't belong to a nation.");
         }
+    }
+
+    @GetMapping("/getallnations")
+    public ResponseEntity<?> getAllNations(){
+        return ResponseEntity.ok(nationRepository.findAll());
     }
 }
 
