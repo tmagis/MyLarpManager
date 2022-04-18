@@ -1,5 +1,7 @@
 package be.larp.mylarpmanager.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,15 +16,14 @@ public class Nation extends UuidModel {
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "INTRO_TEXT", nullable = false)
+    @Column(name = "INTRO_TEXT")
     private String introText;
 
-    @Column(name = "FULL_DESCRIPTION", nullable = false)
+    @Column(name = "FULL_DESCRIPTION")
     private String fullDescription;
 
-    @OneToMany
-    @JoinColumn(name = "fk_nation_characters")
-    private List<Character> characters;
+    @OneToMany(mappedBy = "nation")
+    private List<User> players;
 
     public String getName() {
         return name;
@@ -46,5 +47,14 @@ public class Nation extends UuidModel {
 
     public void setFullDescription(String fullDescription) {
         this.fullDescription = fullDescription;
+    }
+
+    @JsonIgnore
+    public List<User> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<User> players) {
+        this.players = players;
     }
 }

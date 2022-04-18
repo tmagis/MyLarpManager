@@ -1,9 +1,11 @@
 package be.larp.mylarpmanager.startup;
 
 import be.larp.mylarpmanager.models.Character;
+import be.larp.mylarpmanager.models.Nation;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
+import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class FirstSetup implements InitializingBean {
     UserRepository userRepository;
 
     @Autowired
+    NationRepository nationRepository;
+
+    @Autowired
     CharacterRepository characterRepository;
 
     @Autowired
@@ -34,6 +39,10 @@ public class FirstSetup implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (userRepository.count() == 0) {
+            Nation nation = new Nation();
+            nation.setName("Black Mesa");
+            nation.setUuid(UUID.randomUUID().toString());
+            nationRepository.saveAndFlush(nation);
             String username = "admin";
             String password = "changeme";
             String email = "admin@admin.be";
@@ -47,6 +56,7 @@ public class FirstSetup implements InitializingBean {
             defaultUser.setLastName(lastName);
             defaultUser.setFirstName(firstName);
             defaultUser.setUuid(UUID.randomUUID().toString());
+            defaultUser.setNation(nation);
             userRepository.saveAndFlush(defaultUser);
             String chname = "Bobby";
             String background = "Once upon a time, me.";

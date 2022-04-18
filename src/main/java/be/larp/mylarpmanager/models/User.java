@@ -38,7 +38,8 @@ public class User extends UuidModel implements UserDetails {
     @OneToMany(mappedBy = "player")
     private List<Character> characters;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_nation_players")
     private Nation nation;
 
     @Enumerated(EnumType.STRING)
