@@ -36,7 +36,7 @@ public class NationController extends Controller {
       User user = getRequestUser();
         Nation nation = nationRepository.findByUuid(changeNationDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + changeNationDetailsRequest.getUuid() + " not found."));
-        if((user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_MANAGER)) || highPrivileges()) {
+        if( highPrivileges() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_MANAGER))) {
             nation.setName(changeNationDetailsRequest.getName());
             nation.setIntroText(changeNationDetailsRequest.getIntroText());
             nation.setFullDescription(changeNationDetailsRequest.getFullDescription());

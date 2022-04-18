@@ -28,7 +28,7 @@ public class CharacterController extends Controller {
     public ResponseEntity<?> reset(@Valid @RequestBody ChangeCharacterDetailsRequest changeCharacterDetailsRequest) {
         Character character = characterRepository.findByUuid(changeCharacterDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Character with uuid " + changeCharacterDetailsRequest.getUuid() + " not found."));
-        if(character.getPlayer().getUuid().equals(getRequestUser().getUuid()) || highPrivileges()){
+        if(highPrivileges() || character.getPlayer().getUuid().equals(getRequestUser().getUuid()) ){
             character.setAge(changeCharacterDetailsRequest.getAge());
             character.setBackground(changeCharacterDetailsRequest.getBackground());
             character.setName(changeCharacterDetailsRequest.getName());
