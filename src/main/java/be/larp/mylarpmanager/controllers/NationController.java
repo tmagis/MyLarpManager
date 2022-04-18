@@ -1,7 +1,9 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.Character;
 import be.larp.mylarpmanager.models.Nation;
+import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
 import be.larp.mylarpmanager.repositories.NationRepository;
@@ -11,6 +13,7 @@ import be.larp.mylarpmanager.requests.ChangeNationDetailsRequest;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,26 +31,31 @@ public class NationController extends Controller {
     @Autowired
     private NationRepository nationRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @PostMapping("/changedetails")
     public ResponseEntity<?> reset(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
+      User user = getRequestUser();
         Nation nation = nationRepository.findByUuid(changeNationDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + changeNationDetailsRequest.getUuid() + " not found."));
-        nation.setName(changeNationDetailsRequest.getName());
-        nation.setIntroText(changeNationDetailsRequest.getIntroText());
-        nation.setFullDescription(changeNationDetailsRequest.getFullDescription());
-        nationRepository.saveAndFlush(nation);
-        return ResponseEntity.ok(nation);
+        if((user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_MANAGER)) || highPrivileges()) {
+            nation.setName(changeNationDetailsRequest.getName());
+            nation.setIntroText(changeNationDetailsRequest.getIntroText());
+            nation.setFullDescription(changeNationDetailsRequest.getFullDescription());
+            nationRepository.saveAndFlush(nation);
+            return ResponseEntity.ok(nation);
+        }else{
+            throw new BadCredentialsException("Your account privileges doesn't allow you to do that.");
+        }
     }
 
     @GetMapping("/getmynationplayers")
     public ResponseEntity<?> get(){
-        User user = userRepository.findByUuid(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid())
-                .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
+        User user = getRequestUser();
         Nation nation = user.getNation();
-        return ResponseEntity.ok(nation.getPlayers());
+        if(nation!=null) {
+            return ResponseEntity.ok(nation.getPlayers());
+        }else{
+            throw new BadRequestException("You don't belong to a nation.");
+        }
     }
 }
 

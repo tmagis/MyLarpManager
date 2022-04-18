@@ -8,11 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -25,9 +23,10 @@ public class UserController extends Controller {
     @Autowired
     JwtUtils jwtUtils;
 
+    //TODO Allow to change someone else with roles ?
     @PostMapping("/changedetails")
     public ResponseEntity<?> reset(@Valid @RequestBody ChangeUserDetailsRequest changeUserDetailsRequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getRequestUser();
         user.setUsername(changeUserDetailsRequest.getUsername());
         user.setEmail(changeUserDetailsRequest.getEmail());
         user.setFirstName(changeUserDetailsRequest.getFirstName());
@@ -38,8 +37,7 @@ public class UserController extends Controller {
 
     @GetMapping("/getmycharacters")
     public ResponseEntity<?> get(){
-        User user = userRepository.findByUuid(((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid())
-                .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
+        User user = getRequestUser();
         return ResponseEntity.ok(user.getCharacters());
     }
 

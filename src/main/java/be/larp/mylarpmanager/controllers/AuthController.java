@@ -29,9 +29,6 @@ public class AuthController extends Controller {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -49,7 +46,7 @@ public class AuthController extends Controller {
 
     @PostMapping("/changepassword")
     public ResponseEntity<?> reset(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getRequestUser();
         if(encoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
             if (changePasswordRequest.getNewPassword().equals(changePasswordRequest.getNewPasswordConfirmation())) {
                 user.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
@@ -63,17 +60,9 @@ public class AuthController extends Controller {
         }
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(BadCredentialsException.class)
-    public Errors handleLoginException(BadCredentialsException ex) {
-        Errors errors = new Errors();
-        errors.addGlobalError(ex.getMessage());
-        return errors;
-    }
-
     @GetMapping("/whoami")
     public ResponseEntity<?> whoAmI() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getRequestUser();
         return ResponseEntity.ok(user);
     }
 
