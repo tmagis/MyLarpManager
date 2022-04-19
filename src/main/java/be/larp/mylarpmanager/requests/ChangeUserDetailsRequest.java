@@ -2,52 +2,19 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class ChangeUserDetailsRequest extends GenericChangeRequest{
+public class ChangeUserDetailsRequest extends CreateUserRequest implements GenericUuidBasedRequest {
+    @NotBlank(message = "User uuid is required.")
+    private String uuid;
 
-    @NotBlank(message = "Username is required.")
-    private String username;
+    @Override
+    public String getUuid() {
+        return this.uuid;
+    }
 
-    @NotBlank(message = "An email address is required.")
-    private String email;
-
-    @NotBlank(message = "A first name is required.")
-    private String firstName;
-
-    @NotBlank(message = "A last name is required.")
-    private String lastName;
-
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
     public ChangeUserDetailsRequest() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 }

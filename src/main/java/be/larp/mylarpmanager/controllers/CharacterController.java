@@ -1,5 +1,6 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.Character;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
@@ -36,9 +37,10 @@ public class CharacterController extends Controller {
             character.setPictureURL(changeCharacterDetailsRequest.getPictureURL());
             character.setLastModificationTime(LocalDateTime.now());
             characterRepository.saveAndFlush(character);
+            trace(getRequestUser(), "updated character :"+character);
             return ResponseEntity.ok(character);
         }else{
-            throw new BadCredentialsException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
 

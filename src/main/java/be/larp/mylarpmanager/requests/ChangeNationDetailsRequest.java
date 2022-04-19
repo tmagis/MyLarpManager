@@ -2,37 +2,19 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class ChangeNationDetailsRequest extends GenericChangeRequest{
+public class ChangeNationDetailsRequest extends CreateNationRequest implements GenericUuidBasedRequest {
 
-    @NotBlank(message = "Nation name is required.")
-    private String name;
+    @NotBlank(message = "Nation uuid is required.")
+    private String uuid;
 
-    private String introText;
-
-    private String fullDescription;
-
-    public String getName() {
-        return name;
+    @Override
+    public String getUuid() {
+        return this.uuid;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIntroText() {
-        return introText;
-    }
-
-    public void setIntroText(String introText) {
-        this.introText = introText;
-    }
-
-    public String getFullDescription() {
-        return fullDescription;
-    }
-
-    public void setFullDescription(String fullDescription) {
-        this.fullDescription = fullDescription;
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public ChangeNationDetailsRequest() {

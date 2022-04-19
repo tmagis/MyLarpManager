@@ -41,6 +41,7 @@ public class AuthController extends Controller {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
+        trace(getRequestUser(), "successful login.");
         return ResponseEntity.ok(new Token(jwt));
     }
 
@@ -51,6 +52,7 @@ public class AuthController extends Controller {
             if (changePasswordRequest.getNewPassword().equals(changePasswordRequest.getNewPasswordConfirmation())) {
                 user.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
                 userRepository.saveAndFlush(user);
+                trace(user, "password change.");
                 return ResponseEntity.ok().build();
             }else {
                 throw new BadRequestException("The two passwords don't match.");
@@ -63,6 +65,7 @@ public class AuthController extends Controller {
     @GetMapping("/whoami")
     public ResponseEntity<?> whoAmI() {
         User user = getRequestUser();
+        trace(user, "load details.");
         return ResponseEntity.ok(user);
     }
 
@@ -70,6 +73,7 @@ public class AuthController extends Controller {
     public ResponseEntity<?> renew() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwt = jwtUtils.generateJwtToken(authentication);
+        trace(getRequestUser(), "renew JWT Token");
         return ResponseEntity.ok(new Token(jwt));
     }
 

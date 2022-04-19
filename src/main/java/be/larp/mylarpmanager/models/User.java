@@ -38,6 +38,9 @@ public class User extends UuidModel implements UserDetails {
     @OneToMany(mappedBy = "player")
     private List<Character> characters;
 
+    @OneToMany(mappedBy = "user")
+    private List<UserActionHistory> userActionHistories;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_nation_players")
     private Nation nation;
@@ -165,5 +168,14 @@ public class User extends UuidModel implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @JsonIgnore
+    public List<UserActionHistory> getUserActionHistories() {
+        return userActionHistories;
+    }
+
+    public void setUserActionHistories(List<UserActionHistory> userActionHistories) {
+        this.userActionHistories = userActionHistories;
     }
 }

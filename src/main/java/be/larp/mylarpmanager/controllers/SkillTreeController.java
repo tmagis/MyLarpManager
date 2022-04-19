@@ -1,5 +1,6 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.SkillTree;
 import be.larp.mylarpmanager.repositories.SkillRepository;
 import be.larp.mylarpmanager.repositories.SkillTreeRepository;
@@ -35,9 +36,10 @@ public class SkillTreeController extends Controller {
             skillTree.setName(changeSkillTreeDetailsRequest.getName());
             skillTree.setBlessing(changeSkillTreeDetailsRequest.getBlessing());
             skillTreeRepository.saveAndFlush(skillTree);
+            trace(getRequestUser(), "has updated SkillTree "+skillTree);
             return ResponseEntity.ok(skillTree);
         }else{
-            throw new BadCredentialsException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
 

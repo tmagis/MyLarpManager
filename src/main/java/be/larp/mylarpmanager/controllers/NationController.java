@@ -1,5 +1,6 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.Character;
 import be.larp.mylarpmanager.models.Nation;
@@ -41,9 +42,10 @@ public class NationController extends Controller {
             nation.setIntroText(changeNationDetailsRequest.getIntroText());
             nation.setFullDescription(changeNationDetailsRequest.getFullDescription());
             nationRepository.saveAndFlush(nation);
+            trace(user, "has updated nation: "+nation);
             return ResponseEntity.ok(nation);
         }else{
-            throw new BadCredentialsException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
 
@@ -51,6 +53,7 @@ public class NationController extends Controller {
     public ResponseEntity<?> getMyNationPlayers(){
         User user = getRequestUser();
         Nation nation = user.getNation();
+        trace(user, "has loaded the list of his nation players.");
         if(nation!=null) {
             return ResponseEntity.ok(nation.getPlayers());
         }else{
