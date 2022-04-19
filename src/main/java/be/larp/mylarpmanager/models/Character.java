@@ -149,5 +149,19 @@ public class Character extends UuidModel {
         this.skills = skills;
     }
 
-
+    @Override
+    public String toString() {
+        return "Character{" +
+                "name='" + name + '\'' +
+                ", pictureURL='" + pictureURL + '\'' +
+                ", background='" + background + '\'' +
+                ", age=" + age +
+                ", numberOfEventsPlayed=" + numberOfEventsPlayed +
+                ", race='" + race + '\'' +
+                ", isAlive=" + isAlive +
+                ", reasonOfDeath='" + reasonOfDeath + '\'' +
+                ", creationTime=" + creationTime +
+                ", lastModificationTime=" + lastModificationTime +
+                '}';
+    }
 }

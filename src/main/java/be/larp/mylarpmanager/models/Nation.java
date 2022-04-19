@@ -57,4 +57,13 @@ public class Nation extends UuidModel {
     public void setPlayers(List<User> players) {
         this.players = players;
     }
+
+    @Override
+    public String toString() {
+        return "Nation{" +
+                "name='" + name + '\'' +
+                ", introText='" + introText + '\'' +
+                ", fullDescription='" + fullDescription + '\'' +
+                '}';
+    }
 }

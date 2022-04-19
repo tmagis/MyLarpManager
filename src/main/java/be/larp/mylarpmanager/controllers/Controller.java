@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public class Controller {
 
@@ -31,6 +33,10 @@ public class Controller {
 
     @Autowired
     UserActionHistoryRepository userActionHistoryRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -61,8 +67,14 @@ public class Controller {
                 .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
     }
 
-    public boolean highPrivileges(){
+    public boolean orgaOrAdmin(){
         return (getRequestUser().getRole().equals(Role.ORGA) || getRequestUser().getRole().equals(Role.ADMIN));
+    }
+    public boolean admin(){
+        return (getRequestUser().getRole().equals(Role.ADMIN));
+    }
+    public String getRandomUuid(){
+        return UUID.randomUUID().toString();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

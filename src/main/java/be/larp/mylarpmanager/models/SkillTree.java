@@ -54,4 +54,13 @@ public class SkillTree extends UuidModel {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "SkillTree{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", blessing='" + blessing + '\'' +
+                '}';
+    }
 }

@@ -1,14 +1,15 @@
 package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
+import be.larp.mylarpmanager.models.Skill;
 import be.larp.mylarpmanager.models.SkillTree;
 import be.larp.mylarpmanager.repositories.SkillRepository;
 import be.larp.mylarpmanager.repositories.SkillTreeRepository;
 import be.larp.mylarpmanager.requests.ChangeSkillTreeDetailsRequest;
+import be.larp.mylarpmanager.requests.CreateSkillTreeRequest;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,18 +30,35 @@ public class SkillTreeController extends Controller {
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest) {
-      if(highPrivileges()){
+      if(orgaOrAdmin()){
         SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillTreeDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillTreeDetailsRequest.getUuid() + " not found."));
-            skillTree.setDescription(changeSkillTreeDetailsRequest.getDescription());
-            skillTree.setName(changeSkillTreeDetailsRequest.getName());
-            skillTree.setBlessing(changeSkillTreeDetailsRequest.getBlessing());
-            skillTreeRepository.saveAndFlush(skillTree);
+          setValues(skillTree, changeSkillTreeDetailsRequest);
+          trace(getRequestUser(), "has updated SkillTree "+skillTree);
+            return ResponseEntity.ok(skillTree);
+        }else{
+            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> changeNationDetails(@Valid @RequestBody CreateSkillTreeRequest createSkillTreeRequest) {
+        if(orgaOrAdmin()){
+            SkillTree skillTree = new SkillTree();
+            skillTree.setUuid(getRandomUuid());
+            setValues(skillTree, createSkillTreeRequest);
             trace(getRequestUser(), "has updated SkillTree "+skillTree);
             return ResponseEntity.ok(skillTree);
         }else{
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
+    }
+
+    private void setValues(SkillTree skillTree, CreateSkillTreeRequest createSkillTreeRequest) {
+        skillTree.setDescription(createSkillTreeRequest.getDescription());
+        skillTree.setName(createSkillTreeRequest.getName());
+        skillTree.setBlessing(createSkillTreeRequest.getBlessing());
+        skillTreeRepository.saveAndFlush(skillTree);
     }
 
     @GetMapping("/getallskilltrees")

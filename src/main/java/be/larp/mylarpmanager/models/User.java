@@ -178,4 +178,15 @@ public class User extends UuidModel implements UserDetails {
     public void setUserActionHistories(List<UserActionHistory> userActionHistories) {
         this.userActionHistories = userActionHistories;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

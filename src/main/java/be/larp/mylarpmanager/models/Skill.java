@@ -97,4 +97,17 @@ public class Skill extends UuidModel {
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", cost=" + cost +
+                ", iconURL='" + iconURL + '\'' +
+                ", allowMultiple=" + allowMultiple +
+                ", level=" + level +
+                ", hidden=" + hidden +
+                '}';
+    }
 }

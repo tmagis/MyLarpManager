@@ -29,9 +29,6 @@ public class AuthController extends Controller {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
     JwtUtils jwtUtils;
 
     @PostMapping("/login")
