@@ -41,6 +41,9 @@ public class FirstSetup implements InitializingBean {
         if (userRepository.count() == 0) {
             Nation nation = new Nation();
             nation.setName("Black Mesa");
+            nation.setContributionMandatory(false);
+            nation.setInternationalFriendly(false);
+            nation.setFamilyFriendly(false);
             nation.setUuid(UUID.randomUUID().toString());
             nationRepository.saveAndFlush(nation);
             String username = "admin";

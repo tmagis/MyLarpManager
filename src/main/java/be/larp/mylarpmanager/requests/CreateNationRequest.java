@@ -1,11 +1,23 @@
 package be.larp.mylarpmanager.requests;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
 public class CreateNationRequest {
 
     @NotBlank(message = "Nation name is required.")
     private String name;
+
+    @NotBlank(message = "Nation familyFriendly attribute is required.")
+    private boolean familyFriendly;
+
+    @NotBlank(message = "Nation internationalFriendly attribute is required.")
+    private boolean internationalFriendly;
+
+    private int contributionInCents;
+
+    @NotBlank(message = "Nation contributionMandatory attribute is required.")
+    private boolean contributionMandatory;
 
     private String introText;
 
@@ -33,6 +45,38 @@ public class CreateNationRequest {
 
     public void setFullDescription(String fullDescription) {
         this.fullDescription = fullDescription;
+    }
+
+    public boolean isFamilyFriendly() {
+        return familyFriendly;
+    }
+
+    public void setFamilyFriendly(boolean familyFriendly) {
+        this.familyFriendly = familyFriendly;
+    }
+
+    public boolean isInternationalFriendly() {
+        return internationalFriendly;
+    }
+
+    public void setInternationalFriendly(boolean internationalFriendly) {
+        this.internationalFriendly = internationalFriendly;
+    }
+
+    public int getContributionInCents() {
+        return contributionInCents;
+    }
+
+    public void setContributionInCents(int contributionInCents) {
+        this.contributionInCents = contributionInCents;
+    }
+
+    public boolean isContributionMandatory() {
+        return contributionMandatory;
+    }
+
+    public void setContributionMandatory(boolean contributionMandatory) {
+        this.contributionMandatory = contributionMandatory;
     }
 
     public CreateNationRequest() {

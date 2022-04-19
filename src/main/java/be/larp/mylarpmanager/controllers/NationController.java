@@ -58,6 +58,10 @@ public class NationController extends Controller {
         nation.setName(createNationRequest.getName());
         nation.setIntroText(createNationRequest.getIntroText());
         nation.setFullDescription(createNationRequest.getFullDescription());
+        nation.setFamilyFriendly(createNationRequest.isFamilyFriendly());
+        nation.setContributionInCents(createNationRequest.getContributionInCents());
+        nation.setInternationalFriendly(createNationRequest.isInternationalFriendly());
+        nation.setContributionMandatory(createNationRequest.isContributionMandatory());
         nationRepository.saveAndFlush(nation);
     }
 
