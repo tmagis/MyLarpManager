@@ -2,12 +2,11 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class JoinNationRequest {
+public class GenericChangeRequest {
 
-    @NotBlank(message = "Nation uuid is required.")
+    @NotBlank(message = "Uuid is required.")
     private String uuid;
 
-    public JoinNationRequest(){}
 
     public String getUuid() {
         return uuid;

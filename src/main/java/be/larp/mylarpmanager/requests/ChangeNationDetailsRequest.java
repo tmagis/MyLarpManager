@@ -2,10 +2,7 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class ChangeNationDetailsRequest {
-
-    @NotBlank(message = "Nation uuid is required.")
-    private String uuid;
+public class ChangeNationDetailsRequest extends GenericChangeRequest{
 
     @NotBlank(message = "Nation name is required.")
     private String name;
@@ -13,21 +10,6 @@ public class ChangeNationDetailsRequest {
     private String introText;
 
     private String fullDescription;
-
-    public ChangeNationDetailsRequest(String uuid, String name, String introText, String fullDescription) {
-        this.uuid = uuid;
-        this.name = name;
-        this.introText = introText;
-        this.fullDescription = fullDescription;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     public String getName() {
         return name;

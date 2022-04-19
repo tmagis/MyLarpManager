@@ -2,7 +2,7 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class ChangeUserDetailsRequest {
+public class ChangeUserDetailsRequest extends GenericChangeRequest{
 
     @NotBlank(message = "Username is required.")
     private String username;
@@ -15,15 +15,6 @@ public class ChangeUserDetailsRequest {
 
     @NotBlank(message = "A last name is required.")
     private String lastName;
-
-
-    public ChangeUserDetailsRequest(String username, String email, String firstName, String lastName) {
-        this.username = username;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
 
     public ChangeUserDetailsRequest() {
     }

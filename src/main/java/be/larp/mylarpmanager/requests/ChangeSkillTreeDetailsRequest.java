@@ -3,10 +3,8 @@ package be.larp.mylarpmanager.requests;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
-public class ChangeSkillTreeDetailsRequest {
+public class ChangeSkillTreeDetailsRequest extends GenericChangeRequest {
 
-    @NotBlank(message = "SkillTree uuid is required.")
-    private String uuid;
 
     @NotBlank(message = "SkillTree name is required.")
     private String name;
@@ -16,13 +14,6 @@ public class ChangeSkillTreeDetailsRequest {
 
     @NotBlank(message = "SkillTree blessing is required.")
     private String blessing;
-
-    public ChangeSkillTreeDetailsRequest(String name, String description, String blessing, String uuid) {
-        this.name = name;
-        this.description = description;
-        this.blessing = blessing;
-        this.uuid = uuid;
-    }
 
     public ChangeSkillTreeDetailsRequest() {
     }
@@ -49,13 +40,5 @@ public class ChangeSkillTreeDetailsRequest {
 
     public void setBlessing(String blessing) {
         this.blessing = blessing;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 }

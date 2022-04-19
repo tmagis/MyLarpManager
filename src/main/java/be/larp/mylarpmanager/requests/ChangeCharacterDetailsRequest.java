@@ -2,10 +2,7 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class ChangeCharacterDetailsRequest {
-
-    @NotBlank(message = "Character uuid is required.")
-    private String uuid;
+public class ChangeCharacterDetailsRequest extends GenericChangeRequest{
 
     @NotBlank(message = "Character name is required.")
     private String name;
@@ -21,24 +18,6 @@ public class ChangeCharacterDetailsRequest {
     private int age;
 
     private String reasonOfDeath;
-
-    public ChangeCharacterDetailsRequest(String uuid, String name, String pictureURL, String background, int age, String reasonOfDeath, String race) {
-        this.uuid = uuid;
-        this.name = name;
-        this.pictureURL = pictureURL;
-        this.background = background;
-        this.age = age;
-        this.reasonOfDeath = reasonOfDeath;
-        this.race = race;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     public String getRace() {
         return race;

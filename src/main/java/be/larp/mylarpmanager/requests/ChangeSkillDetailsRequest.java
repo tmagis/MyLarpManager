@@ -3,10 +3,7 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class ChangeSkillDetailsRequest {
-
-    @NotBlank(message = "Skill uuid is required.")
-    private String uuid;
+public class ChangeSkillDetailsRequest extends GenericChangeRequest{
 
     @NotBlank(message = "Skill name is required.")
     private String name;
@@ -32,26 +29,6 @@ public class ChangeSkillDetailsRequest {
     private int level;
 
     public ChangeSkillDetailsRequest() {
-    }
-
-    public ChangeSkillDetailsRequest(String uuid, String name, String description, int cost, String iconURL, String skillTreeUuid, boolean allowMultiple, int level, boolean hidden) {
-        this.uuid = uuid;
-        this.name = name;
-        this.description = description;
-        this.cost = cost;
-        this.iconURL = iconURL;
-        this.skillTreeUuid = skillTreeUuid;
-        this.allowMultiple = allowMultiple;
-        this.level = level;
-        this.hidden = hidden;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getName() {

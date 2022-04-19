@@ -14,12 +14,6 @@ public class ChangePasswordRequest {
     public ChangePasswordRequest() {
     }
 
-    public ChangePasswordRequest(String password, String newPassword, String newPasswordConfirmation) {
-        this.currentPassword = password;
-        this.newPassword = newPassword;
-        this.newPasswordConfirmation = newPasswordConfirmation;
-    }
-
     public String getCurrentPassword() {
         return currentPassword;
     }
