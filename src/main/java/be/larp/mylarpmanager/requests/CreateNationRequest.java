@@ -1,21 +1,22 @@
 package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CreateNationRequest {
 
     @NotBlank(message = "Nation name is required.")
     private String name;
 
-    @NotBlank(message = "Nation familyFriendly attribute is required.")
+    @NotNull(message = "Nation familyFriendly attribute is required.")
     private boolean familyFriendly;
 
-    @NotBlank(message = "Nation internationalFriendly attribute is required.")
+    @NotNull(message = "Nation internationalFriendly attribute is required.")
     private boolean internationalFriendly;
 
     private int contributionInCents;
 
-    @NotBlank(message = "Nation contributionMandatory attribute is required.")
+    @NotNull(message = "Nation contributionMandatory attribute is required.")
     private boolean contributionMandatory;
 
     private String introText;

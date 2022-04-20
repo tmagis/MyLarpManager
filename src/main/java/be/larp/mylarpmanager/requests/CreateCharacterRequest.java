@@ -14,7 +14,6 @@ public class CreateCharacterRequest {
 
     private String background;
 
-
     private int age;
 
     private String reasonOfDeath;

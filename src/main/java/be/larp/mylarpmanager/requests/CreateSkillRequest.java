@@ -2,19 +2,20 @@ package be.larp.mylarpmanager.requests;
 
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CreateSkillRequest {
 
     @NotBlank(message = "Skill name is required.")
     private String name;
 
-    @NotBlank(message = "Skill hidden is required.")
+    @NotNull(message = "Skill hidden is required.")
     private boolean hidden;
 
     @NotBlank(message = "Skill description is required.")
     private String description;
 
-    @NotBlank(message = "Skill cost is required.")
+    @NotNull(message = "Skill cost is required.")
     private int cost;
 
     private String iconURL;
@@ -22,10 +23,10 @@ public class CreateSkillRequest {
     @NotBlank(message = "SkillTree uuid is required.")
     private String skillTreeUuid;
 
-    @NotBlank(message = "Skill duplication authorized is required.")
+    @NotNull(message = "Skill duplication authorized is required.")
     private boolean allowMultiple;
 
-    @NotBlank(message = "Skill level is required.")
+    @NotNull(message = "Skill level is required.")
     private int level;
 
     public CreateSkillRequest() {
