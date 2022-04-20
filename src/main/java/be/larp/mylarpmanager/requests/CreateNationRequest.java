@@ -1,6 +1,5 @@
 package be.larp.mylarpmanager.requests;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
 public class CreateNationRequest {

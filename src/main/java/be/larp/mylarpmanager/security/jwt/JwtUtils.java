@@ -18,6 +18,9 @@ public class JwtUtils {
     @Value("${warden.app.jwtSecret}")
     private String jwtSecret;
 
+    @Value("${warden.app.tokenValidityInMinutes:15}")
+    private int tokenValidityInMinutes;
+
     public String generateJwtToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
@@ -25,7 +28,7 @@ public class JwtUtils {
                 .withIssuer("Warden")
                 .withClaim("user", userPrincipal.getUuid())
                 .withIssuedAt(new Date())
-                .withExpiresAt(Date.from(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(15).toInstant()))
+                .withExpiresAt(Date.from(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(tokenValidityInMinutes).toInstant()))
                 .sign(algorithm);
     }
 

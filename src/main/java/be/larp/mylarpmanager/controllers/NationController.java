@@ -31,7 +31,7 @@ public class NationController extends Controller {
       User user = getRequestUser();
         Nation nation = nationRepository.findByUuid(changeNationDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + changeNationDetailsRequest.getUuid() + " not found."));
-        if( orgaOrAdmin() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_MANAGER))) {
+        if( admin() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_MANAGER))) {
             setNationValues(nation, changeNationDetailsRequest);
             trace(user, "has updated nation: "+nation);
             return ResponseEntity.ok(nation);
@@ -43,7 +43,7 @@ public class NationController extends Controller {
     @PostMapping("/create")
     public ResponseEntity<?> createNation(@Valid @RequestBody CreateNationRequest createNationRequest) {
         User user = getRequestUser();
-        if( orgaOrAdmin() ) {
+        if( admin() ) {
             Nation nation = new Nation();
             nation.setUuid(getRandomUuid());
             setNationValues(nation, createNationRequest);
