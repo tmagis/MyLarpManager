@@ -1,6 +1,7 @@
 package be.larp.mylarpmanager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,8 +14,8 @@ public class Nation extends UuidModel {
     @Column(name = "NATION_ID")
     private Long id;
 
-    @Column(name = "NAME", nullable = false, unique = true)
-    private String name;
+    @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+    private TranslatableLabel name;
 
     @Column(name = "INTRO_TEXT")
     private String introText;
@@ -37,11 +38,11 @@ public class Nation extends UuidModel {
     @Column(name = "CONTRIBUTION_MANDATORY", nullable = false)
     private boolean contributionMandatory;
 
-    public String getName() {
+    public TranslatableLabel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(TranslatableLabel name) {
         this.name = name;
     }
 

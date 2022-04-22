@@ -1,9 +1,7 @@
 package be.larp.mylarpmanager.startup;
 
+import be.larp.mylarpmanager.models.*;
 import be.larp.mylarpmanager.models.Character;
-import be.larp.mylarpmanager.models.Nation;
-import be.larp.mylarpmanager.models.Role;
-import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
 import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
@@ -40,7 +38,7 @@ public class FirstSetup implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         if (userRepository.count() == 0) {
             Nation nation = new Nation();
-            nation.setName("Black Mesa");
+            nation.setName(new TranslatableLabel().setEn("Sausage").setFr("Saucisse").setNl("Worst"));
             nation.setContributionMandatory(false);
             nation.setInternationalFriendly(false);
             nation.setFamilyFriendly(false);

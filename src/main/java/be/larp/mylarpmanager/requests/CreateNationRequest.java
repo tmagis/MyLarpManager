@@ -1,12 +1,14 @@
 package be.larp.mylarpmanager.requests;
 
+import be.larp.mylarpmanager.models.TranslatableLabel;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class CreateNationRequest {
 
     @NotBlank(message = "Nation name is required.")
-    private String name;
+    private TranslatableLabel name;
 
     @NotNull(message = "Nation familyFriendly attribute is required.")
     private boolean familyFriendly;
@@ -23,11 +25,11 @@ public class CreateNationRequest {
 
     private String fullDescription;
 
-    public String getName() {
+    public TranslatableLabel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(TranslatableLabel name) {
         this.name = name;
     }
 
