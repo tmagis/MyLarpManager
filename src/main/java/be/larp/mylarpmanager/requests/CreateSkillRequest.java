@@ -1,19 +1,21 @@
 package be.larp.mylarpmanager.requests;
 
 
+import be.larp.mylarpmanager.models.TranslatedLabel;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class CreateSkillRequest {
 
-    @NotBlank(message = "Skill name is required.")
-    private String name;
+    @NotNull(message = "Skill name is required.")
+    private TranslatedLabel name;
 
     @NotNull(message = "Skill hidden is required.")
     private boolean hidden;
 
-    @NotBlank(message = "Skill description is required.")
-    private String description;
+    @NotNull(message = "Skill description is required.")
+    private TranslatedLabel description;
 
     @NotNull(message = "Skill cost is required.")
     private int cost;
@@ -32,19 +34,19 @@ public class CreateSkillRequest {
     public CreateSkillRequest() {
     }
 
-    public String getName() {
+    public TranslatedLabel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(TranslatedLabel name) {
         this.name = name;
     }
 
-    public String getDescription() {
+    public TranslatedLabel getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(TranslatedLabel description) {
         this.description = description;
     }
 

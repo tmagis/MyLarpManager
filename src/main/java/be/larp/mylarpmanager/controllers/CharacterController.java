@@ -42,6 +42,8 @@ public class CharacterController extends Controller {
         Character character = new Character();
         character.setUuid(getRandomUuid());
         character.setCreationTime(LocalDateTime.now());
+        character.setLastModificationTime(LocalDateTime.now());
+        character.setAlive(true);
         setDetails(createCharacterRequest, character);
         trace(getRequestUser(), "created character :"+character);
         return ResponseEntity.ok(character);

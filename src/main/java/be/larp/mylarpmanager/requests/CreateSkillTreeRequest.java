@@ -1,43 +1,46 @@
 package be.larp.mylarpmanager.requests;
 
+import be.larp.mylarpmanager.models.TranslatedLabel;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CreateSkillTreeRequest {
 
 
-    @NotBlank(message = "SkillTree name is required.")
-    private String name;
+    @NotNull(message = "SkillTree name is required.")
+    private TranslatedLabel name;
 
-    @NotBlank(message = "SkillTree description is required.")
-    private String description;
+    @NotNull(message = "SkillTree description is required.")
+    private TranslatedLabel description;
 
-    @NotBlank(message = "SkillTree blessing is required.")
-    private String blessing;
+    @NotNull(message = "SkillTree blessing is required.")
+    private TranslatedLabel blessing;
 
     public CreateSkillTreeRequest() {
     }
 
-    public String getName() {
+    public TranslatedLabel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(TranslatedLabel name) {
         this.name = name;
     }
 
-    public String getDescription() {
+    public TranslatedLabel getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(TranslatedLabel description) {
         this.description = description;
     }
 
-    public String getBlessing() {
+    public TranslatedLabel getBlessing() {
         return blessing;
     }
 
-    public void setBlessing(String blessing) {
+    public void setBlessing(TranslatedLabel blessing) {
         this.blessing = blessing;
     }
 }

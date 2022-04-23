@@ -1,7 +1,6 @@
 package be.larp.mylarpmanager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,13 +14,13 @@ public class Nation extends UuidModel {
     private Long id;
 
     @OneToOne(optional = false, cascade = CascadeType.PERSIST)
-    private TranslatableLabel name;
+    private TranslatedLabel name;
 
-    @Column(name = "INTRO_TEXT")
-    private String introText;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private TranslatedLabel introText;
 
-    @Column(name = "FULL_DESCRIPTION")
-    private String fullDescription;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private TranslatedLabel fullDescription;
 
     @OneToMany(mappedBy = "nation")
     private List<User> players;
@@ -38,27 +37,27 @@ public class Nation extends UuidModel {
     @Column(name = "CONTRIBUTION_MANDATORY", nullable = false)
     private boolean contributionMandatory;
 
-    public TranslatableLabel getName() {
+    public TranslatedLabel getName() {
         return name;
     }
 
-    public void setName(TranslatableLabel name) {
+    public void setName(TranslatedLabel name) {
         this.name = name;
     }
 
-    public String getIntroText() {
+    public TranslatedLabel getIntroText() {
         return introText;
     }
 
-    public void setIntroText(String introText) {
+    public void setIntroText(TranslatedLabel introText) {
         this.introText = introText;
     }
 
-    public String getFullDescription() {
+    public TranslatedLabel getFullDescription() {
         return fullDescription;
     }
 
-    public void setFullDescription(String fullDescription) {
+    public void setFullDescription(TranslatedLabel fullDescription) {
         this.fullDescription = fullDescription;
     }
 

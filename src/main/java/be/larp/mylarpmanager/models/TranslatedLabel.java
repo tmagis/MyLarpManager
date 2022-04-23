@@ -1,14 +1,13 @@
 package be.larp.mylarpmanager.models;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
-@Table(name = "TRANSLATABLE_ITEM")
-public class TranslatableLabel {
+@Table(name = "TRANSLATED_ITEM")
+public class TranslatedLabel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TRANSLATABLE_ITEM_ID")
+    @Column(name = "TRANSLATED_ITEM_ID")
     private Long id;
 
     @Column(name = "EN", nullable = false)
@@ -20,14 +19,14 @@ public class TranslatableLabel {
     @Column(name = "NL")
     private String nl;
 
-    public TranslatableLabel() {
+    public TranslatedLabel() {
     }
 
     public String getEn() {
         return en;
     }
 
-    public TranslatableLabel setEn(String en) {
+    public TranslatedLabel setEn(String en) {
         this.en = en;
         return this;
     }
@@ -36,7 +35,7 @@ public class TranslatableLabel {
         return fr;
     }
 
-    public TranslatableLabel setFr(String fr) {
+    public TranslatedLabel setFr(String fr) {
         this.fr = fr;
         return this;
     }
@@ -45,8 +44,17 @@ public class TranslatableLabel {
         return nl;
     }
 
-    public TranslatableLabel setNl(String nl) {
+    public TranslatedLabel setNl(String nl) {
         this.nl = nl;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "TranslatableLabel{" +
+                "en='" + en + '\'' +
+                ", fr='" + fr + '\'' +
+                ", nl='" + nl + '\'' +
+                '}';
     }
 }

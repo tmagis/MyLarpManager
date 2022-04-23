@@ -10,11 +10,11 @@ public class Skill extends UuidModel {
     @Column(name = "SKILL_ID")
     private Long id;
 
-    @Column(name = "NAME", nullable = false, unique = true)
-    private String name;
+    @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+    private TranslatedLabel name;
 
-    @Column(name = "DESCRIPTION", nullable = false)
-    private String description;
+    @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+    private TranslatedLabel description;
 
     @Column(name = "COST", nullable = false)
     private int cost;
@@ -34,19 +34,19 @@ public class Skill extends UuidModel {
     @Column(name = "HIDDEN", nullable = false)
     private boolean hidden;
 
-    public String getName() {
+    public TranslatedLabel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(TranslatedLabel name) {
         this.name = name;
     }
 
-    public String getDescription() {
+    public TranslatedLabel getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(TranslatedLabel description) {
         this.description = description;
     }
 

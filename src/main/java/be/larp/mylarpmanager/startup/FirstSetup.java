@@ -13,8 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.UUID;
 
 @Component
@@ -38,7 +36,12 @@ public class FirstSetup implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         if (userRepository.count() == 0) {
             Nation nation = new Nation();
-            nation.setName(new TranslatableLabel().setEn("Sausage").setFr("Saucisse").setNl("Worst"));
+            nation.setName(
+                    new TranslatedLabel()
+                            .setEn("Sausage")
+                            .setFr("Saucisse")
+                            .setNl("Worst")
+            );
             nation.setContributionMandatory(false);
             nation.setInternationalFriendly(false);
             nation.setFamilyFriendly(false);

@@ -11,31 +11,31 @@ public class SkillTree extends UuidModel {
     @Column(name = "SKILL_TREE_ID")
     private Long id;
 
-    @Column(name = "NAME", nullable = false, unique = true)
-    private String name;
+    @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+    private TranslatedLabel name;
 
-    @Column(name = "DESCRIPTION", nullable = false)
-    private String description;
+    @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+    private TranslatedLabel description;
 
-    @Column(name = "BLESSING", nullable = false)
-    private String blessing;
+    @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+    private TranslatedLabel blessing;
 
     @OneToMany(mappedBy = "skillTree")
     private Collection<Skill> skills;
 
-    public String getDescription() {
+    public TranslatedLabel getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(TranslatedLabel description) {
         this.description = description;
     }
 
-    public String getBlessing() {
+    public TranslatedLabel getBlessing() {
         return blessing;
     }
 
-    public void setBlessing(String blessing) {
+    public void setBlessing(TranslatedLabel blessing) {
         this.blessing = blessing;
     }
 
@@ -47,11 +47,11 @@ public class SkillTree extends UuidModel {
         this.skills = skills;
     }
 
-    public String getName() {
+    public TranslatedLabel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(TranslatedLabel name) {
         this.name = name;
     }
 
