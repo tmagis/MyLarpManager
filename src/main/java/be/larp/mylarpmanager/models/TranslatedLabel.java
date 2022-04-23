@@ -10,10 +10,10 @@ public class TranslatedLabel {
     @Column(name = "TRANSLATED_ITEM_ID")
     private Long id;
 
-    @Column(name = "EN", nullable = false)
+    @Column(name = "EN")
     private String en;
 
-    @Column(name = "FR")
+    @Column(name = "FR", nullable = false)
     private String fr;
 
     @Column(name = "NL")
