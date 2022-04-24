@@ -37,6 +37,18 @@ public class Nation extends UuidModel {
     @Column(name = "CONTRIBUTION_MANDATORY", nullable = false)
     private boolean contributionMandatory;
 
+    @OneToMany(mappedBy = "nation")
+    private List<JoinNationDemand> joinNationDemands;
+
+    @JsonIgnore
+    public List<JoinNationDemand> getJoinNationDemands() {
+        return joinNationDemands;
+    }
+
+    public void setJoinNationDemands(List<JoinNationDemand> joinNationDemands) {
+        this.joinNationDemands = joinNationDemands;
+    }
+
     public TranslatedItem getName() {
         return name;
     }

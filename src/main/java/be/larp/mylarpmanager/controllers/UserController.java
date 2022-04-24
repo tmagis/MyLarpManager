@@ -82,6 +82,7 @@ public class UserController extends Controller {
                     .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + joinNationRequest.getNationUuid() + " not found."));
             User userToChange = userRepository.findByUuid(joinNationRequest.getPlayerUuid())
                     .orElseThrow(() -> new NoSuchElementException("Player with uuid " + joinNationRequest.getPlayerUuid() + " not found."));
+            cancelPendingRequests(userToChange);
             userToChange.setNation(nation);
             userRepository.saveAndFlush(userToChange);
             trace(requester, "has changed " + userToChange + " making him join nation " + nation);
@@ -109,19 +110,20 @@ public class UserController extends Controller {
             JoinNationDemand joinNationDemand = new JoinNationDemand();
             joinNationDemand.setUuid(getRandomUuid());
             joinNationDemand.setRequestTime(LocalDateTime.now());
+            joinNationDemand.setMotivation(joinNationRequest.getMotivation());
             joinNationDemand.setCandidate(candidate);
             joinNationDemand.setNation(nation);
             joinNationDemand.setStatus(Status.PENDING);
             joinNationDemandRepository.saveAndFlush(joinNationDemand);
             trace(requester, " has made candidate " + candidate + " apply for joining nation " + nation);
-            return ResponseEntity.ok(requester);
+            return ResponseEntity.ok(joinNationDemand);
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
 
     private void cancelPendingRequests(User candidate) {
-        candidate.getJoinNationRequests()
+        candidate.getJoinNationDemands()
                 .stream()
                 .filter(j -> j
                         .getStatus()
@@ -146,7 +148,7 @@ public class UserController extends Controller {
             }
             userRepository.saveAndFlush(userToChange);
             trace(requester, " has made user " + requester + " leave his nation.");
-            return ResponseEntity.ok(requester.getCharacters());
+            return ResponseEntity.ok(ResponseEntity.ok());
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }

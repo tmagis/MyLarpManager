@@ -39,7 +39,7 @@ public class User extends UuidModel implements UserDetails {
     private List<Character> characters;
 
     @OneToMany(mappedBy = "candidate")
-    private List<JoinNationDemand> joinNationRequests;
+    private List<JoinNationDemand> joinNationDemands;
 
     @OneToMany(mappedBy = "user")
     private List<UserActionHistory> userActionHistories;
@@ -183,12 +183,12 @@ public class User extends UuidModel implements UserDetails {
     }
 
     @JsonIgnore
-    public List<JoinNationDemand> getJoinNationRequests() {
-        return joinNationRequests;
+    public List<JoinNationDemand> getJoinNationDemands() {
+        return joinNationDemands;
     }
 
-    public void setJoinNationRequests(List<JoinNationDemand> joinNationRequests) {
-        this.joinNationRequests = joinNationRequests;
+    public void setJoinNationDemands(List<JoinNationDemand> joinNationRequests) {
+        this.joinNationDemands = joinNationRequests;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package be.larp.mylarpmanager.requests;
 
-import javax.validation.constraints.NotBlank;
-
 public class JoinNationRequest extends ForceJoinNationRequest{
 
     private String motivation;

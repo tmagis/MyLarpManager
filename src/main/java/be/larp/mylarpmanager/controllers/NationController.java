@@ -77,6 +77,22 @@ public class NationController extends Controller {
         }
     }
 
+
+    @GetMapping("/getmynationrequests")
+    public ResponseEntity<?> getMyNationRequest(){
+        User requester = getRequestUser();
+        Nation nation = requester.getNation();
+        trace(requester, "has loaded the list of his nation requests.");
+        if(requester.isAdmin() || requester.isOrga() || requester.isNationAdmin() || requester.isNationSheriff()) {
+            if (nation != null) {
+                return ResponseEntity.ok(nation.getJoinNationDemands());
+            } else {
+                throw new BadRequestException("You don't belong to a nation.");
+            }
+        }else{
+            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+        }
+    }
     @GetMapping("/getallnations")
     public ResponseEntity<?> getAllNations(){
         return ResponseEntity.ok(nationRepository.findAll());
