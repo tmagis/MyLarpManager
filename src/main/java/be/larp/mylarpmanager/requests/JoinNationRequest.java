@@ -2,29 +2,18 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class JoinNationRequest{
+public class JoinNationRequest extends ForceJoinNationRequest{
 
-    @NotBlank(message = "Nation uuid is required.")
-    private String nationUuid;
+    private String motivation;
 
-    @NotBlank(message = "Player uuid is required.")
-    private String playerUuid;
-
-    public JoinNationRequest(){}
-
-    public String getNationUuid() {
-        return nationUuid;
+    public JoinNationRequest() {
     }
 
-    public void setNationUuid(String nationUuid) {
-        this.nationUuid = nationUuid;
+    public String getMotivation() {
+        return motivation;
     }
 
-    public String getPlayerUuid() {
-        return playerUuid;
-    }
-
-    public void setPlayerUuid(String playerUuid) {
-        this.playerUuid = playerUuid;
+    public void setMotivation(String motivation) {
+        this.motivation = motivation;
     }
 }

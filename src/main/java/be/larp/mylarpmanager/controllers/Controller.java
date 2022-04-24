@@ -67,10 +67,16 @@ public class Controller {
                 .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
     }
 
-    public boolean orgaOrAdmin(){
-        return (getRequestUser().getRole().equals(Role.ORGA) || getRequestUser().getRole().equals(Role.ADMIN));
+    public boolean requesterIsOrga(){
+        return (getRequestUser().getRole().equals(Role.ORGA));
     }
-    public boolean admin(){
+    public boolean requesterIsNationAdmin(){
+        return (getRequestUser().getRole().equals(Role.NATION_ADMIN));
+    }
+    public boolean requesterIsNationSheriff(){
+        return (getRequestUser().getRole().equals(Role.NATION_SHERIFF));
+    }
+    public boolean requesterIsAdmin(){
         return (getRequestUser().getRole().equals(Role.ADMIN));
     }
     public String getRandomUuid(){

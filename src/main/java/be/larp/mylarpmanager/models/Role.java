@@ -3,6 +3,7 @@ package be.larp.mylarpmanager.models;
 public enum Role {
     PLAYER,
     ORGA,
-    NATION_MANAGER,
+    NATION_ADMIN,
+    NATION_SHERIFF,
     ADMIN
 }

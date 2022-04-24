@@ -28,7 +28,7 @@ public class CharacterController extends Controller {
     public ResponseEntity<?> updateCharacter(@Valid @RequestBody ChangeCharacterDetailsRequest changeCharacterDetailsRequest) {
         Character character = characterRepository.findByUuid(changeCharacterDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Character with uuid " + changeCharacterDetailsRequest.getUuid() + " not found."));
-        if(orgaOrAdmin() || character.getPlayer().getUuid().equals(getRequestUser().getUuid()) ){
+        if(requesterIsAdmin() || requesterIsOrga() || character.getPlayer().getUuid().equals(getRequestUser().getUuid()) ){
             setDetails(changeCharacterDetailsRequest, character);
             trace(getRequestUser(), "updated character :"+character);
             return ResponseEntity.ok(character);

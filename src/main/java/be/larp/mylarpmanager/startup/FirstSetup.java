@@ -37,7 +37,7 @@ public class FirstSetup implements InitializingBean {
         if (userRepository.count() == 0) {
             Nation nation = new Nation();
             nation.setName(
-                    new TranslatedLabel()
+                    new TranslatedItem()
                             .setEn("Sausage")
                             .setFr("Saucisse")
                             .setNl("Worst")

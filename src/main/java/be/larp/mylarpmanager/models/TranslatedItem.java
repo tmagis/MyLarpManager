@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "TRANSLATED_ITEM")
-public class TranslatedLabel {
+public class TranslatedItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRANSLATED_ITEM_ID")
@@ -19,14 +19,14 @@ public class TranslatedLabel {
     @Column(name = "NL")
     private String nl;
 
-    public TranslatedLabel() {
+    public TranslatedItem() {
     }
 
     public String getEn() {
         return en;
     }
 
-    public TranslatedLabel setEn(String en) {
+    public TranslatedItem setEn(String en) {
         this.en = en;
         return this;
     }
@@ -35,7 +35,7 @@ public class TranslatedLabel {
         return fr;
     }
 
-    public TranslatedLabel setFr(String fr) {
+    public TranslatedItem setFr(String fr) {
         this.fr = fr;
         return this;
     }
@@ -44,7 +44,7 @@ public class TranslatedLabel {
         return nl;
     }
 
-    public TranslatedLabel setNl(String nl) {
+    public TranslatedItem setNl(String nl) {
         this.nl = nl;
         return this;
     }

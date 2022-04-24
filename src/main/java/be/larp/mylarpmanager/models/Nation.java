@@ -14,13 +14,13 @@ public class Nation extends UuidModel {
     private Long id;
 
     @OneToOne(optional = false, cascade = CascadeType.PERSIST)
-    private TranslatedLabel name;
+    private TranslatedItem name;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    private TranslatedLabel introText;
+    private TranslatedItem introText;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    private TranslatedLabel fullDescription;
+    private TranslatedItem fullDescription;
 
     @OneToMany(mappedBy = "nation")
     private List<User> players;
@@ -37,27 +37,27 @@ public class Nation extends UuidModel {
     @Column(name = "CONTRIBUTION_MANDATORY", nullable = false)
     private boolean contributionMandatory;
 
-    public TranslatedLabel getName() {
+    public TranslatedItem getName() {
         return name;
     }
 
-    public void setName(TranslatedLabel name) {
+    public void setName(TranslatedItem name) {
         this.name = name;
     }
 
-    public TranslatedLabel getIntroText() {
+    public TranslatedItem getIntroText() {
         return introText;
     }
 
-    public void setIntroText(TranslatedLabel introText) {
+    public void setIntroText(TranslatedItem introText) {
         this.introText = introText;
     }
 
-    public TranslatedLabel getFullDescription() {
+    public TranslatedItem getFullDescription() {
         return fullDescription;
     }
 
-    public void setFullDescription(TranslatedLabel fullDescription) {
+    public void setFullDescription(TranslatedItem fullDescription) {
         this.fullDescription = fullDescription;
     }
 

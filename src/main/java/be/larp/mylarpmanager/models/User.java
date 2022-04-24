@@ -38,6 +38,9 @@ public class User extends UuidModel implements UserDetails {
     @OneToMany(mappedBy = "player")
     private List<Character> characters;
 
+    @OneToMany(mappedBy = "candidate")
+    private List<JoinNationDemand> joinNationRequests;
+
     @OneToMany(mappedBy = "user")
     private List<UserActionHistory> userActionHistories;
 
@@ -179,6 +182,15 @@ public class User extends UuidModel implements UserDetails {
         this.userActionHistories = userActionHistories;
     }
 
+    @JsonIgnore
+    public List<JoinNationDemand> getJoinNationRequests() {
+        return joinNationRequests;
+    }
+
+    public void setJoinNationRequests(List<JoinNationDemand> joinNationRequests) {
+        this.joinNationRequests = joinNationRequests;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -188,5 +200,28 @@ public class User extends UuidModel implements UserDetails {
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 '}';
+    }
+
+    @JsonIgnore
+    public boolean isNationAdmin(){
+        return role.equals(Role.NATION_ADMIN);
+    }
+
+
+    @JsonIgnore
+    public boolean isAdmin(){
+        return role.equals(Role.ADMIN);
+    }
+
+
+    @JsonIgnore
+    public boolean isNationSheriff(){
+        return role.equals(Role.NATION_SHERIFF);
+    }
+
+
+    @JsonIgnore
+    public boolean isOrga(){
+        return role.equals(Role.ORGA);
     }
 }

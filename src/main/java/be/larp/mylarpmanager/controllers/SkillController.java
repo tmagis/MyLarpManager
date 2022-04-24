@@ -29,7 +29,7 @@ public class SkillController extends Controller {
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeSkillDetailsRequest changeSkillDetailsRequest) {
-      if(orgaOrAdmin()){
+      if(requesterIsAdmin() || requesterIsOrga()){
         Skill skill = skillRepository.findByUuid(changeSkillDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + changeSkillDetailsRequest.getUuid() + " not found."));
         SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillDetailsRequest.getSkillTreeUuid())
@@ -44,7 +44,7 @@ public class SkillController extends Controller {
 
     @PostMapping("/create")
     public ResponseEntity<?> createSkill(@Valid @RequestBody CreateSkillRequest createSkillRequest) {
-        if(orgaOrAdmin()){
+        if(requesterIsAdmin() || requesterIsOrga()){
             Skill skill = new Skill();
             skill.setUuid(getRandomUuid());
             SkillTree skillTree = skillTreeRepository.findByUuid(createSkillRequest.getSkillTreeUuid())

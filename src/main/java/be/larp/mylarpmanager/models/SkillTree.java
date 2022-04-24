@@ -12,30 +12,30 @@ public class SkillTree extends UuidModel {
     private Long id;
 
     @OneToOne(optional = false, cascade = CascadeType.PERSIST)
-    private TranslatedLabel name;
+    private TranslatedItem name;
 
     @OneToOne(optional = false, cascade = CascadeType.PERSIST)
-    private TranslatedLabel description;
+    private TranslatedItem description;
 
     @OneToOne(optional = false, cascade = CascadeType.PERSIST)
-    private TranslatedLabel blessing;
+    private TranslatedItem blessing;
 
     @OneToMany(mappedBy = "skillTree")
     private Collection<Skill> skills;
 
-    public TranslatedLabel getDescription() {
+    public TranslatedItem getDescription() {
         return description;
     }
 
-    public void setDescription(TranslatedLabel description) {
+    public void setDescription(TranslatedItem description) {
         this.description = description;
     }
 
-    public TranslatedLabel getBlessing() {
+    public TranslatedItem getBlessing() {
         return blessing;
     }
 
-    public void setBlessing(TranslatedLabel blessing) {
+    public void setBlessing(TranslatedItem blessing) {
         this.blessing = blessing;
     }
 
@@ -47,11 +47,11 @@ public class SkillTree extends UuidModel {
         this.skills = skills;
     }
 
-    public TranslatedLabel getName() {
+    public TranslatedItem getName() {
         return name;
     }
 
-    public void setName(TranslatedLabel name) {
+    public void setName(TranslatedItem name) {
         this.name = name;
     }
 
