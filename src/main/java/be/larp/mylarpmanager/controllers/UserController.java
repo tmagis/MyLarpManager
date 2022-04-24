@@ -1,6 +1,7 @@
 package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
+import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.*;
 import be.larp.mylarpmanager.repositories.JoinNationDemandRepository;
 import be.larp.mylarpmanager.repositories.NationRepository;
@@ -87,6 +88,32 @@ public class UserController extends Controller {
             userRepository.saveAndFlush(userToChange);
             trace(requester, "has changed " + userToChange + " making him join nation " + nation);
             return ResponseEntity.ok(requester);
+        } else {
+            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+        }
+    }
+
+    @PostMapping("/processdemand")
+    public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ProcessDemandRequest processDemandRequest) {
+        User requester = getRequestUser();
+        if (requester.isAdmin() || requester.isOrga() || requester.isNationSheriff() || requester.isNationAdmin()) {
+            JoinNationDemand joinNationDemand = joinNationDemandRepository.findByUuid(processDemandRequest.getUuid())
+                    .orElseThrow(() -> new NoSuchElementException("Demand with uuid " + processDemandRequest.getUuid() + " not found."));
+            if(processDemandRequest.getStatus().equals(Status.APPROVED.toString())) {
+                joinNationDemand.setStatus(Status.APPROVED);
+                joinNationDemand.setApprover(requester);
+                joinNationDemand.getCandidate().setNation(joinNationDemand.getNation());
+                joinNationDemand.setProcessingTime(LocalDateTime.now());
+                userRepository.saveAndFlush(joinNationDemand.getCandidate());
+                joinNationDemandRepository.saveAndFlush(joinNationDemand);
+                trace(requester, "has approved " + joinNationDemand.getCandidate() + " making him join nation " + joinNationDemand.getNation());
+                return ResponseEntity.ok(joinNationDemand);
+            } else if (processDemandRequest.getStatus().equals(Status.REFUSED.toString())) {
+                //TODO
+                return ResponseEntity.ok(joinNationDemand);
+            }else{
+                throw new BadRequestException("The status can be APPROVED or REFUSED.");
+            }
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
