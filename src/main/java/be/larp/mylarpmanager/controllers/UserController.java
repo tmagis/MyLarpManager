@@ -78,7 +78,7 @@ public class UserController extends Controller {
     @PostMapping("/forcejoinnation")
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ForceJoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
-        if (requester.isAdmin() || requester.isOrga() || requester.getUuid().equals(joinNationRequest.getPlayerUuid())) {
+        if (requester.isAdmin() || requester.isOrga()) {
             Nation nation = nationRepository.findByUuid(joinNationRequest.getNationUuid())
                     .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + joinNationRequest.getNationUuid() + " not found."));
             User userToChange = userRepository.findByUuid(joinNationRequest.getPlayerUuid())
@@ -99,20 +99,24 @@ public class UserController extends Controller {
         if (requester.isAdmin() || requester.isOrga() || requester.isNationSheriff() || requester.isNationAdmin()) {
             JoinNationDemand joinNationDemand = joinNationDemandRepository.findByUuid(processDemandRequest.getUuid())
                     .orElseThrow(() -> new NoSuchElementException("Demand with uuid " + processDemandRequest.getUuid() + " not found."));
-            if(processDemandRequest.getStatus().equals(Status.APPROVED.toString())) {
-                joinNationDemand.setStatus(Status.APPROVED);
-                joinNationDemand.setApprover(requester);
-                joinNationDemand.getCandidate().setNation(joinNationDemand.getNation());
-                joinNationDemand.setProcessingTime(LocalDateTime.now());
-                userRepository.saveAndFlush(joinNationDemand.getCandidate());
-                joinNationDemandRepository.saveAndFlush(joinNationDemand);
-                trace(requester, "has approved " + joinNationDemand.getCandidate() + " making him join nation " + joinNationDemand.getNation());
-                return ResponseEntity.ok(joinNationDemand);
-            } else if (processDemandRequest.getStatus().equals(Status.REFUSED.toString())) {
-                //TODO
-                return ResponseEntity.ok(joinNationDemand);
-            }else{
-                throw new BadRequestException("The status can be APPROVED or REFUSED.");
+            switch (Status.valueOf(processDemandRequest.getStatus())) {
+                case APPROVED:
+                    joinNationDemand.setStatus(Status.APPROVED);
+                    joinNationDemand.setApprover(requester);
+                    joinNationDemand.getCandidate().setNation(joinNationDemand.getNation());
+                    joinNationDemand.setProcessingTime(LocalDateTime.now());
+                    userRepository.saveAndFlush(joinNationDemand.getCandidate());
+                    joinNationDemandRepository.saveAndFlush(joinNationDemand);
+                    trace(requester, "has approved " + joinNationDemand.getCandidate() + " making him join nation " + joinNationDemand.getNation());
+                    return ResponseEntity.ok(joinNationDemand);
+                case REFUSED:
+                    if (processDemandRequest.getApproverMotivation() == null || processDemandRequest.getApproverMotivation().isBlank()) {
+                        throw new BadRequestException("A motivation is required when refusing.");
+                    } else {
+                        return ResponseEntity.ok(joinNationDemand);
+                    }
+                default:
+                    throw new BadRequestException("The status can only be \""+Status.APPROVED+"\" or \""+Status.REFUSED+"\".");
             }
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
