@@ -28,14 +28,14 @@ public class NationController extends Controller {
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
-      User user = getRequestUser();
+        User user = getRequestUser();
         Nation nation = nationRepository.findByUuid(changeNationDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + changeNationDetailsRequest.getUuid() + " not found."));
-        if( requesterIsAdmin() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_ADMIN))) {
+        if (requesterIsAdmin() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_ADMIN))) {
             setNationValues(nation, changeNationDetailsRequest);
-            trace(user, "has updated nation: "+nation);
+            trace(user, "update nation", nation);
             return ResponseEntity.ok(nation);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
@@ -43,13 +43,13 @@ public class NationController extends Controller {
     @PostMapping("/create")
     public ResponseEntity<?> createNation(@Valid @RequestBody CreateNationRequest createNationRequest) {
         User requester = getRequestUser();
-        if( requesterIsAdmin() ) {
+        if (requesterIsAdmin()) {
             Nation nation = new Nation();
             nation.setUuid(getRandomUuid());
             setNationValues(nation, createNationRequest);
-            trace(requester, "has created nation: "+nation);
+            trace(requester, "create nation", nation);
             return ResponseEntity.ok(nation);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
@@ -66,35 +66,36 @@ public class NationController extends Controller {
     }
 
     @GetMapping("/getmynationplayers")
-    public ResponseEntity<?> getMyNationPlayers(){
+    public ResponseEntity<?> getMyNationPlayers() {
         User requester = getRequestUser();
         Nation nation = requester.getNation();
-        trace(requester, "has loaded the list of his nation players.");
-        if(nation!=null) {
+        trace(requester, "has loaded the list of his nation players.", null);
+        if (nation != null) {
             return ResponseEntity.ok(nation.getPlayers());
-        }else{
+        } else {
             throw new BadRequestException("You don't belong to a nation.");
         }
     }
 
 
     @GetMapping("/getmynationrequests")
-    public ResponseEntity<?> getMyNationRequest(){
+    public ResponseEntity<?> getMyNationRequest() {
         User requester = getRequestUser();
         Nation nation = requester.getNation();
-        trace(requester, "has loaded the list of his nation requests.");
-        if(requester.isAdmin() || requester.isOrga() || requester.isNationAdmin() || requester.isNationSheriff()) {
+        trace(requester, "load the list of his nation requests.", null);
+        if (requester.isAdmin() || requester.isOrga() || requester.isNationAdmin() || requester.isNationSheriff()) {
             if (nation != null) {
                 return ResponseEntity.ok(nation.getJoinNationDemands());
             } else {
                 throw new BadRequestException("You don't belong to a nation.");
             }
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
+
     @GetMapping("/getallnations")
-    public ResponseEntity<?> getAllNations(){
+    public ResponseEntity<?> getAllNations() {
         return ResponseEntity.ok(nationRepository.findAll());
     }
 }

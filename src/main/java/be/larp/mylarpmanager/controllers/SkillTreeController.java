@@ -30,26 +30,26 @@ public class SkillTreeController extends Controller {
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest) {
-      if(requesterIsAdmin() || requesterIsOrga()){
-        SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillTreeDetailsRequest.getUuid())
-                .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillTreeDetailsRequest.getUuid() + " not found."));
-          setValues(skillTree, changeSkillTreeDetailsRequest);
-          trace(getRequestUser(), "has updated SkillTree "+skillTree);
+        if (requesterIsAdmin() || requesterIsOrga()) {
+            SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillTreeDetailsRequest.getUuid())
+                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillTreeDetailsRequest.getUuid() + " not found."));
+            setValues(skillTree, changeSkillTreeDetailsRequest);
+            trace(getRequestUser(), "update SkillTree", skillTree);
             return ResponseEntity.ok(skillTree);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody CreateSkillTreeRequest createSkillTreeRequest) {
-        if(requesterIsAdmin() || requesterIsOrga()){
+        if (requesterIsAdmin() || requesterIsOrga()) {
             SkillTree skillTree = new SkillTree();
             skillTree.setUuid(getRandomUuid());
             setValues(skillTree, createSkillTreeRequest);
-            trace(getRequestUser(), "has updated SkillTree "+skillTree);
+            trace(getRequestUser(), "create SkillTree", skillTree);
             return ResponseEntity.ok(skillTree);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
@@ -62,7 +62,7 @@ public class SkillTreeController extends Controller {
     }
 
     @GetMapping("/getallskilltrees")
-    public ResponseEntity<?> getAllSkillTrees(){
+    public ResponseEntity<?> getAllSkillTrees() {
         return ResponseEntity.ok(skillTreeRepository.findAll());
     }
 }

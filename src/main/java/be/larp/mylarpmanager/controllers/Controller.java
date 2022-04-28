@@ -5,6 +5,7 @@ import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.models.UserActionHistory;
+import be.larp.mylarpmanager.models.UuidModel;
 import be.larp.mylarpmanager.repositories.UserActionHistoryRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.responses.Errors;
@@ -53,33 +54,44 @@ public class Controller {
         return errors;
     }
 
-    public void trace( User user, String text){
+    public void trace(User user, String text, UuidModel on) {
+        String log = "User: " + user.getUuid() + " has done action: " + text;
+        String log_trace = "User: " + user + " has done action: " + text;
+        if (on != null) {
+            log = log + " on " + on.getClass().getSimpleName() + " " + on.getUuid();
+            log_trace = log_trace + " on " + on;
+        }
+        logger.info(log);
+        logger.trace(log_trace);
         UserActionHistory userActionHistory = new UserActionHistory();
         userActionHistory.setUser(user);
-        userActionHistory.setAction(text);
+        userActionHistory.setAction(log_trace);
         userActionHistory.setActionTime(LocalDateTime.now());
         userActionHistoryRepository.saveAndFlush(userActionHistory);
-        logger.info("User: "+user.toString()+" has done action: "+text);
     }
 
-    public User getRequestUser(){
+    public User getRequestUser() {
         return userRepository.findByUuid(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid())
-                .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
     }
 
-    public boolean requesterIsOrga(){
+    public boolean requesterIsOrga() {
         return (getRequestUser().getRole().equals(Role.ORGA));
     }
-    public boolean requesterIsNationAdmin(){
+
+    public boolean requesterIsNationAdmin() {
         return (getRequestUser().getRole().equals(Role.NATION_ADMIN));
     }
-    public boolean requesterIsNationSheriff(){
+
+    public boolean requesterIsNationSheriff() {
         return (getRequestUser().getRole().equals(Role.NATION_SHERIFF));
     }
-    public boolean requesterIsAdmin(){
+
+    public boolean requesterIsAdmin() {
         return (getRequestUser().getRole().equals(Role.ADMIN));
     }
-    public String getRandomUuid(){
+
+    public String getRandomUuid() {
         return UUID.randomUUID().toString();
     }
 

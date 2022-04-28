@@ -29,30 +29,30 @@ public class SkillController extends Controller {
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeSkillDetailsRequest changeSkillDetailsRequest) {
-      if(requesterIsAdmin() || requesterIsOrga()){
-        Skill skill = skillRepository.findByUuid(changeSkillDetailsRequest.getUuid())
-                .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + changeSkillDetailsRequest.getUuid() + " not found."));
-        SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillDetailsRequest.getSkillTreeUuid())
-                .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillDetailsRequest.getSkillTreeUuid() + " not found."));
-          setValues(skill, changeSkillDetailsRequest, skillTree);
-          trace(getRequestUser(), "has updated skill "+skill);
+        if (requesterIsAdmin() || requesterIsOrga()) {
+            Skill skill = skillRepository.findByUuid(changeSkillDetailsRequest.getUuid())
+                    .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + changeSkillDetailsRequest.getUuid() + " not found."));
+            SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillDetailsRequest.getSkillTreeUuid())
+                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillDetailsRequest.getSkillTreeUuid() + " not found."));
+            setValues(skill, changeSkillDetailsRequest, skillTree);
+            trace(getRequestUser(), "update skill", skill);
             return ResponseEntity.ok(skill);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> createSkill(@Valid @RequestBody CreateSkillRequest createSkillRequest) {
-        if(requesterIsAdmin() || requesterIsOrga()){
+        if (requesterIsAdmin() || requesterIsOrga()) {
             Skill skill = new Skill();
             skill.setUuid(getRandomUuid());
             SkillTree skillTree = skillTreeRepository.findByUuid(createSkillRequest.getSkillTreeUuid())
                     .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + createSkillRequest.getSkillTreeUuid() + " not found."));
             setValues(skill, createSkillRequest, skillTree);
-            trace(getRequestUser(), "has created skill "+skill);
+            trace(getRequestUser(), "create skill", skill);
             return ResponseEntity.ok(skill);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }

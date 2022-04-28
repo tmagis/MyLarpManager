@@ -40,21 +40,22 @@ public class UserController extends Controller {
             User userToChange = userRepository.findByUuid(changeUserDetailsRequest.getUuid())
                     .orElseThrow(() -> new NoSuchElementException("User with uuid " + changeUserDetailsRequest.getUuid() + " not found."));
             setValues(userToChange, changeUserDetailsRequest);
-            trace(requester, "has updated user " + userToChange);
+            trace(requester, "update user", userToChange);
             return ResponseEntity.ok(userToChange);
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
+
     @PostMapping("/create")
     public ResponseEntity<?> changeDetails(@Valid @RequestBody CreateUserRequest createUserRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga()) {
-            User userToChange =  new User();
+            User userToChange = new User();
             userToChange.setUuid(getRandomUuid());
             userToChange.setPassword(encoder.encode(getRandomUuid()));
             setValues(userToChange, createUserRequest);
-            trace(requester, "has created user " + userToChange);
+            trace(requester, "created user ", userToChange);
             return ResponseEntity.ok(userToChange);
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
@@ -86,7 +87,7 @@ public class UserController extends Controller {
             cancelPendingRequests(userToChange);
             userToChange.setNation(nation);
             userRepository.saveAndFlush(userToChange);
-            trace(requester, "has changed " + userToChange + " making him join nation " + nation);
+            trace(requester, "force join nation", userToChange);
             return ResponseEntity.ok(requester);
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
@@ -107,7 +108,7 @@ public class UserController extends Controller {
                     joinNationDemand.setProcessingTime(LocalDateTime.now());
                     userRepository.saveAndFlush(joinNationDemand.getCandidate());
                     joinNationDemandRepository.saveAndFlush(joinNationDemand);
-                    trace(requester, "has approved " + joinNationDemand.getCandidate() + " making him join nation " + joinNationDemand.getNation());
+                    trace(requester, "approve request", joinNationDemand);
                     return ResponseEntity.ok(joinNationDemand);
                 case REFUSED:
                     if (processDemandRequest.getApproverMotivation() == null || processDemandRequest.getApproverMotivation().isBlank()) {
@@ -121,7 +122,7 @@ public class UserController extends Controller {
                         return ResponseEntity.ok(joinNationDemand);
                     }
                 default:
-                    throw new BadRequestException("The status can only be \""+Status.APPROVED+"\" or \""+Status.REFUSED+"\".");
+                    throw new BadRequestException("The status can only be \"" + Status.APPROVED + "\" or \"" + Status.REFUSED + "\".");
             }
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
@@ -137,8 +138,8 @@ public class UserController extends Controller {
             User candidate = userRepository.findByUuid(joinNationRequest.getPlayerUuid())
                     .orElseThrow(() -> new NoSuchElementException("Player with uuid " + joinNationRequest.getPlayerUuid() + " not found."));
 
-            if(candidate.getNation() != null){
-                trace(requester, " has made " + candidate + " left nation " + nation);
+            if (candidate.getNation() != null) {
+                trace(requester, "autoleave nation", candidate);
                 candidate.setNation(null);
                 userRepository.saveAndFlush(candidate);
             }
@@ -151,7 +152,7 @@ public class UserController extends Controller {
             joinNationDemand.setNation(nation);
             joinNationDemand.setStatus(Status.PENDING);
             joinNationDemandRepository.saveAndFlush(joinNationDemand);
-            trace(requester, " has made candidate " + candidate + " apply for joining nation " + nation);
+            trace(requester, "create joining request", joinNationDemand);
             return ResponseEntity.ok(joinNationDemand);
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
@@ -166,6 +167,7 @@ public class UserController extends Controller {
                         .equals(Status.PENDING))
                 .collect(Collectors.toList())
                 .forEach(k -> {
+                    trace(candidate, "got his demand cancelled", k);
                     k.setStatus(Status.CANCELLED);
                     k.setProcessingTime(LocalDateTime.now());
                     joinNationDemandRepository.saveAndFlush(k);
@@ -179,11 +181,11 @@ public class UserController extends Controller {
             User userToChange = userRepository.findByUuid(leaveNationRequest.getUuid())
                     .orElseThrow(() -> new NoSuchElementException("Player with uuid " + leaveNationRequest.getUuid() + " not found."));
             userToChange.setNation(null);
-            if(userToChange.isNationAdmin() || userToChange.isNationSheriff()){
+            if (userToChange.isNationAdmin() || userToChange.isNationSheriff()) {
                 userToChange.setRole(Role.PLAYER);
             }
             userRepository.saveAndFlush(userToChange);
-            trace(requester, " has made user " + requester + " leave his nation.");
+            trace(requester, "leave nation", userToChange);
             return ResponseEntity.ok(ResponseEntity.ok());
         } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");

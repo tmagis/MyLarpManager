@@ -58,6 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/auth/renew").authenticated()
                 .antMatchers("/api/v1/auth/whoami").authenticated()
                 .antMatchers("/api/v1/auth/changepassword").authenticated()
+                .antMatchers("/api/v1/auth/signoff").authenticated()
+                .antMatchers("/api/v1/auth/massivesignoff").authenticated()
                 .antMatchers("/api/v1/user/changedetails").authenticated()
                 .antMatchers("/api/v1/user/getmycharacters").authenticated()
                 .antMatchers("/api/v1/user/forcejoinnation").authenticated()

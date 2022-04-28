@@ -32,6 +32,9 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "CURRENT_TOKEN", unique = true)
+    private String currentToken;
+
     @OneToMany(mappedBy = "player")
     private List<Ticket> tickets;
 
@@ -203,25 +206,34 @@ public class User extends UuidModel implements UserDetails {
     }
 
     @JsonIgnore
-    public boolean isNationAdmin(){
+    public boolean isNationAdmin() {
         return role.equals(Role.NATION_ADMIN);
     }
 
 
     @JsonIgnore
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return role.equals(Role.ADMIN);
     }
 
 
     @JsonIgnore
-    public boolean isNationSheriff(){
+    public boolean isNationSheriff() {
         return role.equals(Role.NATION_SHERIFF);
     }
 
 
     @JsonIgnore
-    public boolean isOrga(){
+    public boolean isOrga() {
         return role.equals(Role.ORGA);
+    }
+
+    public void setCurrentToken(String currentToken) {
+        this.currentToken = currentToken;
+    }
+
+    @JsonIgnore
+    public String getCurrentToken() {
+        return currentToken;
     }
 }

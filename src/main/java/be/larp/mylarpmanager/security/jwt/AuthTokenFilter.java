@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,6 +19,9 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
@@ -29,12 +33,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = getJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String uuid = jwtUtils.getUuidFromJwtToken(jwt);
-                UserDetails userDetails = userDetailsService.loadUserByUuid(uuid);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                if(encoder.matches(jwt, userDetailsService.getCurrentToken(uuid))) {
+                    UserDetails userDetails = userDetailsService.loadUserByUuid(uuid);
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }else{
+                    logger.info("User "+uuid+" tried to use an old token.");
+                }
             }
         } catch (Exception ignored) {
         }

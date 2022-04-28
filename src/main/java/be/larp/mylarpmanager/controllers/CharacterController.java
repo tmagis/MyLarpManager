@@ -28,11 +28,11 @@ public class CharacterController extends Controller {
     public ResponseEntity<?> updateCharacter(@Valid @RequestBody ChangeCharacterDetailsRequest changeCharacterDetailsRequest) {
         Character character = characterRepository.findByUuid(changeCharacterDetailsRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Character with uuid " + changeCharacterDetailsRequest.getUuid() + " not found."));
-        if(requesterIsAdmin() || requesterIsOrga() || character.getPlayer().getUuid().equals(getRequestUser().getUuid()) ){
+        if (requesterIsAdmin() || requesterIsOrga() || character.getPlayer().getUuid().equals(getRequestUser().getUuid())) {
             setDetails(changeCharacterDetailsRequest, character);
-            trace(getRequestUser(), "updated character :"+character);
+            trace(getRequestUser(), "update character ", character);
             return ResponseEntity.ok(character);
-        }else{
+        } else {
             throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
         }
     }
@@ -45,7 +45,7 @@ public class CharacterController extends Controller {
         character.setLastModificationTime(LocalDateTime.now());
         character.setAlive(true);
         setDetails(createCharacterRequest, character);
-        trace(getRequestUser(), "created character :"+character);
+        trace(getRequestUser(), "create character :", character);
         return ResponseEntity.ok(character);
     }
 
