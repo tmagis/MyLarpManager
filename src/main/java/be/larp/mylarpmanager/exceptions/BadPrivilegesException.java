@@ -4,4 +4,8 @@ public class BadPrivilegesException extends RuntimeException {
     public BadPrivilegesException(String s) {
         super(s);
     }
+
+    public BadPrivilegesException() {
+        super();
+    }
 }

@@ -115,7 +115,11 @@ public class Controller {
     @ExceptionHandler(BadPrivilegesException.class)
     public Errors handleLoginException(BadPrivilegesException ex) {
         Errors errors = new Errors();
-        errors.addGlobalError(ex.getMessage());
+        if (ex.getMessage() == null) {
+            errors.addGlobalError("Your account privileges doesn't allow you to do that.");
+        } else {
+            errors.addGlobalError(ex.getMessage());
+        }
         return errors;
     }
 

@@ -43,7 +43,7 @@ public class UserController extends Controller {
             trace(requester, "update user", userToChange);
             return ResponseEntity.ok(userToChange);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -58,7 +58,7 @@ public class UserController extends Controller {
             trace(requester, "created user ", userToChange);
             return ResponseEntity.ok(userToChange);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -90,7 +90,7 @@ public class UserController extends Controller {
             trace(requester, "force join nation", userToChange);
             return ResponseEntity.ok(requester);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -125,7 +125,7 @@ public class UserController extends Controller {
                     throw new BadRequestException("The status can only be \"" + Status.APPROVED + "\" or \"" + Status.REFUSED + "\".");
             }
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -155,7 +155,7 @@ public class UserController extends Controller {
             trace(requester, "create joining request", joinNationDemand);
             return ResponseEntity.ok(joinNationDemand);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -188,7 +188,7 @@ public class UserController extends Controller {
             trace(requester, "leave nation", userToChange);
             return ResponseEntity.ok(ResponseEntity.ok());
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 }

@@ -33,7 +33,7 @@ public class CharacterController extends Controller {
             trace(getRequestUser(), "update character ", character);
             return ResponseEntity.ok(character);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 

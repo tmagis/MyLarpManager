@@ -38,7 +38,7 @@ public class SkillController extends Controller {
             trace(getRequestUser(), "update skill", skill);
             return ResponseEntity.ok(skill);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -53,7 +53,7 @@ public class SkillController extends Controller {
             trace(getRequestUser(), "create skill", skill);
             return ResponseEntity.ok(skill);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 

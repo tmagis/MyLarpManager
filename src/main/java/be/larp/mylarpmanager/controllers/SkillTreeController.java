@@ -37,7 +37,7 @@ public class SkillTreeController extends Controller {
             trace(getRequestUser(), "update SkillTree", skillTree);
             return ResponseEntity.ok(skillTree);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -50,7 +50,7 @@ public class SkillTreeController extends Controller {
             trace(getRequestUser(), "create SkillTree", skillTree);
             return ResponseEntity.ok(skillTree);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 

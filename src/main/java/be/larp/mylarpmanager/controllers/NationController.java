@@ -36,7 +36,7 @@ public class NationController extends Controller {
             trace(user, "update nation", nation);
             return ResponseEntity.ok(nation);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -50,7 +50,7 @@ public class NationController extends Controller {
             trace(requester, "create nation", nation);
             return ResponseEntity.ok(nation);
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
@@ -90,7 +90,7 @@ public class NationController extends Controller {
                 throw new BadRequestException("You don't belong to a nation.");
             }
         } else {
-            throw new BadPrivilegesException("Your account privileges doesn't allow you to do that.");
+            throw new BadPrivilegesException();
         }
     }
 
