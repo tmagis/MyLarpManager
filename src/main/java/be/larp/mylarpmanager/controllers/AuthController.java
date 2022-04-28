@@ -1,5 +1,6 @@
 package be.larp.mylarpmanager.controllers;
 
+import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.requests.ChangePasswordRequest;
@@ -77,7 +78,7 @@ public class AuthController extends Controller {
             trace(requester, "signed everybody off.", null);
             return ResponseEntity.ok(ResponseEntity.ok());
         } else {
-            throw new BadCredentialsException("The current password is not valid.");
+            throw new BadPrivilegesException();
         }
     }
 
