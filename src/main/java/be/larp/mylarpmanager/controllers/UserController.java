@@ -113,6 +113,11 @@ public class UserController extends Controller {
                     if (processDemandRequest.getApproverMotivation() == null || processDemandRequest.getApproverMotivation().isBlank()) {
                         throw new BadRequestException("A motivation is required when refusing.");
                     } else {
+                        joinNationDemand.setStatus(Status.REFUSED);
+                        joinNationDemand.setApproverMotivation(processDemandRequest.getApproverMotivation());
+                        joinNationDemand.setApprover(requester);
+                        joinNationDemand.setProcessingTime(LocalDateTime.now());
+                        joinNationDemandRepository.saveAndFlush(joinNationDemand);
                         return ResponseEntity.ok(joinNationDemand);
                     }
                 default:
