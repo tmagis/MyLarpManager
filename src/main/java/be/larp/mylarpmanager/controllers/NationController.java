@@ -213,7 +213,7 @@ public class NationController extends Controller {
             }
             userRepository.saveAndFlush(userToChange);
             trace(requester, "leave nation", userToChange);
-            return ResponseEntity.ok(ResponseEntity.ok());
+            return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
         }

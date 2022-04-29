@@ -82,7 +82,7 @@ public class UserController extends Controller {
         //
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userToCreate, "pouet", Locale.FRENCH));
         trace(userToCreate, "register", null);
-        return ResponseEntity.ok(ResponseEntity.ok());
+        return ResponseEntity.ok().build();
     }
 
     private void validateUser(CreateUserRequest createUserRequest) {

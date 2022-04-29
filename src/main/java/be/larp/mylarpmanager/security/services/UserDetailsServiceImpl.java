@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
     @Value("${warden.app.resetPasswordTokenValidityInMinutes:15}")
     private int resetPasswordTokenValidityInMinutes;
-    @Value("${warden.app.activateAccountTokenValidityInMinutes:60}")
+    @Value("${warden.app.activateAccountTokenValidityInMinutes:1440}")
     private int activateAccountTokenValidityInMinutes;
     @Autowired
     private UserRepository userRepository;

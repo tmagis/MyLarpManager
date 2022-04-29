@@ -2,7 +2,10 @@ package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
+import be.larp.mylarpmanager.exceptions.ExpiredTokenException;
+import be.larp.mylarpmanager.models.ActionToken;
 import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.repositories.ActionTokenRepository;
 import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.LoginRequest;
 import be.larp.mylarpmanager.requests.ResetPasswordRequest;
@@ -19,9 +22,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
@@ -34,6 +40,9 @@ public class AuthController extends Controller {
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    ActionTokenRepository actionTokenRepository;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -71,7 +80,7 @@ public class AuthController extends Controller {
         User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("User with email " + resetPasswordRequest.getEmail() + " not found."));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, "pouet", Locale.FRENCH));
-        return ResponseEntity.ok(ResponseEntity.ok());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/signoff")
@@ -80,7 +89,7 @@ public class AuthController extends Controller {
         requester.setCurrentToken(null);
         userRepository.saveAndFlush(requester);
         trace(requester, "signed off.", null);
-        return ResponseEntity.ok(ResponseEntity.ok());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/massivesignoff")
@@ -92,7 +101,7 @@ public class AuthController extends Controller {
                 userRepository.saveAndFlush(u);
             });
             trace(requester, "signed everybody off.", null);
-            return ResponseEntity.ok(ResponseEntity.ok());
+            return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
         }
@@ -103,6 +112,23 @@ public class AuthController extends Controller {
         User requester = getRequestUser();
         trace(requester, "load his details.", null);
         return ResponseEntity.ok(requester);
+    }
+
+
+    @GetMapping("/confirm")
+    public ResponseEntity<?> confirmRegistration
+            (WebRequest request, Model model, @RequestParam("token") String token) {
+        Locale locale = request.getLocale();
+        ActionToken actionToken = actionTokenRepository.findByToken(token)
+                .orElseThrow(() -> new NoSuchElementException("Token is invalid."));
+        if(LocalDateTime.now().isAfter(actionToken.getExpirationTime())){
+            throw new ExpiredTokenException("The token is expired");
+        }
+        User user = actionToken.getUser();
+        user.setEnabled(true);
+        userRepository.saveAndFlush(user);
+        trace(user, "activated account", null);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/renew")

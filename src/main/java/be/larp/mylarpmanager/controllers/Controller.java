@@ -2,6 +2,7 @@ package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
+import be.larp.mylarpmanager.exceptions.ExpiredTokenException;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.models.UserActionHistory;
@@ -51,6 +52,14 @@ public class Controller {
                 errors.addGlobalError(error.getDefaultMessage());
             }
         });
+        return errors;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ExpiredTokenException.class)
+    public Errors handle(ExpiredTokenException ex) {
+        Errors errors = new Errors();
+        errors.addGlobalError(ex.getMessage());
         return errors;
     }
 
