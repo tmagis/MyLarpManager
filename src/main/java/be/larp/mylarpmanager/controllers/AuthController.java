@@ -5,11 +5,14 @@ import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.LoginRequest;
+import be.larp.mylarpmanager.requests.ResetPasswordRequest;
 import be.larp.mylarpmanager.responses.Token;
+import be.larp.mylarpmanager.security.events.OnRegistrationCompleteEvent;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,14 +22,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController extends Controller {
-
-    Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
     @Autowired
     JwtUtils jwtUtils;
 
@@ -56,6 +64,14 @@ public class AuthController extends Controller {
         } else {
             throw new BadCredentialsException("The current password is not valid.");
         }
+    }
+
+    @PostMapping("/resetpassword")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("User with email " + resetPasswordRequest.getEmail() + " not found."));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, "pouet", Locale.FRENCH));
+        return ResponseEntity.ok(ResponseEntity.ok());
     }
 
     @GetMapping("/signoff")
@@ -104,6 +120,5 @@ public class AuthController extends Controller {
         userRepository.saveAndFlush(requester);
         return jwt;
     }
-
 
 }

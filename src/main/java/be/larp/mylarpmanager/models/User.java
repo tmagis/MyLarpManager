@@ -17,6 +17,8 @@ public class User extends UuidModel implements UserDetails {
     @Column(name = "USER_ID")
     private Long id;
 
+    @Column(name = "ENABLED")
+    private boolean enabled;
     @Column(name = "USERNAME", nullable = false, unique = true)
     private String username;
 
@@ -56,6 +58,8 @@ public class User extends UuidModel implements UserDetails {
     private Role role;
 
     public User() {
+        super();
+        this.enabled = false;
         characters = new ArrayList<>();
         tickets = new ArrayList<>();
     }
@@ -86,7 +90,7 @@ public class User extends UuidModel implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public void setUsername(String username) {
@@ -197,12 +201,17 @@ public class User extends UuidModel implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "enabled=" + enabled +
+                ", username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 '}';
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @JsonIgnore

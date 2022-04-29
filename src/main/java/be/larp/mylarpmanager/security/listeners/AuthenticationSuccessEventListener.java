@@ -1,4 +1,4 @@
-package be.larp.mylarpmanager.security;
+package be.larp.mylarpmanager.security.listeners;
 
 import be.larp.mylarpmanager.security.services.LoginAttemptService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LoginAttemptService {
 
-    Logger logger = LoggerFactory.getLogger(LoginAttemptService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginAttemptService.class);
 
     @Value("${warden.app.tentatives.maxTentatives:10}")
     private int maxTentatives;

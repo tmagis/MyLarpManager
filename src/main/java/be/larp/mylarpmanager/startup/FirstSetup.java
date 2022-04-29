@@ -33,7 +33,7 @@ public class FirstSetup implements InitializingBean {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet(){
         if (userRepository.count() == 0) {
             Nation nation = new Nation();
             nation.setName(
@@ -54,6 +54,7 @@ public class FirstSetup implements InitializingBean {
             String lastName = "Délicieux";
             User defaultUser = new User();
             defaultUser.setRole(Role.ADMIN);
+            defaultUser.setEnabled(true);
             defaultUser.setUsername(username);
             defaultUser.setPassword(passwordEncoder.encode(password));
             defaultUser.setEmail(email);

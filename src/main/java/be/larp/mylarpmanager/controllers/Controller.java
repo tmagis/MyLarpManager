@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class Controller {
 
-    Logger logger = LoggerFactory.getLogger(Controller.class);
+    private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 
     @Autowired
     UserRepository userRepository;
