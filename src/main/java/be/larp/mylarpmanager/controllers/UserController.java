@@ -16,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -71,16 +73,14 @@ public class UserController extends Controller {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    public ResponseEntity<?> register(HttpServletRequest request, @Valid @RequestBody CreateUserRequest createUserRequest) {
         validateUser(createUserRequest);
         User userToCreate = new User();
         userToCreate.setUuid(getRandomUuid());
         userToCreate.setPassword(encoder.encode(getRandomUuid()));
         setValues(userToCreate, createUserRequest);
-        //
-        RequestContextHolder.currentRequestAttributes();
-        //
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userToCreate, "pouet", Locale.FRENCH));
+        String host = String.valueOf(request.getRequestURL().delete(request.getRequestURL().indexOf(request.getRequestURI()), request.getRequestURL().length()));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userToCreate, host, request.getLocale()));
         trace(userToCreate, "register", null);
         return ResponseEntity.ok().build();
     }

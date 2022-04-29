@@ -32,7 +32,7 @@ public class RegistrationEventListener implements
         String token = userDetailsService.createActionToken(user, ActionType.VERIFY_EMAIL);
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
-        String confirmationUrl = "localhost:3000/confirm?token=" + token;
+        String confirmationUrl = event.getBaseURL()+"/confirm?token=" + token;
         String message = messages.getMessage("message.confirmRegistration", null,event.getLocale());
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);

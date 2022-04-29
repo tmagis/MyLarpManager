@@ -34,7 +34,7 @@ public class PasswordResetEventListener implements
         String token = userDetailsService.createActionToken(user, ActionType.PASSWORD_RESET);
         String recipientAddress = user.getEmail();
         String subject = "Password reset";
-        String confirmationUrl = "localhost:3000/reset?token=" + token;
+        String confirmationUrl = event.getBaseURL()+"/reset?token=" + token;
         String message = messages.getMessage("message.resetPassword", null,event.getLocale());
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);

@@ -10,7 +10,7 @@ import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.LoginRequest;
 import be.larp.mylarpmanager.requests.ResetPasswordRequest;
 import be.larp.mylarpmanager.responses.Token;
-import be.larp.mylarpmanager.security.events.OnRegistrationCompleteEvent;
+import be.larp.mylarpmanager.security.events.OnPasswordResetEvent;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +22,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -76,10 +76,12 @@ public class AuthController extends Controller {
     }
 
     @PostMapping("/resetpassword")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<?> resetPassword(HttpServletRequest request, @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("User with email " + resetPasswordRequest.getEmail() + " not found."));
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, "pouet", Locale.FRENCH));
+        //TODO Improve
+        String host = String.valueOf(request.getRequestURL().delete(request.getRequestURL().indexOf(request.getRequestURI()), request.getRequestURL().length()));
+        eventPublisher.publishEvent(new OnPasswordResetEvent(user,host , request.getLocale()));
         return ResponseEntity.ok().build();
     }
 
@@ -117,7 +119,7 @@ public class AuthController extends Controller {
 
     @GetMapping("/confirm")
     public ResponseEntity<?> confirmRegistration
-            (WebRequest request, Model model, @RequestParam("token") String token) {
+            (WebRequest request, @RequestParam("token") String token) {
         Locale locale = request.getLocale();
         ActionToken actionToken = actionTokenRepository.findByToken(token)
                 .orElseThrow(() -> new NoSuchElementException("Token is invalid."));
