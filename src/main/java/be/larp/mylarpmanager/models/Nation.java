@@ -25,6 +25,9 @@ public class Nation extends UuidModel {
     @OneToMany(mappedBy = "nation")
     private List<User> players;
 
+    @Column(name="MAIN_DEITY")
+    private String mainDeity;
+
     @Column(name = "FAMILY_FRIENDLY", nullable = false)
     private boolean familyFriendly;
 
@@ -112,6 +115,14 @@ public class Nation extends UuidModel {
 
     public void setContributionMandatory(boolean contributionMandatory) {
         this.contributionMandatory = contributionMandatory;
+    }
+
+    public String getMainDeity() {
+        return mainDeity;
+    }
+
+    public void setMainDeity(String mainDeity) {
+        this.mainDeity = mainDeity;
     }
 
     @Override

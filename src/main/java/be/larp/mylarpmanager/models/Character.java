@@ -51,6 +51,11 @@ public class Character extends UuidModel {
     @Column(name = "LAST_MODIFICATION_TIME", nullable = false)
     private LocalDateTime lastModificationTime;
 
+    public Character() {
+        creationTime = LocalDateTime.now();
+        lastModificationTime = LocalDateTime.now();
+    }
+
     public String getPictureURL() {
         return pictureURL;
     }

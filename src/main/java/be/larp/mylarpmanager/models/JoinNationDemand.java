@@ -38,6 +38,7 @@ public class JoinNationDemand extends UuidModel {
     private LocalDateTime processingTime;
 
     public JoinNationDemand() {
+        requestTime = LocalDateTime.now();
     }
 
     public User getCandidate() {

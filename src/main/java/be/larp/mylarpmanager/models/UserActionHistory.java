@@ -1,16 +1,8 @@
 package be.larp.mylarpmanager.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @Entity
 @Table(name = "USER_ACTION_HISTORY")
@@ -32,6 +24,7 @@ public class UserActionHistory {
     private LocalDateTime actionTime;
 
     public UserActionHistory() {
+        actionTime = LocalDateTime.now();
     }
 
     public User getUser() {
