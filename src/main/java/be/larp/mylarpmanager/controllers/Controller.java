@@ -22,6 +22,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -53,6 +54,10 @@ public class Controller {
             }
         });
         return errors;
+    }
+
+    String getHost(HttpServletRequest request) {
+        return String.valueOf(request.getRequestURL().delete(request.getRequestURL().indexOf(request.getRequestURI()), request.getRequestURL().length()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

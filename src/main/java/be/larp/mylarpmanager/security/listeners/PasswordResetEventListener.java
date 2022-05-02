@@ -1,7 +1,7 @@
 package be.larp.mylarpmanager.security.listeners;
 
 import be.larp.mylarpmanager.models.User;
-import be.larp.mylarpmanager.security.ActionType;
+import be.larp.mylarpmanager.models.ActionType;
 import be.larp.mylarpmanager.security.events.OnPasswordResetEvent;
 import be.larp.mylarpmanager.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class PasswordResetEventListener implements
         String token = userDetailsService.createActionToken(user, ActionType.PASSWORD_RESET);
         String recipientAddress = user.getEmail();
         String subject = "Password reset";
-        String confirmationUrl = event.getBaseURL()+"/reset?token=" + token;
+        String confirmationUrl = event.getBaseURL()+"/setpassword?token=" + token;
         String message = messages.getMessage("message.resetPassword", null,event.getLocale());
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);

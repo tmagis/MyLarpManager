@@ -1,16 +1,14 @@
 package be.larp.mylarpmanager.security.services;
 
-import be.larp.mylarpmanager.controllers.Controller;
 import be.larp.mylarpmanager.models.ActionToken;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.ActionTokenRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
-import be.larp.mylarpmanager.security.ActionType;
+import be.larp.mylarpmanager.models.ActionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -71,6 +69,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         ActionToken actionToken = new ActionToken();
         actionToken.setToken(token);
         actionToken.setUser(user);
+        actionToken.setActionType(actionType);
         LocalDateTime localDateTime;
         switch (actionType) {
             case VERIFY_EMAIL:

@@ -4,11 +4,13 @@ import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.exceptions.ExpiredTokenException;
 import be.larp.mylarpmanager.models.ActionToken;
+import be.larp.mylarpmanager.models.ActionType;
 import be.larp.mylarpmanager.models.User;
 import be.larp.mylarpmanager.repositories.ActionTokenRepository;
 import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.LoginRequest;
 import be.larp.mylarpmanager.requests.ResetPasswordRequest;
+import be.larp.mylarpmanager.requests.SetPasswordRequest;
 import be.larp.mylarpmanager.responses.Token;
 import be.larp.mylarpmanager.security.events.OnPasswordResetEvent;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
@@ -62,14 +64,8 @@ public class AuthController extends Controller {
     public ResponseEntity<?> reset(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         User user = getRequestUser();
         if (encoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
-            if (changePasswordRequest.getNewPassword().equals(changePasswordRequest.getNewPasswordConfirmation())) {
-                user.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
-                userRepository.saveAndFlush(user);
-                trace(user, "password change.", null);
-                return ResponseEntity.ok().build();
-            } else {
-                throw new BadRequestException("The two passwords don't match.");
-            }
+            changePassword(changePasswordRequest.getNewPassword(), changePasswordRequest.getNewPasswordConfirmation(), user);
+            return ResponseEntity.ok().build();
         } else {
             throw new BadCredentialsException("The current password is not valid.");
         }
@@ -79,10 +75,37 @@ public class AuthController extends Controller {
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("User with email " + resetPasswordRequest.getEmail() + " not found."));
-        //TODO Improve
-        String host = String.valueOf(request.getRequestURL().delete(request.getRequestURL().indexOf(request.getRequestURI()), request.getRequestURL().length()));
-        eventPublisher.publishEvent(new OnPasswordResetEvent(user,host , request.getLocale()));
+        eventPublisher.publishEvent(new OnPasswordResetEvent(user, getHost(request), request.getLocale()));
         return ResponseEntity.ok().build();
+    }
+
+    private void changePassword(String password, String passwordConfirmation, User user) {
+        if (password.equals(passwordConfirmation)) {
+            user.setPassword(encoder.encode(password));
+            userRepository.saveAndFlush(user);
+            trace(user, "password change.", null);
+        } else {
+            throw new BadRequestException("The two passwords don't match.");
+        }
+    }
+
+    @PostMapping("/setpassword")
+    public ResponseEntity<?> setPassword(@Valid @RequestBody SetPasswordRequest setPasswordRequest) {
+        ActionToken actionToken = getActionToken(setPasswordRequest.getToken(), ActionType.PASSWORD_RESET);
+        changePassword(setPasswordRequest.getNewPassword(), setPasswordRequest.getNewPasswordConfirmation(), actionToken.getUser());
+        return ResponseEntity.ok().build();
+    }
+
+    private ActionToken getActionToken(String token, ActionType actionType) {
+        ActionToken actionToken = actionTokenRepository.findByToken(token)
+                .orElseThrow(() -> new NoSuchElementException("Token is invalid."));
+        if(!actionToken.getActionType().equals(actionType)){
+            throw new BadRequestException("The token is not valid for this kind of action.");
+        }
+        if (LocalDateTime.now().isAfter(actionToken.getExpirationTime())) {
+            throw new ExpiredTokenException("The token is expired.");
+        }
+        return actionToken;
     }
 
     @GetMapping("/signoff")
@@ -119,13 +142,8 @@ public class AuthController extends Controller {
 
     @GetMapping("/confirm")
     public ResponseEntity<?> confirmRegistration
-            (WebRequest request, @RequestParam("token") String token) {
-        Locale locale = request.getLocale();
-        ActionToken actionToken = actionTokenRepository.findByToken(token)
-                .orElseThrow(() -> new NoSuchElementException("Token is invalid."));
-        if(LocalDateTime.now().isAfter(actionToken.getExpirationTime())){
-            throw new ExpiredTokenException("The token is expired");
-        }
+            (@RequestParam("token") String token) {
+        ActionToken actionToken = getActionToken(token, ActionType.VERIFY_EMAIL);
         User user = actionToken.getUser();
         user.setEnabled(true);
         userRepository.saveAndFlush(user);

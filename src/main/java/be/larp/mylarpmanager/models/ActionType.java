@@ -1,4 +1,4 @@
-package be.larp.mylarpmanager.security;
+package be.larp.mylarpmanager.models;
 
 public enum ActionType {
     PASSWORD_RESET,

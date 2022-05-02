@@ -14,6 +14,10 @@ public class ActionToken {
     @Column(name = "TOKEN", nullable = false)
     private String token;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ACTION_TYPE", nullable = false)
+    private ActionType actionType;
+
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "USER_ID")
     private User user;
@@ -22,6 +26,14 @@ public class ActionToken {
     private LocalDateTime expirationTime;
 
     public ActionToken() {
+    }
+
+    public ActionType getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
     }
 
     public String getToken() {

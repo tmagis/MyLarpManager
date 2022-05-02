@@ -1,7 +1,7 @@
 package be.larp.mylarpmanager.security.listeners;
 
 import be.larp.mylarpmanager.models.User;
-import be.larp.mylarpmanager.security.ActionType;
+import be.larp.mylarpmanager.models.ActionType;
 import be.larp.mylarpmanager.security.events.OnRegistrationCompleteEvent;
 import be.larp.mylarpmanager.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
