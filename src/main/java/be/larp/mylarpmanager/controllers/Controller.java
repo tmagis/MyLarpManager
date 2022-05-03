@@ -140,4 +140,10 @@ public class Controller {
         errors.addGlobalError(ex.getMessage());
         return errors;
     }
+
+    public void checkSamePassword(String password, String passwordConfirmation) {
+        if (!password.equals(passwordConfirmation)) {
+            throw new BadRequestException("The two passwords don't match.");
+        }
+    }
 }

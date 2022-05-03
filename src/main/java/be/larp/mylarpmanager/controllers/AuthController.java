@@ -78,14 +78,12 @@ public class AuthController extends Controller {
     }
 
     private void changePassword(String password, String passwordConfirmation, User user) {
-        if (password.equals(passwordConfirmation)) {
-            user.setPassword(encoder.encode(password));
-            userRepository.saveAndFlush(user);
-            trace(user, "password change.", null);
-        } else {
-            throw new BadRequestException("The two passwords don't match.");
-        }
+        checkSamePassword(password, passwordConfirmation);
+        user.setPassword(encoder.encode(password));
+        userRepository.saveAndFlush(user);
+        trace(user, "password change.", null);
     }
+
 
     @PostMapping("/setpassword")
     public ResponseEntity<?> setPassword(@Valid @RequestBody SetPasswordRequest setPasswordRequest) {
@@ -97,7 +95,7 @@ public class AuthController extends Controller {
     private ActionToken getActionToken(String token, ActionType actionType) {
         ActionToken actionToken = actionTokenRepository.findByToken(token)
                 .orElseThrow(() -> new NoSuchElementException("Token is invalid."));
-        if(!actionToken.getActionType().equals(actionType)){
+        if (!actionToken.getActionType().equals(actionType)) {
             throw new BadRequestException("The token is not valid for this kind of action.");
         }
         if (LocalDateTime.now().isAfter(actionToken.getExpirationTime())) {

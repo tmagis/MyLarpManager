@@ -16,6 +16,12 @@ public class CreateUserRequest {
     @NotBlank(message = "A last name is required.")
     private String lastName;
 
+    @NotBlank(message = "A password is required.")
+    private String password;
+
+    @NotBlank(message = "A password confirmation is required.")
+    private String passwordConfirmation;
+
     public CreateUserRequest() {
     }
 
@@ -49,5 +55,21 @@ public class CreateUserRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
     }
 }

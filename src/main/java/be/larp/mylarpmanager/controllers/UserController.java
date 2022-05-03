@@ -53,7 +53,6 @@ public class UserController extends Controller {
             validateUser(createUserRequest);
             User userToCreate = new User();
             userToCreate.setEnabled(true);
-            userToCreate.setPassword(encoder.encode("TODO TODO TODO"));
             setValues(userToCreate, createUserRequest);
             trace(requester, "created user", userToCreate);
             return ResponseEntity.ok(userToCreate);
@@ -66,7 +65,6 @@ public class UserController extends Controller {
     public ResponseEntity<?> register(HttpServletRequest request, @Valid @RequestBody CreateUserRequest createUserRequest) {
         validateUser(createUserRequest);
         User userToCreate = new User();
-        userToCreate.setPassword(encoder.encode("TODO TODO TODO"));
         setValues(userToCreate, createUserRequest);
         String host = String.valueOf(request.getRequestURL().delete(request.getRequestURL().indexOf(request.getRequestURI()), request.getRequestURL().length()));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userToCreate, host, request.getLocale()));
@@ -84,6 +82,8 @@ public class UserController extends Controller {
     }
 
     private void setValues(User userToChange, CreateUserRequest createUserRequest) {
+        checkSamePassword(createUserRequest.getPassword(), createUserRequest.getPasswordConfirmation());
+        userToChange.setPassword(encoder.encode(createUserRequest.getPassword()));
         userToChange.setUsername(createUserRequest.getUsername());
         userToChange.setEmail(createUserRequest.getEmail());
         userToChange.setFirstName(createUserRequest.getFirstName());
