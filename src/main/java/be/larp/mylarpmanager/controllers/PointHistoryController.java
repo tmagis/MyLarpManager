@@ -47,7 +47,7 @@ public class PointHistoryController extends Controller {
 
     @PostMapping("/create")
     public ResponseEntity<?> createEvent(@Valid @RequestBody CreatePointHistoryRequest createPointHistoryRequest) {
-        if (requesterIsAdmin()) {
+        if (requesterIsAdmin() || requesterIsOrga()) {
             PointHistory pointHistory = new PointHistory();
 
             setValues(createPointHistoryRequest, pointHistory);
