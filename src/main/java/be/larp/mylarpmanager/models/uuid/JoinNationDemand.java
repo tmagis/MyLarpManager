@@ -1,4 +1,6 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
+
+import be.larp.mylarpmanager.models.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -39,6 +41,7 @@ public class JoinNationDemand extends UuidModel {
 
     public JoinNationDemand() {
         requestTime = LocalDateTime.now();
+        setUuid();
     }
 
     public User getCandidate() {

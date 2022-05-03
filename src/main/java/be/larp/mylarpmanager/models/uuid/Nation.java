@@ -1,5 +1,6 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
 
+import be.larp.mylarpmanager.models.TranslatedItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -136,5 +137,9 @@ public class Nation extends UuidModel {
                 ", contributionInCents=" + contributionInCents +
                 ", contributionMandatory=" + contributionMandatory +
                 '}';
+    }
+
+    public Nation() {
+        setUuid();
     }
 }

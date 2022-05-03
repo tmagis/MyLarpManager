@@ -1,4 +1,6 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
+
+import be.larp.mylarpmanager.models.TranslatedItem;
 
 import javax.persistence.*;
 
@@ -33,6 +35,10 @@ public class Skill extends UuidModel {
 
     @Column(name = "HIDDEN", nullable = false)
     private boolean hidden;
+
+    public Skill() {
+        setUuid();
+    }
 
     public TranslatedItem getName() {
         return name;

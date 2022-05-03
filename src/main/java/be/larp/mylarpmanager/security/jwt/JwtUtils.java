@@ -1,6 +1,6 @@
 package be.larp.mylarpmanager.security.jwt;
 
-import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.models.uuid.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;

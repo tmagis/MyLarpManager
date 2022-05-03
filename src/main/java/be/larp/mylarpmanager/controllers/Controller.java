@@ -4,9 +4,9 @@ import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.exceptions.ExpiredTokenException;
 import be.larp.mylarpmanager.models.Role;
-import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.models.UserActionHistory;
-import be.larp.mylarpmanager.models.UuidModel;
+import be.larp.mylarpmanager.models.uuid.UuidModel;
 import be.larp.mylarpmanager.repositories.UserActionHistoryRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.responses.Errors;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 public class Controller {
 
@@ -105,9 +104,6 @@ public class Controller {
         return (getRequestUser().getRole().equals(Role.ADMIN));
     }
 
-    public String getRandomUuid() {
-        return UUID.randomUUID().toString();
-    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)

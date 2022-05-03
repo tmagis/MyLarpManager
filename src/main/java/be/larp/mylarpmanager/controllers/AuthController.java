@@ -5,7 +5,7 @@ import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.exceptions.ExpiredTokenException;
 import be.larp.mylarpmanager.models.ActionToken;
 import be.larp.mylarpmanager.models.ActionType;
-import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.ActionTokenRepository;
 import be.larp.mylarpmanager.requests.ChangePasswordRequest;
 import be.larp.mylarpmanager.requests.LoginRequest;
@@ -25,12 +25,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @RestController

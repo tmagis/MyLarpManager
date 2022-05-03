@@ -1,5 +1,7 @@
 package be.larp.mylarpmanager.models;
 
+import be.larp.mylarpmanager.models.uuid.User;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

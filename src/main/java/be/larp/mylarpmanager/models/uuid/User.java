@@ -1,5 +1,7 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
 
+import be.larp.mylarpmanager.models.Role;
+import be.larp.mylarpmanager.models.UserActionHistory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,6 +64,7 @@ public class User extends UuidModel implements UserDetails {
         this.enabled = false;
         characters = new ArrayList<>();
         tickets = new ArrayList<>();
+        setUuid();
     }
 
     @Override

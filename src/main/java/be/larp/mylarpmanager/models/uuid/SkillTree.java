@@ -1,4 +1,6 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
+
+import be.larp.mylarpmanager.models.TranslatedItem;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -22,6 +24,10 @@ public class SkillTree extends UuidModel {
 
     @OneToMany(mappedBy = "skillTree")
     private Collection<Skill> skills;
+
+    public SkillTree() {
+        setUuid();
+    }
 
     public TranslatedItem getDescription() {
         return description;

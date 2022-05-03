@@ -1,7 +1,9 @@
 package be.larp.mylarpmanager.startup;
 
 import be.larp.mylarpmanager.models.*;
-import be.larp.mylarpmanager.models.Character;
+import be.larp.mylarpmanager.models.uuid.Character;
+import be.larp.mylarpmanager.models.uuid.Nation;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
 import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;

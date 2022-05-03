@@ -1,4 +1,4 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -82,5 +82,6 @@ public class PointHistory extends UuidModel {
 
     public PointHistory() {
         gainedOn = LocalDateTime.now();
+        setUuid();
     }
 }

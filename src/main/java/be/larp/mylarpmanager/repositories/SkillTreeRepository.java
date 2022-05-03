@@ -1,6 +1,6 @@
 package be.larp.mylarpmanager.repositories;
 
-import be.larp.mylarpmanager.models.SkillTree;
+import be.larp.mylarpmanager.models.uuid.SkillTree;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

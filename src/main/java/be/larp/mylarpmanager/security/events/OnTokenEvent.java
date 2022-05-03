@@ -1,6 +1,6 @@
 package be.larp.mylarpmanager.security.events;
 
-import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.models.uuid.User;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.Locale;

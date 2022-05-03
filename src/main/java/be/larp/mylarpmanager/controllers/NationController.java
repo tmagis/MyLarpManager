@@ -3,6 +3,9 @@ package be.larp.mylarpmanager.controllers;
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.*;
+import be.larp.mylarpmanager.models.uuid.JoinNationDemand;
+import be.larp.mylarpmanager.models.uuid.Nation;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.JoinNationDemandRepository;
 import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.requests.*;
@@ -48,7 +51,6 @@ public class NationController extends Controller {
         User requester = getRequestUser();
         if (requesterIsAdmin()) {
             Nation nation = new Nation();
-            nation.setUuid(getRandomUuid());
             setNationValues(nation, createNationRequest);
             trace(requester, "create nation", nation);
             return ResponseEntity.ok(nation);
@@ -172,7 +174,6 @@ public class NationController extends Controller {
             }
             cancelPendingRequests(candidate);
             JoinNationDemand joinNationDemand = new JoinNationDemand();
-            joinNationDemand.setUuid(getRandomUuid());
             joinNationDemand.setRequestTime(LocalDateTime.now());
             joinNationDemand.setMotivation(joinNationRequest.getMotivation());
             joinNationDemand.setCandidate(candidate);

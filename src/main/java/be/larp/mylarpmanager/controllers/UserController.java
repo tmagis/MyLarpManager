@@ -2,9 +2,7 @@ package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
-import be.larp.mylarpmanager.models.*;
-import be.larp.mylarpmanager.repositories.JoinNationDemandRepository;
-import be.larp.mylarpmanager.repositories.NationRepository;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.requests.*;
 import be.larp.mylarpmanager.security.events.OnRegistrationCompleteEvent;
@@ -12,18 +10,11 @@ import be.larp.mylarpmanager.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.RequestContextListener;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -62,8 +53,7 @@ public class UserController extends Controller {
             validateUser(createUserRequest);
             User userToCreate = new User();
             userToCreate.setEnabled(true);
-            userToCreate.setUuid(getRandomUuid());
-            userToCreate.setPassword(encoder.encode(getRandomUuid()));
+            userToCreate.setPassword(encoder.encode("TODO TODO TODO"));
             setValues(userToCreate, createUserRequest);
             trace(requester, "created user", userToCreate);
             return ResponseEntity.ok(userToCreate);
@@ -76,8 +66,7 @@ public class UserController extends Controller {
     public ResponseEntity<?> register(HttpServletRequest request, @Valid @RequestBody CreateUserRequest createUserRequest) {
         validateUser(createUserRequest);
         User userToCreate = new User();
-        userToCreate.setUuid(getRandomUuid());
-        userToCreate.setPassword(encoder.encode(getRandomUuid()));
+        userToCreate.setPassword(encoder.encode("TODO TODO TODO"));
         setValues(userToCreate, createUserRequest);
         String host = String.valueOf(request.getRequestURL().delete(request.getRequestURL().indexOf(request.getRequestURI()), request.getRequestURL().length()));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userToCreate, host, request.getLocale()));

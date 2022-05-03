@@ -1,4 +1,4 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +32,10 @@ public class Ticket extends UuidModel {
 
     @Column(name = "IS_CANCELLED", nullable = false)
     private String isCancelled;
+
+    public Ticket() {
+        setUuid();
+    }
 
     public User getPlayer() {
         return player;

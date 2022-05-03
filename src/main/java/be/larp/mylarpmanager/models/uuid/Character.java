@@ -1,4 +1,4 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -54,6 +54,7 @@ public class Character extends UuidModel {
     public Character() {
         creationTime = LocalDateTime.now();
         lastModificationTime = LocalDateTime.now();
+        setUuid();
     }
 
     public String getPictureURL() {

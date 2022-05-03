@@ -1,7 +1,7 @@
 package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
-import be.larp.mylarpmanager.models.Character;
+import be.larp.mylarpmanager.models.uuid.Character;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
 import be.larp.mylarpmanager.requests.ChangeCharacterDetailsRequest;
 import be.larp.mylarpmanager.requests.CreateCharacterRequest;
@@ -40,7 +40,6 @@ public class CharacterController extends Controller {
     @PostMapping("/create")
     public ResponseEntity<?> createCharacter(@Valid @RequestBody CreateCharacterRequest createCharacterRequest) {
         Character character = new Character();
-        character.setUuid(getRandomUuid());
         character.setCreationTime(LocalDateTime.now());
         character.setLastModificationTime(LocalDateTime.now());
         character.setAlive(true);

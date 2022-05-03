@@ -1,6 +1,6 @@
 package be.larp.mylarpmanager.repositories;
 
-import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.models.uuid.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

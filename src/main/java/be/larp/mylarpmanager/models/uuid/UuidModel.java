@@ -1,7 +1,8 @@
-package be.larp.mylarpmanager.models;
+package be.larp.mylarpmanager.models.uuid;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.util.UUID;
 
 @MappedSuperclass
 public abstract class UuidModel {
@@ -15,5 +16,13 @@ public abstract class UuidModel {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public void setUuid(){
+        this.uuid = getRandomUuid();
+    }
+
+    private String getRandomUuid() {
+        return UUID.randomUUID().toString();
     }
 }

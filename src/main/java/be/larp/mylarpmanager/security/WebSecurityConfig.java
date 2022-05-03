@@ -80,6 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/skilltree/changedetails").authenticated()
                 .antMatchers("/api/v1/skilltree/getallskilltrees").authenticated()
                 .antMatchers("/api/v1/skilltree/create").authenticated()
+                .antMatchers("/api/v1/event/create").authenticated()
+                .antMatchers("/api/v1/event/changedetails").authenticated()
                 .anyRequest().permitAll();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

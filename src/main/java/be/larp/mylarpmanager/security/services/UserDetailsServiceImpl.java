@@ -1,7 +1,7 @@
 package be.larp.mylarpmanager.security.services;
 
 import be.larp.mylarpmanager.models.ActionToken;
-import be.larp.mylarpmanager.models.User;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.ActionTokenRepository;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.models.ActionType;

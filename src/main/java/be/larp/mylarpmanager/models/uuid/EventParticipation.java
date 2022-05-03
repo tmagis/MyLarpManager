@@ -1,6 +1,4 @@
-package be.larp.mylarpmanager.models;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package be.larp.mylarpmanager.models.uuid;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,6 +30,7 @@ public class EventParticipation extends UuidModel {
     private List<PointHistory> pointHistories;
 
     public EventParticipation() {
+        setUuid();
     }
 
     public Character getChoosenOne() {
