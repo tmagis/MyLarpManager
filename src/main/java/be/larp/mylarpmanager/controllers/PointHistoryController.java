@@ -33,7 +33,7 @@ public class PointHistoryController extends Controller {
     private EventParticipationRepository eventParticipationRepository;
 
     @PostMapping("/changedetails")
-    public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangePointHistoryDetailsRequest changePointHistoryDetailsRequest) {
+    public ResponseEntity<?> changePointHistory(@Valid @RequestBody ChangePointHistoryDetailsRequest changePointHistoryDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             PointHistory pointHistory = pointHistoryRepository.findByUuid(changePointHistoryDetailsRequest.getUuid())
                     .orElseThrow(() -> new NoSuchElementException("PointHistory with uuid " + changePointHistoryDetailsRequest.getUuid() + " not found."));
@@ -46,7 +46,7 @@ public class PointHistoryController extends Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createEvent(@Valid @RequestBody CreatePointHistoryRequest createPointHistoryRequest) {
+    public ResponseEntity<?> createPointHistory(@Valid @RequestBody CreatePointHistoryRequest createPointHistoryRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             PointHistory pointHistory = new PointHistory();
 

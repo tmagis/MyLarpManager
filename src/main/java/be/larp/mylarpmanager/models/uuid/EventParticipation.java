@@ -12,8 +12,8 @@ public class EventParticipation extends UuidModel {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_character_choosen_one")
-    private Character choosenOne;
+    @JoinColumn(name = "fk_character_chosen_one")
+    private Character chosenOne;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fk_nation")
@@ -33,12 +33,12 @@ public class EventParticipation extends UuidModel {
         setUuid();
     }
 
-    public Character getChoosenOne() {
-        return choosenOne;
+    public Character getChosenOne() {
+        return chosenOne;
     }
 
-    public void setChoosenOne(Character choosenOne) {
-        this.choosenOne = choosenOne;
+    public void setChosenOne(Character chosenOne) {
+        this.chosenOne = chosenOne;
     }
 
     public Nation getNation() {
