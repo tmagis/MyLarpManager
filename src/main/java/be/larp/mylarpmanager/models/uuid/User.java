@@ -61,7 +61,8 @@ public class User extends UuidModel implements UserDetails {
 
     public User() {
         super();
-        this.enabled = false;
+        role = Role.PLAYER;
+        enabled = false;
         characters = new ArrayList<>();
         tickets = new ArrayList<>();
         setUuid();

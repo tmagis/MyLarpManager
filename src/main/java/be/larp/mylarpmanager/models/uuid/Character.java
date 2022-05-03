@@ -21,13 +21,13 @@ public class Character extends UuidModel {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "PICTURE_URL")
+    @Column(name = "PICTURE_URL", columnDefinition = "LONGTEXT")
     private String pictureURL;
 
     @ManyToMany
     private Collection<Skill> skills;
 
-    @Column(name = "BACKGROUND")
+    @Column(name = "BACKGROUND", columnDefinition = "LONGTEXT")
     private String background;
 
     @Column(name = "AGE")

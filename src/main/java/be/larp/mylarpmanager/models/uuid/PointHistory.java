@@ -29,7 +29,7 @@ public class PointHistory extends UuidModel {
     @JoinColumn(name = "fk_user_awardedby")
     private User awardedBy;
 
-    @Column(name="REASON")
+    @Column(name="REASON", columnDefinition = "LONGTEXT")
     private String reason;
 
     public int getPoints() {

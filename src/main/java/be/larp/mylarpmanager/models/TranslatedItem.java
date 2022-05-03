@@ -10,13 +10,13 @@ public class TranslatedItem {
     @Column(name = "TRANSLATED_ITEM_ID")
     private Long id;
 
-    @Column(name = "EN")
+    @Column(name = "EN", columnDefinition = "LONGTEXT")
     private String en;
 
-    @Column(name = "FR", nullable = false)
+    @Column(name = "FR", nullable = false, columnDefinition = "LONGTEXT")
     private String fr;
 
-    @Column(name = "NL")
+    @Column(name = "NL", columnDefinition = "LONGTEXT")
     private String nl;
 
     public TranslatedItem() {

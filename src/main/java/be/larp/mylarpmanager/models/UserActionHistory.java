@@ -19,7 +19,7 @@ public class UserActionHistory {
     @JoinColumn(name = "fk_action_history_user")
     private User user;
 
-    @Column(name = "ACTION", nullable = false)
+    @Column(name = "ACTION", columnDefinition = "LONGTEXT", nullable = false)
     private String action;
 
     @Column(name = "ACTION_TIME", nullable = false)

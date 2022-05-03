@@ -21,7 +21,7 @@ public class Skill extends UuidModel {
     @Column(name = "COST", nullable = false)
     private int cost;
 
-    @Column(name = "ICON_URL")
+    @Column(name = "ICON_URL", columnDefinition = "LONGTEXT")
     private String iconURL;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
