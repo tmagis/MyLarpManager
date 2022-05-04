@@ -106,7 +106,6 @@ public class UserControllerTest {
         String response = mvcResult.getResponse().getContentAsString();
         ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(response, ChangeNationDetailsRequest.class);
         assertEquals(nationNameFr, changeNationDetailsRequest.getName().getFr());
-        //assertEquals(fullDescription, changeNationDetailsRequest.getFullDescription());
         nationUuid = changeNationDetailsRequest.getUuid();
     }
 
@@ -121,7 +120,7 @@ public class UserControllerTest {
     @Test
     public void step_06_admin_design_new_user_nation_admin() throws Exception {
         SetRoleRequest setRoleRequest = new SetRoleRequest();
-        setRoleRequest.setRole(String.valueOf(Role.NATION_ADMIN));
+        setRoleRequest.setRole(Role.NATION_ADMIN.name());
         setRoleRequest.setUserUuid(userUuid);
         getMvcResult("/api/v1/user/setrole", setRoleRequest);
     }
@@ -155,7 +154,7 @@ public class UserControllerTest {
     @Test
     public void step_10_nation_admin_leave_nation() throws Exception {
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
-        assertTrue(mvcResult.getResponse().getContentAsString().contains("NATION_ADMIN"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
         LeaveNationRequest leaveNationRequest = new LeaveNationRequest();
         leaveNationRequest.setUuid(userUuid);
         getMvcResult("/api/v1/nation/leavenation", leaveNationRequest);
@@ -163,9 +162,32 @@ public class UserControllerTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is4xxClientError());
         mvcResult = getMvcResult("/api/v1/auth/whoami");
-        assertFalse(mvcResult.getResponse().getContentAsString().contains("NATION_ADMIN"));
-        assertTrue(mvcResult.getResponse().getContentAsString().contains("PLAYER"));
+        assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.PLAYER.name()));
+    }
 
+    @Test
+    public void step_11_admin_promotes_other_admin() throws Exception {
+        login("admin", "changeme");
+        SetRoleRequest setRoleRequest = new SetRoleRequest();
+        setRoleRequest.setRole(String.valueOf(Role.ADMIN));
+        setRoleRequest.setUserUuid(userUuid);
+        getMvcResult("/api/v1/user/setrole", setRoleRequest);
+        login(LOGIN, SEKWET);
+        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
+        assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
+        assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
+    }
+
+    @Test
+    public void step_12_admin_change_his_role_to_error() throws Exception {
+        SetRoleRequest setRoleRequest = new SetRoleRequest();
+        setRoleRequest.setRole("POTATO_ADMIN");
+        setRoleRequest.setUserUuid(userUuid);
+        //postError("/api/v1/user/setrole", setRoleRequest);
+        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
+        assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
+        assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
     }
 
     private MvcResult getMvcResult(String url) throws Exception {
@@ -182,6 +204,12 @@ public class UserControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void postError(String url, Object o) throws Exception {
+        mvc.perform(post(url).content(asJsonString(o)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is4xxClientError());
     }
 
     private void login(String username, String password) throws Exception {
