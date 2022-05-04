@@ -1,5 +1,6 @@
 import be.larp.mylarpmanager.WardenApplication;
 import be.larp.mylarpmanager.controllers.UserController;
+import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.TranslatedItem;
 import be.larp.mylarpmanager.models.uuid.Nation;
 import be.larp.mylarpmanager.models.uuid.User;
@@ -34,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class UserControllerTest {
 
+    public static final String SEKWET = "sekwet";
+    public static final String LOGIN = "thelegend27";
     private static String token;
     private static String userUuid;
     private static String nationUuid;
@@ -46,19 +49,25 @@ public class UserControllerTest {
 
     @Test
     public void step_01_login_default_account_test() throws Exception {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setPassword("changeme");
-        loginRequest.setUsername("admin");
-        MvcResult mvcResult = mvc.perform(post("/api/v1/auth/login").content(asJsonString(loginRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-        String response = mvcResult.getResponse().getContentAsString();
-        assertTrue(response.contains("token"));
-        response = response.replace("{\"token\":\"", "");
-        token = response.replace("\"}", "");
+        login("admin", "changeme");
+        String response;
+        MvcResult mvcResult;
         mvcResult = mvc.perform(get("/api/v1/auth/whoami")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk()).andReturn();
         response = mvcResult.getResponse().getContentAsString();
         assertTrue(response.contains("admin"));
+    }
+
+    private void login(String username, String password) throws Exception {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setPassword(password);
+        loginRequest.setUsername(username);
+        MvcResult mvcResult = mvc.perform(post("/api/v1/auth/login").content(asJsonString(loginRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        String response = mvcResult.getResponse().getContentAsString();
+        assertTrue(response.contains("token"));
+        response = response.replace("{\"token\":\"", "");
+        token = response.replace("\"}", "");
     }
 
     @Test
@@ -87,36 +96,40 @@ public class UserControllerTest {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setFirstName("Bobby");
         createUserRequest.setLastName("Von Bobbleson");
-        createUserRequest.setPassword("sekwet");
-        createUserRequest.setPasswordConfirmation("sekwet");
-        createUserRequest.setUsername("thelegend27");
+        createUserRequest.setPassword(SEKWET);
+        createUserRequest.setPasswordConfirmation(SEKWET);
+        createUserRequest.setUsername(LOGIN);
         createUserRequest.setEmail("thelegend.27@yopmail.com");
         MvcResult mvcResult = mvc.perform(post("/api/v1/user/create").content(asJsonString(createUserRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk()).andReturn();
         String response = mvcResult.getResponse().getContentAsString();
-        assertTrue(response.contains("Bobby"));
-        assertFalse(response.contains("sekwet"));
         ChangeUserDetailsRequest changeUserDetailsRequest = gson.fromJson(response, ChangeUserDetailsRequest.class);
+        assertEquals(changeUserDetailsRequest.getUsername(), LOGIN);
+        assertNotNull(changeUserDetailsRequest.getUuid());
+        assertFalse(response.contains(SEKWET));
         userUuid = changeUserDetailsRequest.getUuid();
     }
 
     @Test
     public void step_04_admin_creates_nation() throws Exception {
+        String nationNameFr = "Les chaussettes";
+        String fullDescription = "C'est l'histoire racontée par des chaussettes. C'est très marrant. Ce texte fait un petit peu plus que 255 caractères. Quelle belle cueillette nous fîmes : quelques hyménomycètes, des hypholomes, des helvelles, des polypores versicoles, des géasters fimbriés, de superbes coulemelles et un hydne imbriqué ma foi fort appétissant.";
         CreateNationRequest createNationRequest = new CreateNationRequest();
         createNationRequest.setContributionMandatory(false);
         createNationRequest.setContributionInCents(9000);
         createNationRequest.setFamilyFriendly(false);
-        createNationRequest.setName(new TranslatedItem().setFr("Les chaussettes"));
-        createNationRequest.setFullDescription(new TranslatedItem().setFr("C'est l'histoire racontée par des chaussettes. C'est très marrant. Ce texte fait un petit peu plus que 255 caractères. Quelle belle cueillette nous fîmes : quelques hyménomycètes, des hypholomes, des helvelles, des polypores versicoles, des géasters fimbriés, de superbes coulemelles et un hydne imbriqué ma foi fort appétissant."));
+        createNationRequest.setName(new TranslatedItem().setFr(nationNameFr));
+        createNationRequest.setFullDescription(new TranslatedItem().setFr(fullDescription));
         createNationRequest.setIntroText(new TranslatedItem().setFr("C'est l'histoire racontée par des chaussettes. C'est très marrant."));
         createNationRequest.setInternationalFriendly(true);
         MvcResult mvcResult = mvc.perform(post("/api/v1/nation/create").content(asJsonString(createNationRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk()).andReturn();
         String response = mvcResult.getResponse().getContentAsString();
-        assertTrue(response.contains("chaussettes"));
         ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(response, ChangeNationDetailsRequest.class);
+        assertEquals(nationNameFr, changeNationDetailsRequest.getName().getFr());
+        //assertEquals(fullDescription, changeNationDetailsRequest.getFullDescription());
         nationUuid = changeNationDetailsRequest.getUuid();
     }
 
@@ -128,6 +141,49 @@ public class UserControllerTest {
         mvc.perform(post("/api/v1/nation/forcejoinnation").content(asJsonString(forceJoinNationRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void step_06_admin_design_new_user_nation_admin() throws Exception {
+        SetRoleRequest setRoleRequest = new SetRoleRequest();
+        setRoleRequest.setRole(String.valueOf(Role.NATION_ADMIN));
+        setRoleRequest.setUserUuid(userUuid);
+        mvc.perform(post("/api/v1/user/setrole").content(asJsonString(setRoleRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void step_07_admin_logout() throws Exception {
+        mvc.perform(get("/api/v1/auth/logout")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/v1/auth/whoami")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void step_08_nation_admin_login() throws Exception {
+        login(LOGIN, SEKWET);
+    }
+
+    @Test
+    public void step_09_nation_admin_updates_nation() throws Exception {
+        MvcResult mvcResult = mvc.perform(get("/api/v1/nation/getmynation")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk()).andReturn();
+        ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(mvcResult.getResponse().getContentAsString(), ChangeNationDetailsRequest.class);
+        assertFalse(changeNationDetailsRequest.isFamilyFriendly());
+        changeNationDetailsRequest.setFamilyFriendly(true);
+        mvc.perform(post("/api/v1/nation/changedetails").content(asJsonString(changeNationDetailsRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+        mvcResult = mvc.perform(get("/api/v1/nation/getmynation")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk()).andReturn();
+        changeNationDetailsRequest = gson.fromJson(mvcResult.getResponse().getContentAsString(), ChangeNationDetailsRequest.class);
+        assertTrue(changeNationDetailsRequest.isFamilyFriendly());
+
     }
 
     public static String asJsonString(final Object obj) {

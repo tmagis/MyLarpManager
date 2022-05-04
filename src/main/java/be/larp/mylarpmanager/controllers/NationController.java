@@ -73,13 +73,9 @@ public class NationController extends Controller {
     @GetMapping("/getmynationplayers")
     public ResponseEntity<?> getMyNationPlayers() {
         User requester = getRequestUser();
-        Nation nation = requester.getNation();
+        checkMemberOfNation(requester);
         trace(requester, "has loaded the list of his nation players.", null);
-        if (nation != null) {
-            return ResponseEntity.ok(nation.getPlayers());
-        } else {
-            throw new BadRequestException("You don't belong to a nation.");
-        }
+        return ResponseEntity.ok(requester.getNation().getPlayers());
     }
 
 
@@ -88,12 +84,9 @@ public class NationController extends Controller {
         User requester = getRequestUser();
         Nation nation = requester.getNation();
         trace(requester, "load the list of his nation requests.", null);
+        checkMemberOfNation(requester);
         if (requester.isAdmin() || requester.isOrga() || requester.isNationAdmin() || requester.isNationSheriff()) {
-            if (nation != null) {
-                return ResponseEntity.ok(nation.getJoinNationDemands());
-            } else {
-                throw new BadRequestException("You don't belong to a nation.");
-            }
+            return ResponseEntity.ok(nation.getJoinNationDemands());
         } else {
             throw new BadPrivilegesException();
         }
@@ -104,6 +97,13 @@ public class NationController extends Controller {
         return ResponseEntity.ok(nationRepository.findAll());
     }
 
+
+    @GetMapping("/getmynation")
+    public ResponseEntity<?> getMyNation() {
+        User requester = getRequestUser();
+        checkMemberOfNation(requester);
+        return ResponseEntity.ok(requester.getNation());
+    }
 
     @PostMapping("/forcejoinnation")
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ForceJoinNationRequest joinNationRequest) {

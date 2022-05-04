@@ -58,6 +58,14 @@ public class AuthController extends Controller {
         return ResponseEntity.ok(new Token(jwt));
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        User user = getRequestUser();
+        user.setCurrentToken(null);
+        userRepository.saveAndFlush(user);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/changepassword")
     public ResponseEntity<?> reset(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         User user = getRequestUser();

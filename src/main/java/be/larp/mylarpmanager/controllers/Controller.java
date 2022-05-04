@@ -121,6 +121,11 @@ public class Controller {
         return errors;
     }
 
+    void checkMemberOfNation(User userToChange) {
+        if(userToChange.getNation()==null){
+            throw new BadRequestException("The user does not belong to a nation.");
+        }
+    }
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadPrivilegesException.class)
     public Errors handleLoginException(BadPrivilegesException ex) {

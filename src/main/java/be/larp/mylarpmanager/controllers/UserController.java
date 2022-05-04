@@ -2,6 +2,7 @@ package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
+import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.requests.*;
@@ -72,11 +73,71 @@ public class UserController extends Controller {
         return ResponseEntity.ok().build();
     }
 
+//TODO improve readability
+    @PostMapping("/setrole")
+    public ResponseEntity<?> setRole(@Valid @RequestBody SetRoleRequest setRoleRequest) {
+        User requester = getRequestUser();
+        User userToChange = userRepository.findByUuid(setRoleRequest.getUserUuid())
+                .orElseThrow(() -> new NoSuchElementException("User with uuid " + setRoleRequest.getUserUuid() + " not found."));
+        switch (Role.valueOf(setRoleRequest.getRole())) {
+            case ADMIN:
+                if (requester.isAdmin()) {
+                    userToChange.setRole(Role.ADMIN);
+                    userRepository.saveAndFlush(userToChange);
+                } else {
+                    throw new BadPrivilegesException();
+                }
+                break;
+            case ORGA:
+                if (requester.isAdmin() || requester.isOrga()) {
+                    userToChange.setRole(Role.ORGA);
+                    userRepository.saveAndFlush(userToChange);
+                } else {
+                    throw new BadPrivilegesException();
+                }
+                break;
+            case NATION_ADMIN:
+                setNationRole(userToChange, requester, Role.NATION_ADMIN);
+                break;
+            case NATION_SHERIFF:
+                setNationRole(userToChange, requester, Role.NATION_SHERIFF);
+                break;
+            case PLAYER:
+                if (requester.isAdmin()) {
+                    userToChange.setRole(Role.PLAYER);
+                    userRepository.saveAndFlush(userToChange);
+                } else if (requester.isNationAdmin() && (userToChange.isNationAdmin() || userToChange.isNationSheriff())) {
+                    setNationRole(userToChange, requester, Role.PLAYER);
+                } else {
+                    throw new BadPrivilegesException();
+                }
+                break;
+            default:
+                throw new BadRequestException("This role does not exist.");
+        }
+        trace(requester, "change role", userToChange);
+        return ResponseEntity.ok().build();
+    }
+
+    private void setNationRole(User userToChange, User requester, Role nationRole) {
+        checkMemberOfNation(userToChange);
+        if (requester.isAdmin() || requester.isOrga()) {
+            userToChange.setRole(nationRole);
+            userRepository.saveAndFlush(userToChange);
+        } else if (requester.isNationAdmin() && requester.getNation().equals(userToChange.getNation())) {
+            userToChange.setRole(nationRole);
+            userRepository.saveAndFlush(userToChange);
+        } else {
+            throw new BadPrivilegesException();
+        }
+    }
+
+
     private void validateUser(CreateUserRequest createUserRequest) {
-        if(userRepository.findByUsername(createUserRequest.getUsername()).isPresent()){
+        if (userRepository.findByUsername(createUserRequest.getUsername()).isPresent()) {
             throw new BadRequestException("This username is already in use.");
         }
-        if(userRepository.findByEmail(createUserRequest.getEmail()).isPresent()){
+        if (userRepository.findByEmail(createUserRequest.getEmail()).isPresent()) {
             throw new BadRequestException("This email address is already in use.");
         }
     }
