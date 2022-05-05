@@ -42,6 +42,9 @@ public class Character extends UuidModel {
     @Column(name = "IS_ALIVE", nullable = false)
     private boolean isAlive;
 
+    @Column(name = "IS_NPC", nullable = false)
+    private boolean isNPC;
+
     @Column(name = "REASON_OF_DEATH")
     private String reasonOfDeath;
 
@@ -53,6 +56,7 @@ public class Character extends UuidModel {
 
     public Character() {
         isAlive = true;
+        isNPC = false;
         creationTime = LocalDateTime.now();
         lastModificationTime = LocalDateTime.now();
         setUuid();
@@ -145,6 +149,14 @@ public class Character extends UuidModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isNPC() {
+        return isNPC;
+    }
+
+    public void setNPC(boolean npc) {
+        isNPC = npc;
     }
 
     @JsonIgnore

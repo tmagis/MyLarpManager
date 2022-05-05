@@ -1,6 +1,7 @@
 package be.larp.mylarpmanager.models.uuid;
 
 import be.larp.mylarpmanager.models.TranslatedItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -45,6 +46,7 @@ public class SkillTree extends UuidModel {
         this.blessing = blessing;
     }
 
+    @JsonIgnore
     public Collection<Skill> getSkills() {
         return skills;
     }

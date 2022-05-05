@@ -30,13 +30,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class UserControllerTest {
+public class IntegrationTest {
 
     public static final String SEKWET = "sekwet";
     public static final String LOGIN = "thelegend27";
     private static String token;
     private static String userUuid;
     private static String nationUuid;
+    private static String characterUuid;
+    private static String skillTreeUuid;
+    private static String skillUuid;
     private final Gson gson = new Gson();
     @Autowired
     private MockMvc mvc;
@@ -184,6 +187,54 @@ public class UserControllerTest {
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
         assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
+    }
+
+    @Test
+    public void step_13_admin_creates_character() throws Exception {
+        CreateCharacterRequest createCharacterRequest = new CreateCharacterRequest();
+        createCharacterRequest.setAge(300);
+        createCharacterRequest.setName("Jean-Pierre");
+        createCharacterRequest.setBackground("Jean-Pierre Delavergemolle est un grand artiste.");
+        createCharacterRequest.setRace("Humain");
+        createCharacterRequest.setPictureURL("https://cornhub.website/");
+        ChangeCharacterDetailsRequest changeCharacterDetailsRequest = gson.fromJson(getMvcResult("/api/v1/character/create", createCharacterRequest).getResponse().getContentAsString(), ChangeCharacterDetailsRequest.class);
+        assertEquals(changeCharacterDetailsRequest.getName(), "Jean-Pierre");
+        assertNotNull(changeCharacterDetailsRequest.getUuid());
+        characterUuid = changeCharacterDetailsRequest.getUuid();
+    }
+
+
+    @Test
+    public void step_14_admin_creates_skillTree_and_skill() throws Exception {
+        CreateSkillTreeRequest createSkillTreeRequest = new CreateSkillTreeRequest();
+        createSkillTreeRequest.setBlessing(new TranslatedItem().setFr("Bénédiction"));
+        createSkillTreeRequest.setName(new TranslatedItem().setFr("Nom bidon"));
+        createSkillTreeRequest.setDescription(new TranslatedItem().setFr("Une chouette description"));
+        ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skilltree/create", createSkillTreeRequest).getResponse().getContentAsString(), ChangeSkillTreeDetailsRequest.class);
+        assertNotNull(changeSkillTreeDetailsRequest.getUuid());
+        skillTreeUuid = changeSkillTreeDetailsRequest.getUuid();
+        CreateSkillRequest createSkillRequest = new CreateSkillRequest();
+        createSkillRequest.setDescription(new TranslatedItem().setFr("Desc"));
+        createSkillRequest.setName(new TranslatedItem().setFr("Nice skill name"));
+        createSkillRequest.setSkillTreeUuid(skillTreeUuid);
+        createSkillRequest.setCost(5);
+        createSkillRequest.setAllowMultiple(true);
+        createSkillRequest.setHidden(false);
+        createSkillRequest.setLevel(1);
+        ChangeSkillDetailsRequest changeSkillDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skill/create", createSkillRequest).getResponse().getContentAsString(), ChangeSkillDetailsRequest.class);
+        assertNotNull(changeSkillDetailsRequest.getUuid());
+        skillUuid = changeSkillDetailsRequest.getUuid();
+    }
+
+
+    @Test
+    public void step_15_admin_adds_skill_to_character() throws Exception {
+        AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
+        addCharacterSkillRequest.setSkillUuid(skillUuid);
+        addCharacterSkillRequest.setCharacterUuid(characterUuid);
+        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        postError("/api/v1/character/addskill", addCharacterSkillRequest);
     }
 
     private MvcResult getMvcResult(String url) throws Exception {

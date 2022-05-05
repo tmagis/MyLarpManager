@@ -44,6 +44,11 @@ public class SkillTreeController extends Controller {
         }
     }
 
+    @GetMapping("/getall")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(skillTreeRepository.findAll());
+    }
+
     private void setValues(SkillTree skillTree, CreateSkillTreeRequest createSkillTreeRequest) {
         skillTree.setDescription(createSkillTreeRequest.getDescription());
         skillTree.setName(createSkillTreeRequest.getName());
