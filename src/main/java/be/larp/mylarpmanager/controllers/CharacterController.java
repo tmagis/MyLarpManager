@@ -48,7 +48,7 @@ public class CharacterController extends Controller {
     }
 
     @PostMapping("/kill")
-    public ResponseEntity<?> updateCharacter(@Valid @RequestBody KillCharacterRequest killCharacterRequest) {
+    public ResponseEntity<?> kill(@Valid @RequestBody KillCharacterRequest killCharacterRequest) {
         Character character = characterRepository.findByUuid(killCharacterRequest.getUuid())
                 .orElseThrow(() -> new NoSuchElementException("Character with uuid " + killCharacterRequest.getUuid() + " not found."));
         if (requesterIsAdmin() || requesterIsOrga()) {
@@ -63,9 +63,9 @@ public class CharacterController extends Controller {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCharacter(@Valid @RequestBody UuidOnlyRequest uuidOnlyRequest) {
-        Character character = characterRepository.findByUuid(uuidOnlyRequest.getUuid())
-                .orElseThrow(() -> new NoSuchElementException("Character with uuid " + uuidOnlyRequest.getUuid() + " not found."));
+    public ResponseEntity<?> deleteCharacter(@PathVariable String uuid) {
+        Character character = characterRepository.findByUuid(uuid)
+                .orElseThrow(() -> new NoSuchElementException("Character with uuid " + uuid + " not found."));
         if (requesterIsAdmin() || requesterIsOrga() || getRequestUser().equals(character.getPlayer())) {
             //TODO avoid delete a dead character ? Disallow delete active character ?
             characterRepository.delete(character);
@@ -84,6 +84,13 @@ public class CharacterController extends Controller {
         setDetails(createCharacterRequest, character);
         trace(getRequestUser(), "create character", character);
         return ResponseEntity.ok(character);
+    }
+
+    @GetMapping("/getpointsavailable/{uuid}")
+    public ResponseEntity<?> addSkill(@PathVariable String uuid) {
+        Character character = characterRepository.findByUuid(uuid)
+                .orElseThrow(() -> new NoSuchElementException("Character with uuid " + uuid + " not found."));
+        return ResponseEntity.ok(skillPoints - getPointsUsed(character.getSkills()));
     }
 
     @PostMapping("/addskill")

@@ -7,7 +7,6 @@ import be.larp.mylarpmanager.repositories.SkillRepository;
 import be.larp.mylarpmanager.repositories.SkillTreeRepository;
 import be.larp.mylarpmanager.requests.ChangeSkillDetailsRequest;
 import be.larp.mylarpmanager.requests.CreateSkillRequest;
-import be.larp.mylarpmanager.requests.UuidOnlyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,11 +55,11 @@ public class SkillController extends Controller {
         }
     }
 
-    @PostMapping("/getallskilltreeskills")
-    public ResponseEntity<?> getAllSkillTreeSkills(@Valid @RequestBody UuidOnlyRequest skillTreeUuid) {
+    @GetMapping("/getallskilltreeskills/{skillTreeUuid}")
+    public ResponseEntity<?> getAllSkillTreeSkills(@PathVariable String skillTreeUuid) {
         if (requesterIsAdmin()) {
-            SkillTree skillTree = skillTreeRepository.findByUuid(skillTreeUuid.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + skillTreeUuid.getUuid() + " not found."));
+            SkillTree skillTree = skillTreeRepository.findByUuid(skillTreeUuid)
+                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + skillTreeUuid + " not found."));
             Collection<Skill> skills = skillTree.getSkills();
             if(!requesterIsAdmin() && !requesterIsOrga()){
                 skills = skills.stream().filter(skill -> !skill.isHidden()).collect(Collectors.toList());
@@ -71,11 +70,11 @@ public class SkillController extends Controller {
             throw new BadPrivilegesException();
         }
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteSkill(@Valid @RequestBody UuidOnlyRequest uuidOnlyRequest) {
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deleteSkill(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            Skill skill = skillRepository.findByUuid(uuidOnlyRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + uuidOnlyRequest.getUuid() + " not found."));
+            Skill skill = skillRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + uuid + " not found."));
             //TODO check cascade configuration for characters having that skill
             skillRepository.delete(skill);
             trace(getRequestUser(), "deleted skill", skill);

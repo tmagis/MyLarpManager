@@ -15,14 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -154,9 +154,7 @@ public class IntegrationTest {
     public void step_10_nation_admin_leave_nation() throws Exception {
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
-        UuidOnlyRequest uuidOnlyRequest = new UuidOnlyRequest();
-        uuidOnlyRequest.setUuid(userUuid);
-        getMvcResult("/api/v1/nation/leavenation", uuidOnlyRequest);
+        getRequest("/api/v1/nation/leavenation", userUuid);
         mvc.perform(get("/api/v1/nation/getmynation")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is4xxClientError());
@@ -232,11 +230,30 @@ public class IntegrationTest {
         AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
         addCharacterSkillRequest.setSkillUuid(skillUuid);
         addCharacterSkillRequest.setCharacterUuid(characterUuid);
+        assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
         getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
         getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+
+        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
         postError("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
     }
 
+    @Test
+    public void step_16_admin_deletes_skill_already_assigned_to_character() throws Exception {
+        deleteRequest("/api/v1/skill", skillUuid);
+        assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+    }
+
+    private MvcResult deleteRequest(String url, String uuid) throws Exception{
+        return mvc.perform(delete(url+"/"+uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
+    }
+
+    private MvcResult getRequest(String url, String uuid) throws Exception{
+        return mvc.perform(get(url+"/"+uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
+    }
     private MvcResult getMvcResult(String url) throws Exception {
         MvcResult mvcResult;
         mvcResult = mvc.perform(get(url)

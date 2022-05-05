@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/user/create").authenticated()
                 .antMatchers("/api/v1/character/changedetails").authenticated()
                 .antMatchers("/api/v1/character/create").authenticated()
+                .antMatchers("/api/v1/character/getpointsavailable").authenticated()
                 .antMatchers("/api/v1/character/delete").authenticated()
                 .antMatchers("/api/v1/character/addskill").authenticated()
                 .antMatchers("/api/v1/character/kill").authenticated()
