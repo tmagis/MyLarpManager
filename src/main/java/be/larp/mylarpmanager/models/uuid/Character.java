@@ -52,6 +52,7 @@ public class Character extends UuidModel {
     private LocalDateTime lastModificationTime;
 
     public Character() {
+        isAlive = true;
         creationTime = LocalDateTime.now();
         lastModificationTime = LocalDateTime.now();
         setUuid();

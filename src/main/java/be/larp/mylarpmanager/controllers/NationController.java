@@ -203,11 +203,11 @@ public class NationController extends Controller {
     }
 
     @PostMapping("/leavenation")
-    public ResponseEntity<?> leaveNation(@Valid @RequestBody LeaveNationRequest leaveNationRequest) {
+    public ResponseEntity<?> leaveNation(@Valid @RequestBody UuidOnlyRequest uuidOnlyRequest) {
         User requester = getRequestUser();
-        if (requesterIsAdmin() || requesterIsOrga() || requester.getUuid().equals(leaveNationRequest.getUuid())) {
-            User userToChange = userRepository.findByUuid(leaveNationRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Player with uuid " + leaveNationRequest.getUuid() + " not found."));
+        if (requesterIsAdmin() || requesterIsOrga() || requester.getUuid().equals(uuidOnlyRequest.getUuid())) {
+            User userToChange = userRepository.findByUuid(uuidOnlyRequest.getUuid())
+                    .orElseThrow(() -> new NoSuchElementException("Player with uuid " + uuidOnlyRequest.getUuid() + " not found."));
             userToChange.setNation(null);
             if (userToChange.isNationAdmin() || userToChange.isNationSheriff()) {
                 userToChange.setRole(Role.PLAYER);

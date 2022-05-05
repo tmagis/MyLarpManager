@@ -2,12 +2,12 @@ package be.larp.mylarpmanager.requests;
 
 import javax.validation.constraints.NotBlank;
 
-public class LeaveNationRequest implements GenericUuidBasedRequest{
+public class UuidOnlyRequest implements GenericUuidBasedRequest{
 
-    @NotBlank(message = "Player uuid is required.")
+    @NotBlank(message = "Uuid is required.")
     private String uuid;
 
-    public LeaveNationRequest(){}
+    public UuidOnlyRequest(){}
 
     @Override
     public String getUuid() {

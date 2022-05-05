@@ -2,13 +2,9 @@ import be.larp.mylarpmanager.WardenApplication;
 import be.larp.mylarpmanager.controllers.UserController;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.TranslatedItem;
-import be.larp.mylarpmanager.models.uuid.Nation;
-import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.requests.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import org.h2.command.ddl.CreateUser;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -155,9 +151,9 @@ public class UserControllerTest {
     public void step_10_nation_admin_leave_nation() throws Exception {
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
-        LeaveNationRequest leaveNationRequest = new LeaveNationRequest();
-        leaveNationRequest.setUuid(userUuid);
-        getMvcResult("/api/v1/nation/leavenation", leaveNationRequest);
+        UuidOnlyRequest uuidOnlyRequest = new UuidOnlyRequest();
+        uuidOnlyRequest.setUuid(userUuid);
+        getMvcResult("/api/v1/nation/leavenation", uuidOnlyRequest);
         mvc.perform(get("/api/v1/nation/getmynation")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is4xxClientError());

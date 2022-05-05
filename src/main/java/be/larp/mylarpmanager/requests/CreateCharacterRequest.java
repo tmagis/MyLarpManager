@@ -16,8 +16,6 @@ public class CreateCharacterRequest {
 
     private int age;
 
-    private String reasonOfDeath;
-
     public String getRace() {
         return race;
     }
@@ -57,14 +55,6 @@ public class CreateCharacterRequest {
 
     public void setAge(int age) {
         this.age = age;
-    }
-
-    public String getReasonOfDeath() {
-        return reasonOfDeath;
-    }
-
-    public void setReasonOfDeath(String reasonOfDeath) {
-        this.reasonOfDeath = reasonOfDeath;
     }
 
     public CreateCharacterRequest() {
