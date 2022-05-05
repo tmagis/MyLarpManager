@@ -5,6 +5,7 @@ import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.*;
 import be.larp.mylarpmanager.models.uuid.JoinNationDemand;
 import be.larp.mylarpmanager.models.uuid.Nation;
+import be.larp.mylarpmanager.models.uuid.SkillTree;
 import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.JoinNationDemandRepository;
 import be.larp.mylarpmanager.repositories.NationRepository;
@@ -182,6 +183,18 @@ public class NationController extends Controller {
             joinNationDemandRepository.saveAndFlush(joinNationDemand);
             trace(requester, "create joining request", joinNationDemand);
             return ResponseEntity.ok(joinNationDemand);
+        } else {
+            throw new BadPrivilegesException();
+        }
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deleteNation(@PathVariable String uuid) {
+        if (requesterIsAdmin()) {
+            Nation nation = nationRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + uuid + " not found."));
+            nationRepository.delete(nation);
+            return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
         }

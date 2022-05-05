@@ -2,6 +2,7 @@ package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.uuid.SkillTree;
+import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.SkillTreeRepository;
 import be.larp.mylarpmanager.requests.ChangeSkillTreeDetailsRequest;
 import be.larp.mylarpmanager.requests.CreateSkillTreeRequest;
@@ -39,6 +40,18 @@ public class SkillTreeController extends Controller {
             setValues(skillTree, createSkillTreeRequest);
             trace(getRequestUser(), "create SkillTree", skillTree);
             return ResponseEntity.ok(skillTree);
+        } else {
+            throw new BadPrivilegesException();
+        }
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deleteSkillTree(@PathVariable String uuid) {
+        if (requesterIsAdmin()) {
+            SkillTree skillTree = skillTreeRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + uuid + " not found."));
+            skillTreeRepository.delete(skillTree);
+            return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
         }

@@ -13,10 +13,7 @@ import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.requests.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
@@ -45,6 +42,18 @@ public class EventController extends Controller {
             setValues(changeEventDetailsRequest, event);
             trace(getRequestUser(), "update event", event);
             return ResponseEntity.ok(event);
+        } else {
+            throw new BadPrivilegesException();
+        }
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deleteEvent(@PathVariable String uuid) {
+        if (requesterIsAdmin()) {
+            Event event = eventRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new NoSuchElementException("Event with uuid " + uuid + " not found."));
+            eventRepository.delete(event);
+            return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
         }

@@ -62,7 +62,7 @@ public class CharacterController extends Controller {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteCharacter(@PathVariable String uuid) {
         Character character = characterRepository.findByUuid(uuid)
                 .orElseThrow(() -> new NoSuchElementException("Character with uuid " + uuid + " not found."));

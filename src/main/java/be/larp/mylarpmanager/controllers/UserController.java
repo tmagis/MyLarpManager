@@ -3,6 +3,7 @@ package be.larp.mylarpmanager.controllers;
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.Role;
+import be.larp.mylarpmanager.models.uuid.Character;
 import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.requests.*;
@@ -64,6 +65,17 @@ public class UserController extends Controller {
         }
     }
 
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deleteUser(@PathVariable String uuid) {
+        if (requesterIsAdmin()) {
+            User user = userRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new NoSuchElementException("User with uuid " + uuid + " not found."));
+            userRepository.delete(user);
+            return ResponseEntity.ok().build();
+        } else {
+            throw new BadPrivilegesException();
+        }
+    }
     @PostMapping("/register")
     public ResponseEntity<?> register(HttpServletRequest request, @Valid @RequestBody CreateUserRequest createUserRequest) {
         validateUser(createUserRequest);

@@ -4,6 +4,7 @@ import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.uuid.Character;
 import be.larp.mylarpmanager.models.uuid.EventParticipation;
 import be.larp.mylarpmanager.models.uuid.PointHistory;
+import be.larp.mylarpmanager.models.uuid.SkillTree;
 import be.larp.mylarpmanager.repositories.CharacterRepository;
 import be.larp.mylarpmanager.repositories.EventParticipationRepository;
 import be.larp.mylarpmanager.repositories.PointHistoryRepository;
@@ -11,10 +12,7 @@ import be.larp.mylarpmanager.requests.ChangePointHistoryDetailsRequest;
 import be.larp.mylarpmanager.requests.CreatePointHistoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
@@ -44,6 +42,20 @@ public class PointHistoryController extends Controller {
             throw new BadPrivilegesException();
         }
     }
+
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deletePointHistory(@PathVariable String uuid) {
+        if (requesterIsAdmin()) {
+            PointHistory pointHistory = pointHistoryRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new NoSuchElementException("PointHistory with uuid " + uuid + " not found."));
+            pointHistoryRepository.delete(pointHistory);
+            return ResponseEntity.ok().build();
+        } else {
+            throw new BadPrivilegesException();
+        }
+    }
+
 
     @PostMapping("/create")
     public ResponseEntity<?> createPointHistory(@Valid @RequestBody CreatePointHistoryRequest createPointHistoryRequest) {
