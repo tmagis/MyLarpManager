@@ -184,7 +184,7 @@ public class UserControllerTest {
         SetRoleRequest setRoleRequest = new SetRoleRequest();
         setRoleRequest.setRole("POTATO_ADMIN");
         setRoleRequest.setUserUuid(userUuid);
-        //postError("/api/v1/user/setrole", setRoleRequest);
+        postError("/api/v1/user/setrole", setRoleRequest);
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
         assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));

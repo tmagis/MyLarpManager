@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
+import static be.larp.mylarpmanager.models.Role.*;
+
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController extends Controller {
@@ -73,41 +75,46 @@ public class UserController extends Controller {
         return ResponseEntity.ok().build();
     }
 
-//TODO improve readability
+    //TODO improve readability
     @PostMapping("/setrole")
     public ResponseEntity<?> setRole(@Valid @RequestBody SetRoleRequest setRoleRequest) {
         User requester = getRequestUser();
         User userToChange = userRepository.findByUuid(setRoleRequest.getUserUuid())
                 .orElseThrow(() -> new NoSuchElementException("User with uuid " + setRoleRequest.getUserUuid() + " not found."));
-        switch (Role.valueOf(setRoleRequest.getRole())) {
+        Role role;
+        try {
+            role = Role.valueOf(setRoleRequest.getRole());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("This Role does not exist.");
+        }
+        switch (role) {
             case ADMIN:
                 if (requester.isAdmin()) {
-                    userToChange.setRole(Role.ADMIN);
-                    userRepository.saveAndFlush(userToChange);
+                    setRole(userToChange, ADMIN);
                 } else {
                     throw new BadPrivilegesException();
                 }
                 break;
             case ORGA:
-                if (requester.isAdmin() || requester.isOrga()) {
-                    userToChange.setRole(Role.ORGA);
-                    userRepository.saveAndFlush(userToChange);
+                if ((requester.isAdmin()) || (requester.isOrga() && !userToChange.isAdmin())) {
+                    setRole(userToChange, ORGA);
                 } else {
                     throw new BadPrivilegesException();
                 }
                 break;
             case NATION_ADMIN:
-                setNationRole(userToChange, requester, Role.NATION_ADMIN);
+                setNationRole(userToChange, requester, NATION_ADMIN);
                 break;
             case NATION_SHERIFF:
-                setNationRole(userToChange, requester, Role.NATION_SHERIFF);
+                setNationRole(userToChange, requester, NATION_SHERIFF);
                 break;
             case PLAYER:
                 if (requester.isAdmin()) {
-                    userToChange.setRole(Role.PLAYER);
-                    userRepository.saveAndFlush(userToChange);
+                    setRole(userToChange, PLAYER);
+                } else if (requester.isOrga() && !userToChange.isAdmin()) {
+                    setRole(userToChange, PLAYER);
                 } else if (requester.isNationAdmin() && (userToChange.isNationAdmin() || userToChange.isNationSheriff())) {
-                    setNationRole(userToChange, requester, Role.PLAYER);
+                    setNationRole(userToChange, requester, PLAYER);
                 } else {
                     throw new BadPrivilegesException();
                 }
@@ -119,14 +126,17 @@ public class UserController extends Controller {
         return ResponseEntity.ok().build();
     }
 
+    private void setRole(User userToChange, Role role) {
+        userToChange.setRole(role);
+        userRepository.saveAndFlush(userToChange);
+    }
+
     private void setNationRole(User userToChange, User requester, Role nationRole) {
         checkMemberOfNation(userToChange);
         if (requester.isAdmin() || requester.isOrga()) {
-            userToChange.setRole(nationRole);
-            userRepository.saveAndFlush(userToChange);
+            setRole(userToChange, nationRole);
         } else if (requester.isNationAdmin() && requester.getNation().equals(userToChange.getNation())) {
-            userToChange.setRole(nationRole);
-            userRepository.saveAndFlush(userToChange);
+            setRole(userToChange, nationRole);
         } else {
             throw new BadPrivilegesException();
         }
