@@ -3,17 +3,16 @@ package be.larp.mylarpmanager.controllers;
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.uuid.Skill;
 import be.larp.mylarpmanager.models.uuid.SkillTree;
-import be.larp.mylarpmanager.repositories.SkillRepository;
-import be.larp.mylarpmanager.repositories.SkillTreeRepository;
 import be.larp.mylarpmanager.requests.ChangeSkillDetailsRequest;
 import be.larp.mylarpmanager.requests.CreateSkillRequest;
+import be.larp.mylarpmanager.services.SkillService;
+import be.larp.mylarpmanager.services.SkillTreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,18 +20,16 @@ import java.util.stream.Collectors;
 public class SkillController extends Controller {
 
     @Autowired
-    private SkillRepository skillRepository;
+    private SkillService skillService;
 
     @Autowired
-    private SkillTreeRepository skillTreeRepository;
+    private SkillTreeService skillTreeService;
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeSkillDetails(@Valid @RequestBody ChangeSkillDetailsRequest changeSkillDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
-            Skill skill = skillRepository.findByUuid(changeSkillDetailsRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + changeSkillDetailsRequest.getUuid() + " not found."));
-            SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillDetailsRequest.getSkillTreeUuid())
-                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillDetailsRequest.getSkillTreeUuid() + " not found."));
+            Skill skill = skillService.getSkillByUuid(changeSkillDetailsRequest.getUuid());
+            SkillTree skillTree = skillTreeService.getSkillTreeByUuid(changeSkillDetailsRequest.getSkillTreeUuid());
             setValues(skill, changeSkillDetailsRequest, skillTree);
             trace(getRequestUser(), "update skill", skill);
             return ResponseEntity.ok(skill);
@@ -45,8 +42,7 @@ public class SkillController extends Controller {
     public ResponseEntity<?> createSkill(@Valid @RequestBody CreateSkillRequest createSkillRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             Skill skill = new Skill();
-            SkillTree skillTree = skillTreeRepository.findByUuid(createSkillRequest.getSkillTreeUuid())
-                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + createSkillRequest.getSkillTreeUuid() + " not found."));
+            SkillTree skillTree = skillTreeService.getSkillTreeByUuid(createSkillRequest.getSkillTreeUuid());
             setValues(skill, createSkillRequest, skillTree);
             trace(getRequestUser(), "create skill", skill);
             return ResponseEntity.ok(skill);
@@ -58,10 +54,9 @@ public class SkillController extends Controller {
     @GetMapping("/getallskilltreeskills/{skillTreeUuid}")
     public ResponseEntity<?> getAllSkillTreeSkills(@PathVariable String skillTreeUuid) {
         if (requesterIsAdmin()) {
-            SkillTree skillTree = skillTreeRepository.findByUuid(skillTreeUuid)
-                    .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + skillTreeUuid + " not found."));
+            SkillTree skillTree = skillTreeService.getSkillTreeByUuid(skillTreeUuid);
             Collection<Skill> skills = skillTree.getSkills();
-            if(!requesterIsAdmin() && !requesterIsOrga()){
+            if (!requesterIsAdmin() && !requesterIsOrga()) {
                 skills = skills.stream().filter(skill -> !skill.isHidden()).collect(Collectors.toList());
             }
             trace(getRequestUser(), "requested skills", skillTree);
@@ -70,13 +65,13 @@ public class SkillController extends Controller {
             throw new BadPrivilegesException();
         }
     }
+
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteSkill(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            Skill skill = skillRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + uuid + " not found."));
+            Skill skill = skillService.getSkillByUuid(uuid);
             //TODO check cascade configuration for characters having that skill
-            skillRepository.delete(skill);
+            skillService.delete(skill);
             trace(getRequestUser(), "deleted skill", skill);
             return ResponseEntity.ok().build();
         } else {
@@ -85,15 +80,15 @@ public class SkillController extends Controller {
     }
 
     private void setValues(Skill skill, CreateSkillRequest createSkillRequest, SkillTree skillTree) {
-        skill.setName(createSkillRequest.getName());
-        skill.setSkillTree(skillTree);
-        skill.setHidden(createSkillRequest.isHidden());
-        skill.setCost(createSkillRequest.getCost());
-        skill.setLevel(createSkillRequest.getLevel());
-        skill.setAllowMultiple(createSkillRequest.isAllowMultiple());
-        skill.setDescription(createSkillRequest.getDescription());
-        skill.setIconURL(createSkillRequest.getIconURL());
-        skillRepository.saveAndFlush(skill);
+        skill.setName(createSkillRequest.getName())
+                .setSkillTree(skillTree)
+                .setHidden(createSkillRequest.isHidden())
+                .setCost(createSkillRequest.getCost())
+                .setLevel(createSkillRequest.getLevel())
+                .setAllowMultiple(createSkillRequest.isAllowMultiple())
+                .setDescription(createSkillRequest.getDescription())
+                .setIconURL(createSkillRequest.getIconURL());
+        skillService.save(skill);
     }
 }
 

@@ -4,37 +4,33 @@ import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.uuid.Character;
 import be.larp.mylarpmanager.models.uuid.EventParticipation;
 import be.larp.mylarpmanager.models.uuid.PointHistory;
-import be.larp.mylarpmanager.models.uuid.SkillTree;
-import be.larp.mylarpmanager.repositories.CharacterRepository;
-import be.larp.mylarpmanager.repositories.EventParticipationRepository;
-import be.larp.mylarpmanager.repositories.PointHistoryRepository;
 import be.larp.mylarpmanager.requests.ChangePointHistoryDetailsRequest;
 import be.larp.mylarpmanager.requests.CreatePointHistoryRequest;
+import be.larp.mylarpmanager.services.CharacterService;
+import be.larp.mylarpmanager.services.EventParticipationService;
+import be.larp.mylarpmanager.services.PointHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
-
 @RestController
 @RequestMapping("/api/v1/point")
 public class PointHistoryController extends Controller {
 
     @Autowired
-    private PointHistoryRepository pointHistoryRepository;
+    private PointHistoryService pointHistoryService;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     @Autowired
-    private EventParticipationRepository eventParticipationRepository;
+    private EventParticipationService eventParticipationService;
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changePointHistory(@Valid @RequestBody ChangePointHistoryDetailsRequest changePointHistoryDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
-            PointHistory pointHistory = pointHistoryRepository.findByUuid(changePointHistoryDetailsRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("PointHistory with uuid " + changePointHistoryDetailsRequest.getUuid() + " not found."));
+            PointHistory pointHistory = pointHistoryService.getPointHistoryByUuid(changePointHistoryDetailsRequest.getUuid());
             setValues(changePointHistoryDetailsRequest, pointHistory);
             trace(getRequestUser(), "update pointhistory", pointHistory);
             return ResponseEntity.ok(pointHistory);
@@ -47,9 +43,8 @@ public class PointHistoryController extends Controller {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deletePointHistory(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            PointHistory pointHistory = pointHistoryRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new NoSuchElementException("PointHistory with uuid " + uuid + " not found."));
-            pointHistoryRepository.delete(pointHistory);
+            PointHistory pointHistory = pointHistoryService.getPointHistoryByUuid(uuid);
+            pointHistoryService.delete(pointHistory);
             return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
@@ -61,7 +56,6 @@ public class PointHistoryController extends Controller {
     public ResponseEntity<?> createPointHistory(@Valid @RequestBody CreatePointHistoryRequest createPointHistoryRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             PointHistory pointHistory = new PointHistory();
-
             setValues(createPointHistoryRequest, pointHistory);
             trace(getRequestUser(), "create pointhistory", pointHistory);
             return ResponseEntity.ok(pointHistory);
@@ -71,18 +65,16 @@ public class PointHistoryController extends Controller {
     }
 
     private void setValues(CreatePointHistoryRequest createPointHistoryRequest, PointHistory pointHistory) {
-        pointHistory.setPoints(createPointHistoryRequest.getPoints());
-        pointHistory.setReason(createPointHistoryRequest.getReason());
-        pointHistory.setAwardedBy(getRequestUser());
-        EventParticipation eventParticipation = eventParticipationRepository.findByUuid(createPointHistoryRequest.getEventParticipationUuid())
-                .orElseThrow(() -> new NoSuchElementException("EventParticipation with uuid " + createPointHistoryRequest.getEventParticipationUuid() + " not found."));
-        pointHistory.setEventParticipation(eventParticipation);
+        EventParticipation eventParticipation = eventParticipationService.getEventParticipationByUuid(createPointHistoryRequest.getEventParticipationUuid());
+        pointHistory.setPoints(createPointHistoryRequest.getPoints())
+                .setReason(createPointHistoryRequest.getReason())
+                .setAwardedBy(getRequestUser())
+                .setEventParticipation(eventParticipation);
         if (createPointHistoryRequest.getAwardedToCharacterUuid() != null && !createPointHistoryRequest.getAwardedToCharacterUuid().isBlank()) {
-            Character character = characterRepository.findByUuid(createPointHistoryRequest.getAwardedToCharacterUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Character with uuid " + createPointHistoryRequest.getAwardedToCharacterUuid() + " not found."));
+            Character character = characterService.getCharacterByUuid(createPointHistoryRequest.getAwardedToCharacterUuid());
             pointHistory.setAwardedTo(character);
         }
-        pointHistoryRepository.saveAndFlush(pointHistory);
+        pointHistoryService.save(pointHistory);
     }
 }
 

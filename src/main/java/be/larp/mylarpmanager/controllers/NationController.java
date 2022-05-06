@@ -5,19 +5,16 @@ import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.*;
 import be.larp.mylarpmanager.models.uuid.JoinNationDemand;
 import be.larp.mylarpmanager.models.uuid.Nation;
-import be.larp.mylarpmanager.models.uuid.SkillTree;
 import be.larp.mylarpmanager.models.uuid.User;
-import be.larp.mylarpmanager.repositories.JoinNationDemandRepository;
-import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.requests.*;
-import be.larp.mylarpmanager.security.jwt.JwtUtils;
+import be.larp.mylarpmanager.services.JoinNationDemandService;
+import be.larp.mylarpmanager.services.NationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,19 +22,15 @@ import java.util.stream.Collectors;
 public class NationController extends Controller {
 
     @Autowired
-    private JoinNationDemandRepository joinNationDemandRepository;
+    private JoinNationDemandService joinNationDemandService;
 
     @Autowired
-    private NationRepository nationRepository;
-
-    @Autowired
-    private JwtUtils jwtUtils;
+    private NationService nationService;
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
         User user = getRequestUser();
-        Nation nation = nationRepository.findByUuid(changeNationDetailsRequest.getUuid())
-                .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + changeNationDetailsRequest.getUuid() + " not found."));
+        Nation nation = nationService.getSkillByUuid(changeNationDetailsRequest.getUuid());
         if (requesterIsAdmin() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_ADMIN))) {
             setNationValues(nation, changeNationDetailsRequest);
             trace(user, "update nation", nation);
@@ -61,14 +54,14 @@ public class NationController extends Controller {
     }
 
     private void setNationValues(Nation nation, CreateNationRequest createNationRequest) {
-        nation.setName(createNationRequest.getName());
-        nation.setIntroText(createNationRequest.getIntroText());
-        nation.setFullDescription(createNationRequest.getFullDescription());
-        nation.setFamilyFriendly(createNationRequest.isFamilyFriendly());
-        nation.setContributionInCents(createNationRequest.getContributionInCents());
-        nation.setInternationalFriendly(createNationRequest.isInternationalFriendly());
-        nation.setContributionMandatory(createNationRequest.isContributionMandatory());
-        nationRepository.saveAndFlush(nation);
+        nation.setName(createNationRequest.getName())
+                .setIntroText(createNationRequest.getIntroText())
+                .setFullDescription(createNationRequest.getFullDescription())
+                .setFamilyFriendly(createNationRequest.isFamilyFriendly())
+                .setContributionInCents(createNationRequest.getContributionInCents())
+                .setInternationalFriendly(createNationRequest.isInternationalFriendly())
+                .setContributionMandatory(createNationRequest.isContributionMandatory());
+        nationService.save(nation);
     }
 
     @GetMapping("/getmynationplayers")
@@ -95,7 +88,7 @@ public class NationController extends Controller {
 
     @GetMapping("/getallnations")
     public ResponseEntity<?> getAllNations() {
-        return ResponseEntity.ok(nationRepository.findAll());
+        return ResponseEntity.ok(nationService.getAll());
     }
 
 
@@ -110,13 +103,11 @@ public class NationController extends Controller {
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ForceJoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga()) {
-            Nation nation = nationRepository.findByUuid(joinNationRequest.getNationUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + joinNationRequest.getNationUuid() + " not found."));
-            User userToChange = userRepository.findByUuid(joinNationRequest.getPlayerUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Player with uuid " + joinNationRequest.getPlayerUuid() + " not found."));
+            Nation nation = nationService.getSkillByUuid(joinNationRequest.getNationUuid());
+            User userToChange = userService.getUserByUuid(joinNationRequest.getPlayerUuid());
             cancelPendingRequests(userToChange);
             userToChange.setNation(nation);
-            userRepository.saveAndFlush(userToChange);
+            userService.save(userToChange);
             trace(requester, "force join nation", userToChange);
             return ResponseEntity.ok(requester);
         } else {
@@ -128,27 +119,26 @@ public class NationController extends Controller {
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ProcessDemandRequest processDemandRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga() || requester.isNationSheriff() || requester.isNationAdmin()) {
-            JoinNationDemand joinNationDemand = joinNationDemandRepository.findByUuid(processDemandRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Demand with uuid " + processDemandRequest.getUuid() + " not found."));
+            JoinNationDemand joinNationDemand = joinNationDemandService.getSkillByUuid(processDemandRequest.getUuid());
             switch (Status.valueOf(processDemandRequest.getStatus())) {
                 case APPROVED:
-                    joinNationDemand.setStatus(Status.APPROVED);
-                    joinNationDemand.setApprover(requester);
+                    joinNationDemand.setStatus(Status.APPROVED)
+                            .setApprover(requester)
+                            .setProcessingTime(LocalDateTime.now());
                     joinNationDemand.getCandidate().setNation(joinNationDemand.getNation());
-                    joinNationDemand.setProcessingTime(LocalDateTime.now());
-                    userRepository.saveAndFlush(joinNationDemand.getCandidate());
-                    joinNationDemandRepository.saveAndFlush(joinNationDemand);
+                    userService.save(joinNationDemand.getCandidate());
+                    joinNationDemandService.save(joinNationDemand);
                     trace(requester, "approve request", joinNationDemand);
                     return ResponseEntity.ok(joinNationDemand);
                 case REFUSED:
                     if (processDemandRequest.getApproverMotivation() == null || processDemandRequest.getApproverMotivation().isBlank()) {
                         throw new BadRequestException("A motivation is required when refusing.");
                     } else {
-                        joinNationDemand.setStatus(Status.REFUSED);
-                        joinNationDemand.setApproverMotivation(processDemandRequest.getApproverMotivation());
-                        joinNationDemand.setApprover(requester);
-                        joinNationDemand.setProcessingTime(LocalDateTime.now());
-                        joinNationDemandRepository.saveAndFlush(joinNationDemand);
+                        joinNationDemand.setStatus(Status.REFUSED)
+                                .setApproverMotivation(processDemandRequest.getApproverMotivation())
+                                .setApprover(requester)
+                                .setProcessingTime(LocalDateTime.now());
+                        joinNationDemandService.save(joinNationDemand);
                         return ResponseEntity.ok(joinNationDemand);
                     }
                 default:
@@ -163,24 +153,21 @@ public class NationController extends Controller {
     public ResponseEntity<?> joinNation(@Valid @RequestBody JoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga() || requester.getUuid().equals(joinNationRequest.getPlayerUuid())) {
-            Nation nation = nationRepository.findByUuid(joinNationRequest.getNationUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + joinNationRequest.getNationUuid() + " not found."));
-            User candidate = userRepository.findByUuid(joinNationRequest.getPlayerUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Player with uuid " + joinNationRequest.getPlayerUuid() + " not found."));
-
+            Nation nation = nationService.getSkillByUuid(joinNationRequest.getNationUuid());
+            User candidate = userService.getUserByUuid(joinNationRequest.getPlayerUuid());
             if (candidate.getNation() != null) {
                 trace(requester, "autoleave nation", candidate);
                 candidate.setNation(null);
-                userRepository.saveAndFlush(candidate);
+                userService.save(candidate);
             }
             cancelPendingRequests(candidate);
-            JoinNationDemand joinNationDemand = new JoinNationDemand();
-            joinNationDemand.setRequestTime(LocalDateTime.now());
-            joinNationDemand.setMotivation(joinNationRequest.getMotivation());
-            joinNationDemand.setCandidate(candidate);
-            joinNationDemand.setNation(nation);
-            joinNationDemand.setStatus(Status.PENDING);
-            joinNationDemandRepository.saveAndFlush(joinNationDemand);
+            JoinNationDemand joinNationDemand = new JoinNationDemand()
+                    .setRequestTime(LocalDateTime.now())
+                    .setMotivation(joinNationRequest.getMotivation())
+                    .setCandidate(candidate)
+                    .setNation(nation)
+                    .setStatus(Status.PENDING);
+            joinNationDemandService.save(joinNationDemand);
             trace(requester, "create joining request", joinNationDemand);
             return ResponseEntity.ok(joinNationDemand);
         } else {
@@ -191,9 +178,8 @@ public class NationController extends Controller {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteNation(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            Nation nation = nationRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + uuid + " not found."));
-            nationRepository.delete(nation);
+            Nation nation = nationService.getSkillByUuid(uuid);
+            nationService.delete(nation);
             return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
@@ -211,7 +197,7 @@ public class NationController extends Controller {
                     trace(candidate, "got his demand cancelled", k);
                     k.setStatus(Status.CANCELLED);
                     k.setProcessingTime(LocalDateTime.now());
-                    joinNationDemandRepository.saveAndFlush(k);
+                    joinNationDemandService.save(k);
                 });
     }
 
@@ -219,13 +205,12 @@ public class NationController extends Controller {
     public ResponseEntity<?> leaveNation(@PathVariable String playerUuid) {
         User requester = getRequestUser();
         if (requesterIsAdmin() || requesterIsOrga() || requester.getUuid().equals(playerUuid)) {
-            User userToChange = userRepository.findByUuid(playerUuid)
-                    .orElseThrow(() -> new NoSuchElementException("Player with uuid " + playerUuid + " not found."));
+            User userToChange = userService.getUserByUuid(playerUuid);
             userToChange.setNation(null);
             if (userToChange.isNationAdmin() || userToChange.isNationSheriff()) {
                 userToChange.setRole(Role.PLAYER);
             }
-            userRepository.saveAndFlush(userToChange);
+            userService.save(userToChange);
             trace(requester, "leave nation", userToChange);
             return ResponseEntity.ok().build();
         } else {

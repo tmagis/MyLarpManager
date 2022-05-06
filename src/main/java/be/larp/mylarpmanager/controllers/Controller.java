@@ -8,8 +8,8 @@ import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.models.UserActionHistory;
 import be.larp.mylarpmanager.models.uuid.UuidModel;
 import be.larp.mylarpmanager.repositories.UserActionHistoryRepository;
-import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.responses.Errors;
+import be.larp.mylarpmanager.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class Controller {
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     UserActionHistoryRepository userActionHistoryRepository;
@@ -84,8 +84,7 @@ public class Controller {
     }
 
     public User getRequestUser() {
-        return userRepository.findByUuid(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid())
-                .orElseThrow(() -> new NoSuchElementException("User with uuid " + ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid() + " not found."));
+        return userService.getUserByUuid((((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid()));
     }
 
     public boolean requesterIsOrga() {

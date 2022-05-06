@@ -3,9 +3,7 @@ package be.larp.mylarpmanager.controllers;
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.exceptions.BadRequestException;
 import be.larp.mylarpmanager.models.Role;
-import be.larp.mylarpmanager.models.uuid.Character;
 import be.larp.mylarpmanager.models.uuid.User;
-import be.larp.mylarpmanager.repositories.UserRepository;
 import be.larp.mylarpmanager.requests.*;
 import be.larp.mylarpmanager.security.events.OnRegistrationCompleteEvent;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
@@ -16,16 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 import static be.larp.mylarpmanager.models.Role.*;
 
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController extends Controller {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -37,8 +31,7 @@ public class UserController extends Controller {
     public ResponseEntity<?> changeDetails(@Valid @RequestBody ChangeUserDetailsRequest changeUserDetailsRequest) {
         User requester = getRequestUser();
         if (requester.isOrga() || requester.isAdmin() || requester.getUuid().equals(changeUserDetailsRequest.getUuid())) {
-            User userToChange = userRepository.findByUuid(changeUserDetailsRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("User with uuid " + changeUserDetailsRequest.getUuid() + " not found."));
+            User userToChange = userService.getUserByUuid(changeUserDetailsRequest.getUuid());
             setValues(userToChange, changeUserDetailsRequest);
             trace(requester, "update user", userToChange);
             return ResponseEntity.ok(userToChange);
@@ -68,14 +61,14 @@ public class UserController extends Controller {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteUser(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            User user = userRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new NoSuchElementException("User with uuid " + uuid + " not found."));
-            userRepository.delete(user);
+            User user = userService.getUserByUuid(uuid);
+            userService.delete(user);
             return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
         }
     }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(HttpServletRequest request, @Valid @RequestBody CreateUserRequest createUserRequest) {
         validateUser(createUserRequest);
@@ -91,8 +84,7 @@ public class UserController extends Controller {
     @PostMapping("/setrole")
     public ResponseEntity<?> setRole(@Valid @RequestBody SetRoleRequest setRoleRequest) {
         User requester = getRequestUser();
-        User userToChange = userRepository.findByUuid(setRoleRequest.getUserUuid())
-                .orElseThrow(() -> new NoSuchElementException("User with uuid " + setRoleRequest.getUserUuid() + " not found."));
+        User userToChange = userService.getUserByUuid(setRoleRequest.getUserUuid());
         Role role;
         try {
             role = Role.valueOf(setRoleRequest.getRole());
@@ -140,7 +132,7 @@ public class UserController extends Controller {
 
     private void setRole(User userToChange, Role role) {
         userToChange.setRole(role);
-        userRepository.saveAndFlush(userToChange);
+        userService.save(userToChange);
     }
 
     private void setNationRole(User userToChange, User requester, Role nationRole) {
@@ -156,22 +148,22 @@ public class UserController extends Controller {
 
 
     private void validateUser(CreateUserRequest createUserRequest) {
-        if (userRepository.findByUsername(createUserRequest.getUsername()).isPresent()) {
+        if (userService.userWithUsername(createUserRequest.getUsername())) {
             throw new BadRequestException("This username is already in use.");
         }
-        if (userRepository.findByEmail(createUserRequest.getEmail()).isPresent()) {
+        if (userService.userWithEmail(createUserRequest.getEmail())) {
             throw new BadRequestException("This email address is already in use.");
         }
     }
 
     private void setValues(User userToChange, CreateUserRequest createUserRequest) {
         checkSamePassword(createUserRequest.getPassword(), createUserRequest.getPasswordConfirmation());
-        userToChange.setPassword(encoder.encode(createUserRequest.getPassword()));
-        userToChange.setUsername(createUserRequest.getUsername());
-        userToChange.setEmail(createUserRequest.getEmail());
-        userToChange.setFirstName(createUserRequest.getFirstName());
-        userToChange.setLastName(createUserRequest.getLastName());
-        userRepository.saveAndFlush(userToChange);
+        userToChange.setPassword(encoder.encode(createUserRequest.getPassword()))
+                .setUsername(createUserRequest.getUsername())
+                .setEmail(createUserRequest.getEmail())
+                .setFirstName(createUserRequest.getFirstName())
+                .setLastName(createUserRequest.getLastName());
+        userService.save(userToChange);
     }
 
     @GetMapping("/getmycharacters")

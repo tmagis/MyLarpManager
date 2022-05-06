@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface EventParticipationRepository extends JpaRepository<EventParticipation, Long> {
-
-    Optional<EventParticipation> findByUuid(String uuid);
+public interface EventParticipationRepository extends JpaRepository<EventParticipation, Long>, UuidRepository<EventParticipation> {
 
 }

@@ -14,8 +14,6 @@ import be.larp.mylarpmanager.requests.SetPasswordRequest;
 import be.larp.mylarpmanager.responses.Token;
 import be.larp.mylarpmanager.security.events.OnPasswordResetEvent;
 import be.larp.mylarpmanager.security.jwt.JwtUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +32,6 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController extends Controller {
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -62,7 +59,7 @@ public class AuthController extends Controller {
     public ResponseEntity<?> logout() {
         User user = getRequestUser();
         user.setCurrentToken(null);
-        userRepository.saveAndFlush(user);
+        userService.save(user);
         return ResponseEntity.ok().build();
     }
 
@@ -79,8 +76,7 @@ public class AuthController extends Controller {
 
     @PostMapping("/resetpassword")
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("User with email " + resetPasswordRequest.getEmail() + " not found."));
+        User user = userService.getUserByEmail(resetPasswordRequest.getEmail());
         eventPublisher.publishEvent(new OnPasswordResetEvent(user, getHost(request), request.getLocale()));
         return ResponseEntity.ok().build();
     }
@@ -88,7 +84,7 @@ public class AuthController extends Controller {
     private void changePassword(String password, String passwordConfirmation, User user) {
         checkSamePassword(password, passwordConfirmation);
         user.setPassword(encoder.encode(password));
-        userRepository.saveAndFlush(user);
+        userService.save(user);
         trace(user, "password change.", null);
     }
 
@@ -116,7 +112,7 @@ public class AuthController extends Controller {
     public ResponseEntity<?> signOff() {
         User requester = getRequestUser();
         requester.setCurrentToken(null);
-        userRepository.saveAndFlush(requester);
+        userService.save(requester);
         trace(requester, "signed off.", null);
         return ResponseEntity.ok().build();
     }
@@ -125,9 +121,9 @@ public class AuthController extends Controller {
     public ResponseEntity<?> massiveSignOff() {
         User requester = getRequestUser();
         if (requester.isAdmin()) {
-            userRepository.findAll().forEach(u -> {
+            userService.getAll().forEach(u -> {
                 u.setCurrentToken(null);
-                userRepository.saveAndFlush(u);
+                userService.save(u);
             });
             trace(requester, "signed everybody off.", null);
             return ResponseEntity.ok().build();
@@ -150,7 +146,7 @@ public class AuthController extends Controller {
         ActionToken actionToken = getActionToken(token, ActionType.VERIFY_EMAIL);
         User user = actionToken.getUser();
         user.setEnabled(true);
-        userRepository.saveAndFlush(user);
+        userService.save(user);
         trace(user, "activated account", null);
         return ResponseEntity.ok().build();
     }
@@ -167,7 +163,7 @@ public class AuthController extends Controller {
     private String createToken(Authentication authentication, User requester) {
         String jwt = jwtUtils.generateJwtToken(authentication);
         requester.setCurrentToken(encoder.encode(jwt));
-        userRepository.saveAndFlush(requester);
+        userService.save(requester);
         return jwt;
     }
 

@@ -6,39 +6,37 @@ import be.larp.mylarpmanager.models.uuid.Character;
 import be.larp.mylarpmanager.models.uuid.Event;
 import be.larp.mylarpmanager.models.uuid.EventParticipation;
 import be.larp.mylarpmanager.models.uuid.Nation;
-import be.larp.mylarpmanager.repositories.CharacterRepository;
-import be.larp.mylarpmanager.repositories.EventParticipationRepository;
-import be.larp.mylarpmanager.repositories.EventRepository;
-import be.larp.mylarpmanager.repositories.NationRepository;
 import be.larp.mylarpmanager.requests.*;
+import be.larp.mylarpmanager.services.CharacterService;
+import be.larp.mylarpmanager.services.EventParticipationService;
+import be.larp.mylarpmanager.services.EventService;
+import be.larp.mylarpmanager.services.NationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/event")
 public class EventController extends Controller {
 
     @Autowired
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     @Autowired
-    private EventParticipationRepository eventParticipationRepository;
+    private EventParticipationService eventParticipationService;
 
     @Autowired
-    private NationRepository nationRepository;
+    private NationService nationService;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeEventDetails(@Valid @RequestBody ChangeEventDetailsRequest changeEventDetailsRequest) {
         if (requesterIsAdmin()) {
-            Event event = eventRepository.findByUuid(changeEventDetailsRequest.getUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Event with uuid " + changeEventDetailsRequest.getUuid() + " not found."));
+            Event event = eventService.getEventByUuid(changeEventDetailsRequest.getUuid());
             setValues(changeEventDetailsRequest, event);
             trace(getRequestUser(), "update event", event);
             return ResponseEntity.ok(event);
@@ -50,9 +48,8 @@ public class EventController extends Controller {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteEvent(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            Event event = eventRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new NoSuchElementException("Event with uuid " + uuid + " not found."));
-            eventRepository.delete(event);
+            Event event = eventService.getEventByUuid(uuid);
+            eventService.delete(event);
             return ResponseEntity.ok().build();
         } else {
             throw new BadPrivilegesException();
@@ -62,11 +59,8 @@ public class EventController extends Controller {
     @PostMapping("/participate")
     public ResponseEntity<?> participate(@Valid @RequestBody ParticipateEventRequest participateEventRequest) {
         if (requesterIsAdmin() || requesterIsNationAdmin() || requesterIsOrga()) {
-            Event event = eventRepository.findByUuid(participateEventRequest.getEventUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Event with uuid " + participateEventRequest.getEventUuid() + " not found."));
-
-            Nation nation = nationRepository.findByUuid(participateEventRequest.getNationUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + participateEventRequest.getNationUuid() + " not found."));
+            Event event = eventService.getEventByUuid(participateEventRequest.getEventUuid());
+            Nation nation = nationService.getSkillByUuid(participateEventRequest.getNationUuid());
             EventParticipation eventParticipation = new EventParticipation();
             eventParticipation.setEvent(event);
             eventParticipation.setNation(nation);
@@ -80,15 +74,13 @@ public class EventController extends Controller {
     @PostMapping("/setchosenone")
     public ResponseEntity<?> setChosenOne(@Valid @RequestBody SetChosenOneRequest setChosenOneRequest) {
         if (requesterIsAdmin() || requesterIsNationAdmin() || requesterIsOrga()) {
-            EventParticipation eventParticipation = eventParticipationRepository.findByUuid(setChosenOneRequest.getEventParticipationUuid())
-                    .orElseThrow(() -> new NoSuchElementException("EventParticipation with uuid " + setChosenOneRequest.getEventParticipationUuid() + " not found."));
-            Character chosenOne = characterRepository.findByUuid(setChosenOneRequest.getCharacterUuid())
-                    .orElseThrow(() -> new NoSuchElementException("Character with uuid " + setChosenOneRequest.getCharacterUuid() + " not found."));
-            if(!chosenOne.getPlayer().getNation().equals(eventParticipation.getNation())){
+            EventParticipation eventParticipation = eventParticipationService.getEventParticipationByUuid(setChosenOneRequest.getEventParticipationUuid());
+            Character chosenOne = characterService.getCharacterByUuid(setChosenOneRequest.getCharacterUuid());
+            if (!chosenOne.getPlayer().getNation().equals(eventParticipation.getNation())) {
                 throw new BadRequestException("Cannot set chosen one for a character not inside the nation.");
             }
             eventParticipation.setChosenOne(chosenOne);
-            eventParticipationRepository.saveAndFlush(eventParticipation);
+            eventParticipationService.save(eventParticipation);
             trace(getRequestUser(), "set chosen one", eventParticipation);
             return ResponseEntity.ok(eventParticipation);
         } else {
@@ -99,10 +91,9 @@ public class EventController extends Controller {
     @PostMapping("/setsummary")
     public ResponseEntity<?> setConclusion(@Valid @RequestBody SetSummaryRequest setSummaryRequest) {
         if (requesterIsAdmin() || requesterIsNationAdmin() || requesterIsOrga()) {
-            EventParticipation eventParticipation = eventParticipationRepository.findByUuid(setSummaryRequest.getEventParticipationUuid())
-                    .orElseThrow(() -> new NoSuchElementException("EventParticipation with uuid " + setSummaryRequest.getEventParticipationUuid() + " not found."));
+            EventParticipation eventParticipation = eventParticipationService.getEventParticipationByUuid(setSummaryRequest.getEventParticipationUuid());
             eventParticipation.setSummary(setSummaryRequest.getSummary());
-            eventParticipationRepository.saveAndFlush(eventParticipation);
+            eventParticipationService.save(eventParticipation);
             trace(getRequestUser(), "set summary", eventParticipation);
             return ResponseEntity.ok(eventParticipation);
         } else {
@@ -123,14 +114,14 @@ public class EventController extends Controller {
     }
 
     private void setValues(CreateEventRequest createEventRequest, Event event) {
-        event.setConcluded(createEventRequest.isConcluded());
-        event.setDateFrom(createEventRequest.getDateFrom());
-        event.setDateTo(createEventRequest.getDateTo());
-        event.setDeadlineLogisticPack(createEventRequest.getDeadlineLogisticPack());
-        event.setYearTI(createEventRequest.getYearTI());
-        event.setName(createEventRequest.getName());
-        event.setDescription(createEventRequest.getDescription());
-        eventRepository.saveAndFlush(event);
+        event.setConcluded(createEventRequest.isConcluded())
+                .setDateFrom(createEventRequest.getDateFrom())
+                .setDateTo(createEventRequest.getDateTo())
+                .setDeadlineLogisticPack(createEventRequest.getDeadlineLogisticPack())
+                .setYearTI(createEventRequest.getYearTI())
+                .setName(createEventRequest.getName())
+                .setDescription(createEventRequest.getDescription());
+        eventService.save(event);
     }
 }
 
