@@ -19,16 +19,18 @@ public class ProcessDemandRequest implements GenericUuidBasedRequest{
         return status;
     }
 
-    public void setStatus(String status) {
+    public ProcessDemandRequest setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public String getApproverMotivation() {
         return approverMotivation;
     }
 
-    public void setApproverMotivation(String approverMotivation) {
+    public ProcessDemandRequest setApproverMotivation(String approverMotivation) {
         this.approverMotivation = approverMotivation;
+        return this;
     }
 
     @Override
@@ -37,7 +39,8 @@ public class ProcessDemandRequest implements GenericUuidBasedRequest{
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ProcessDemandRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 }

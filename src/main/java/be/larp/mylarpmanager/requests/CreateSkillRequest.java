@@ -38,63 +38,71 @@ public class CreateSkillRequest {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public CreateSkillRequest setName(TranslatedItem name) {
         this.name = name;
-    }
-
-    public TranslatedItem getDescription() {
-        return description;
-    }
-
-    public void setDescription(TranslatedItem description) {
-        this.description = description;
-    }
-
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
+        return this;
     }
 
     public boolean isHidden() {
         return hidden;
     }
 
-    public void setHidden(boolean hidden) {
+    public CreateSkillRequest setHidden(boolean hidden) {
         this.hidden = hidden;
+        return this;
+    }
+
+    public TranslatedItem getDescription() {
+        return description;
+    }
+
+    public CreateSkillRequest setDescription(TranslatedItem description) {
+        this.description = description;
+        return this;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public CreateSkillRequest setCost(int cost) {
+        this.cost = cost;
+        return this;
     }
 
     public String getIconURL() {
         return iconURL;
     }
 
-    public void setIconURL(String iconURL) {
+    public CreateSkillRequest setIconURL(String iconURL) {
         this.iconURL = iconURL;
+        return this;
     }
 
     public String getSkillTreeUuid() {
         return skillTreeUuid;
     }
 
-    public void setSkillTreeUuid(String skillTreeUuid) {
+    public CreateSkillRequest setSkillTreeUuid(String skillTreeUuid) {
         this.skillTreeUuid = skillTreeUuid;
+        return this;
     }
 
     public boolean isAllowMultiple() {
         return allowMultiple;
     }
 
-    public void setAllowMultiple(boolean allowMultiple) {
+    public CreateSkillRequest setAllowMultiple(boolean allowMultiple) {
         this.allowMultiple = allowMultiple;
+        return this;
     }
 
     public int getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public CreateSkillRequest setLevel(int level) {
         this.level = level;
+        return this;
     }
 }

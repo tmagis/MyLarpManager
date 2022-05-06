@@ -33,55 +33,62 @@ public class CreateEventRequest {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public CreateEventRequest setName(TranslatedItem name) {
         this.name = name;
+        return this;
     }
 
     public int getYearTI() {
         return yearTI;
     }
 
-    public void setYearTI(int yearTI) {
+    public CreateEventRequest setYearTI(int yearTI) {
         this.yearTI = yearTI;
+        return this;
     }
 
     public TranslatedItem getDescription() {
         return description;
     }
 
-    public void setDescription(TranslatedItem description) {
+    public CreateEventRequest setDescription(TranslatedItem description) {
         this.description = description;
+        return this;
     }
 
     public LocalDateTime getDateFrom() {
         return dateFrom;
     }
 
-    public void setDateFrom(LocalDateTime dateFrom) {
+    public CreateEventRequest setDateFrom(LocalDateTime dateFrom) {
         this.dateFrom = dateFrom;
+        return this;
     }
 
     public LocalDateTime getDateTo() {
         return dateTo;
     }
 
-    public void setDateTo(LocalDateTime dateTo) {
+    public CreateEventRequest setDateTo(LocalDateTime dateTo) {
         this.dateTo = dateTo;
+        return this;
     }
 
     public LocalDateTime getDeadlineLogisticPack() {
         return deadlineLogisticPack;
     }
 
-    public void setDeadlineLogisticPack(LocalDateTime deadlineLogisticPack) {
+    public CreateEventRequest setDeadlineLogisticPack(LocalDateTime deadlineLogisticPack) {
         this.deadlineLogisticPack = deadlineLogisticPack;
+        return this;
     }
 
     public boolean isConcluded() {
         return concluded;
     }
 
-    public void setConcluded(boolean concluded) {
+    public CreateEventRequest setConcluded(boolean concluded) {
         this.concluded = concluded;
+        return this;
     }
 }

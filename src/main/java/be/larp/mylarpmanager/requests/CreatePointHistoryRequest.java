@@ -24,31 +24,35 @@ public class CreatePointHistoryRequest {
         return eventParticipationUuid;
     }
 
-    public void setEventParticipationUuid(String eventParticipationUuid) {
+    public CreatePointHistoryRequest setEventParticipationUuid(String eventParticipationUuid) {
         this.eventParticipationUuid = eventParticipationUuid;
+        return this;
     }
 
     public String getAwardedToCharacterUuid() {
         return awardedToCharacterUuid;
     }
 
-    public void setAwardedToCharacterUuid(String awardedToCharacterUuid) {
+    public CreatePointHistoryRequest setAwardedToCharacterUuid(String awardedToCharacterUuid) {
         this.awardedToCharacterUuid = awardedToCharacterUuid;
+        return this;
     }
 
     public int getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public CreatePointHistoryRequest setPoints(int points) {
         this.points = points;
+        return this;
     }
 
     public String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public CreatePointHistoryRequest setReason(String reason) {
         this.reason = reason;
+        return this;
     }
 }

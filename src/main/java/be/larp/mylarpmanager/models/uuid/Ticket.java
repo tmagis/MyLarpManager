@@ -41,63 +41,62 @@ public class Ticket extends UuidModel {
         return player;
     }
 
-    public void setPlayer(User player) {
+    public Ticket setPlayer(User player) {
         this.player = player;
+        return this;
     }
 
     public String getExternalId() {
         return externalId;
     }
 
-    public void setExternalId(String externalId) {
+    public Ticket setExternalId(String externalId) {
         this.externalId = externalId;
+        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public Ticket setCode(String code) {
         this.code = code;
-    }
-
-    public LocalDateTime getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(LocalDateTime purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public String getIsPayed() {
-        return isPayed;
-    }
-
-    public void setIsPayed(String isPayed) {
-        this.isPayed = isPayed;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getIsCancelled() {
-        return isCancelled;
-    }
-
-    public void setIsCancelled(String isCancelled) {
-        this.isCancelled = isCancelled;
+        return this;
     }
 
     public String getLinkedEmail() {
         return linkedEmail;
     }
 
-    public void setLinkedEmail(String linkedEmail) {
+    public Ticket setLinkedEmail(String linkedEmail) {
         this.linkedEmail = linkedEmail;
+        return this;
+    }
+
+    public LocalDateTime getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public Ticket setPurchaseDate(LocalDateTime purchaseDate) {
+        this.purchaseDate = purchaseDate;
+        return this;
+    }
+
+    public String getIsPayed() {
+        return isPayed;
+    }
+
+    public Ticket setIsPayed(String isPayed) {
+        this.isPayed = isPayed;
+        return this;
+    }
+
+    public String getIsCancelled() {
+        return isCancelled;
+    }
+
+    public Ticket setIsCancelled(String isCancelled) {
+        this.isCancelled = isCancelled;
+        return this;
     }
 }

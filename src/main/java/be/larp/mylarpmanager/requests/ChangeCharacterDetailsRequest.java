@@ -16,7 +16,8 @@ public class ChangeCharacterDetailsRequest extends CreateCharacterRequest implem
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangeCharacterDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 }

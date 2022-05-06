@@ -46,63 +46,71 @@ public class Event extends UuidModel {
         return yearTI;
     }
 
-    public void setYearTI(int yearTI) {
+    public Event setYearTI(int yearTI) {
         this.yearTI = yearTI;
+        return this;
     }
 
     public TranslatedItem getName() {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public Event setName(TranslatedItem name) {
         this.name = name;
+        return this;
     }
 
     public TranslatedItem getDescription() {
         return description;
     }
 
-    public void setDescription(TranslatedItem description) {
+    public Event setDescription(TranslatedItem description) {
         this.description = description;
+        return this;
     }
 
     public LocalDateTime getDateFrom() {
         return dateFrom;
     }
 
-    public void setDateFrom(LocalDateTime dateFrom) {
+    public Event setDateFrom(LocalDateTime dateFrom) {
         this.dateFrom = dateFrom;
+        return this;
     }
 
     public LocalDateTime getDateTo() {
         return dateTo;
     }
 
-    public void setDateTo(LocalDateTime dateTo) {
+    public Event setDateTo(LocalDateTime dateTo) {
         this.dateTo = dateTo;
+        return this;
     }
 
     public LocalDateTime getDeadlineLogisticPack() {
         return deadlineLogisticPack;
     }
 
-    public void setDeadlineLogisticPack(LocalDateTime deadlineLogisticPack) {
+    public Event setDeadlineLogisticPack(LocalDateTime deadlineLogisticPack) {
         this.deadlineLogisticPack = deadlineLogisticPack;
+        return this;
     }
 
     public boolean isConcluded() {
         return concluded;
     }
 
-    public void setConcluded(boolean concluded) {
+    public Event setConcluded(boolean concluded) {
         this.concluded = concluded;
+        return this;
     }
 
     public List<EventParticipation> getEventParticipationList() {
         return eventParticipationList;
     }
 
-    public void setEventParticipationList(List<EventParticipation> eventParticipationList) {
+    public Event setEventParticipationList(List<EventParticipation> eventParticipationList) {
         this.eventParticipationList = eventParticipationList;
+        return this;
     }
 }

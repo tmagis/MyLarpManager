@@ -48,63 +48,71 @@ public class JoinNationDemand extends UuidModel {
         return candidate;
     }
 
-    public void setCandidate(User candidate) {
+    public JoinNationDemand setCandidate(User candidate) {
         this.candidate = candidate;
+        return this;
     }
 
     public Nation getNation() {
         return nation;
     }
 
-    public void setNation(Nation nation) {
+    public JoinNationDemand setNation(Nation nation) {
         this.nation = nation;
+        return this;
     }
 
     public String getMotivation() {
         return motivation;
     }
 
-    public void setMotivation(String motivation) {
+    public JoinNationDemand setMotivation(String motivation) {
         this.motivation = motivation;
+        return this;
     }
 
     public User getApprover() {
         return approver;
     }
 
-    public void setApprover(User approver) {
+    public JoinNationDemand setApprover(User approver) {
         this.approver = approver;
+        return this;
     }
 
     public String getApproverMotivation() {
         return approverMotivation;
     }
 
-    public void setApproverMotivation(String approverMotivation) {
+    public JoinNationDemand setApproverMotivation(String approverMotivation) {
         this.approverMotivation = approverMotivation;
+        return this;
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public JoinNationDemand setStatus(Status status) {
         this.status = status;
+        return this;
     }
 
     public LocalDateTime getRequestTime() {
         return requestTime;
     }
 
-    public void setRequestTime(LocalDateTime requestTime) {
+    public JoinNationDemand setRequestTime(LocalDateTime requestTime) {
         this.requestTime = requestTime;
+        return this;
     }
 
     public LocalDateTime getProcessingTime() {
         return processingTime;
     }
 
-    public void setProcessingTime(LocalDateTime processingTime) {
+    public JoinNationDemand setProcessingTime(LocalDateTime processingTime) {
         this.processingTime = processingTime;
+        return this;
     }
 }

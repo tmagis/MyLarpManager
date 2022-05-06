@@ -18,23 +18,26 @@ public class ChangePasswordRequest {
         return currentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword) {
+    public ChangePasswordRequest setCurrentPassword(String currentPassword) {
         this.currentPassword = currentPassword;
+        return this;
     }
 
     public String getNewPassword() {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
+    public ChangePasswordRequest setNewPassword(String newPassword) {
         this.newPassword = newPassword;
+        return this;
     }
 
     public String getNewPasswordConfirmation() {
         return newPasswordConfirmation;
     }
 
-    public void setNewPasswordConfirmation(String newPasswordConfirmation) {
+    public ChangePasswordRequest setNewPasswordConfirmation(String newPasswordConfirmation) {
         this.newPasswordConfirmation = newPasswordConfirmation;
+        return this;
     }
 }

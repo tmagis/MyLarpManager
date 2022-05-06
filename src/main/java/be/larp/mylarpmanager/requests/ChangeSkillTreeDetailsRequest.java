@@ -13,8 +13,9 @@ public class ChangeSkillTreeDetailsRequest extends CreateSkillTreeRequest implem
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangeSkillTreeDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
     public ChangeSkillTreeDetailsRequest() {
     }

@@ -30,35 +30,39 @@ public class ActionToken {
     public ActionToken() {
     }
 
-    public ActionType getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
-    }
-
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public ActionToken setToken(String token) {
         this.token = token;
+        return this;
+    }
+
+    public ActionType getActionType() {
+        return actionType;
+    }
+
+    public ActionToken setActionType(ActionType actionType) {
+        this.actionType = actionType;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public ActionToken setUser(User user) {
         this.user = user;
+        return this;
     }
 
     public LocalDateTime getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(LocalDateTime expirationTime) {
+    public ActionToken setExpirationTime(LocalDateTime expirationTime) {
         this.expirationTime = expirationTime;
+        return this;
     }
 }

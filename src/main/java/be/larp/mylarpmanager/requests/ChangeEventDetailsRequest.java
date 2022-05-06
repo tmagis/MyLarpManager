@@ -18,7 +18,8 @@ public class ChangeEventDetailsRequest extends CreateEventRequest implements Gen
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangeEventDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 }

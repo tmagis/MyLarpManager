@@ -12,8 +12,9 @@ public class ChangeUserDetailsRequest extends CreateUserRequest implements Gener
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangeUserDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
     public ChangeUserDetailsRequest() {
     }

@@ -28,56 +28,63 @@ public class CreateNationRequest {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public CreateNationRequest setName(TranslatedItem name) {
         this.name = name;
-    }
-
-    public TranslatedItem getIntroText() {
-        return introText;
-    }
-
-    public void setIntroText(TranslatedItem introText) {
-        this.introText = introText;
-    }
-
-    public TranslatedItem getFullDescription() {
-        return fullDescription;
-    }
-
-    public void setFullDescription(TranslatedItem fullDescription) {
-        this.fullDescription = fullDescription;
+        return this;
     }
 
     public boolean isFamilyFriendly() {
         return familyFriendly;
     }
 
-    public void setFamilyFriendly(boolean familyFriendly) {
+    public CreateNationRequest setFamilyFriendly(boolean familyFriendly) {
         this.familyFriendly = familyFriendly;
+        return this;
     }
 
     public boolean isInternationalFriendly() {
         return internationalFriendly;
     }
 
-    public void setInternationalFriendly(boolean internationalFriendly) {
+    public CreateNationRequest setInternationalFriendly(boolean internationalFriendly) {
         this.internationalFriendly = internationalFriendly;
+        return this;
     }
 
     public int getContributionInCents() {
         return contributionInCents;
     }
 
-    public void setContributionInCents(int contributionInCents) {
+    public CreateNationRequest setContributionInCents(int contributionInCents) {
         this.contributionInCents = contributionInCents;
+        return this;
     }
 
     public boolean isContributionMandatory() {
         return contributionMandatory;
     }
 
-    public void setContributionMandatory(boolean contributionMandatory) {
+    public CreateNationRequest setContributionMandatory(boolean contributionMandatory) {
         this.contributionMandatory = contributionMandatory;
+        return this;
+    }
+
+    public TranslatedItem getIntroText() {
+        return introText;
+    }
+
+    public CreateNationRequest setIntroText(TranslatedItem introText) {
+        this.introText = introText;
+        return this;
+    }
+
+    public TranslatedItem getFullDescription() {
+        return fullDescription;
+    }
+
+    public CreateNationRequest setFullDescription(TranslatedItem fullDescription) {
+        this.fullDescription = fullDescription;
+        return this;
     }
 
     public CreateNationRequest() {

@@ -97,8 +97,9 @@ public class User extends UuidModel implements UserDetails {
         return enabled;
     }
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     @Override
@@ -113,28 +114,32 @@ public class User extends UuidModel implements UserDetails {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
-    public void setId(Long id) {
+    public User setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Nation getNation() {
         return nation;
     }
 
-    public void setNation(Nation nation) {
+    public User setNation(Nation nation) {
         this.nation = nation;
+        return this;
     }
 
     @JsonIgnore
@@ -142,8 +147,9 @@ public class User extends UuidModel implements UserDetails {
         return tickets;
     }
 
-    public void setTickets(List<Ticket> tickets) {
+    public User setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+        return this;
     }
 
     @JsonIgnore
@@ -151,8 +157,9 @@ public class User extends UuidModel implements UserDetails {
         return characters;
     }
 
-    public void setCharacters(List<Character> characters) {
+    public User setCharacters(List<Character> characters) {
         this.characters = characters;
+        return this;
     }
 
     @JsonIgnore
@@ -164,24 +171,27 @@ public class User extends UuidModel implements UserDetails {
         return role;
     }
 
-    public void setRole(Role role) {
+    public User setRole(Role role) {
         this.role = role;
+        return this;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public User setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public User setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
     @JsonIgnore
@@ -189,8 +199,9 @@ public class User extends UuidModel implements UserDetails {
         return userActionHistories;
     }
 
-    public void setUserActionHistories(List<UserActionHistory> userActionHistories) {
+    public User setUserActionHistories(List<UserActionHistory> userActionHistories) {
         this.userActionHistories = userActionHistories;
+        return this;
     }
 
     @JsonIgnore
@@ -198,8 +209,9 @@ public class User extends UuidModel implements UserDetails {
         return joinNationDemands;
     }
 
-    public void setJoinNationDemands(List<JoinNationDemand> joinNationRequests) {
+    public User setJoinNationDemands(List<JoinNationDemand> joinNationRequests) {
         this.joinNationDemands = joinNationRequests;
+        return this;
     }
 
     @Override
@@ -214,8 +226,9 @@ public class User extends UuidModel implements UserDetails {
                 '}';
     }
 
-    public void setEnabled(boolean enabled) {
+    public User setEnabled(boolean enabled) {
         this.enabled = enabled;
+        return this;
     }
 
     @JsonIgnore
@@ -241,8 +254,9 @@ public class User extends UuidModel implements UserDetails {
         return role.equals(Role.ORGA);
     }
 
-    public void setCurrentToken(String currentToken) {
+    public User setCurrentToken(String currentToken) {
         this.currentToken = currentToken;
+        return this;
     }
 
     @JsonIgnore

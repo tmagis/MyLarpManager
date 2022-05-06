@@ -23,23 +23,26 @@ public class CreateSkillTreeRequest {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public CreateSkillTreeRequest setName(TranslatedItem name) {
         this.name = name;
+        return this;
     }
 
     public TranslatedItem getDescription() {
         return description;
     }
 
-    public void setDescription(TranslatedItem description) {
+    public CreateSkillTreeRequest setDescription(TranslatedItem description) {
         this.description = description;
+        return this;
     }
 
     public TranslatedItem getBlessing() {
         return blessing;
     }
 
-    public void setBlessing(TranslatedItem blessing) {
+    public CreateSkillTreeRequest setBlessing(TranslatedItem blessing) {
         this.blessing = blessing;
+        return this;
     }
 }

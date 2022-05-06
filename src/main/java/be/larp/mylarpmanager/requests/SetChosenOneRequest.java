@@ -18,15 +18,17 @@ public class SetChosenOneRequest {
         return characterUuid;
     }
 
-    public void setCharacterUuid(String characterUuid) {
+    public SetChosenOneRequest setCharacterUuid(String characterUuid) {
         this.characterUuid = characterUuid;
+        return this;
     }
 
     public String getEventParticipationUuid() {
         return eventParticipationUuid;
     }
 
-    public void setEventParticipationUuid(String eventParticipationUuid) {
+    public SetChosenOneRequest setEventParticipationUuid(String eventParticipationUuid) {
         this.eventParticipationUuid = eventParticipationUuid;
+        return this;
     }
 }

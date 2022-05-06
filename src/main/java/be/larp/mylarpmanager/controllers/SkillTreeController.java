@@ -2,7 +2,6 @@ package be.larp.mylarpmanager.controllers;
 
 import be.larp.mylarpmanager.exceptions.BadPrivilegesException;
 import be.larp.mylarpmanager.models.uuid.SkillTree;
-import be.larp.mylarpmanager.models.uuid.User;
 import be.larp.mylarpmanager.repositories.SkillTreeRepository;
 import be.larp.mylarpmanager.requests.ChangeSkillTreeDetailsRequest;
 import be.larp.mylarpmanager.requests.CreateSkillTreeRequest;
@@ -21,7 +20,7 @@ public class SkillTreeController extends Controller {
     private SkillTreeRepository skillTreeRepository;
 
     @PostMapping("/changedetails")
-    public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest) {
+    public ResponseEntity<?> changeSkillTreeDetails(@Valid @RequestBody ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             SkillTree skillTree = skillTreeRepository.findByUuid(changeSkillTreeDetailsRequest.getUuid())
                     .orElseThrow(() -> new NoSuchElementException("SkillTree with uuid " + changeSkillTreeDetailsRequest.getUuid() + " not found."));
@@ -34,7 +33,7 @@ public class SkillTreeController extends Controller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> changeNationDetails(@Valid @RequestBody CreateSkillTreeRequest createSkillTreeRequest) {
+    public ResponseEntity<?> createSkillTree(@Valid @RequestBody CreateSkillTreeRequest createSkillTreeRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             SkillTree skillTree = new SkillTree();
             setValues(skillTree, createSkillTreeRequest);

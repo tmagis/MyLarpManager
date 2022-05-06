@@ -37,39 +37,44 @@ public class EventParticipation extends UuidModel {
         return chosenOne;
     }
 
-    public void setChosenOne(Character chosenOne) {
+    public EventParticipation setChosenOne(Character chosenOne) {
         this.chosenOne = chosenOne;
+        return this;
     }
 
     public Nation getNation() {
         return nation;
     }
 
-    public void setNation(Nation nation) {
+    public EventParticipation setNation(Nation nation) {
         this.nation = nation;
+        return this;
     }
 
     public Event getEvent() {
         return event;
     }
 
-    public void setEvent(Event event) {
+    public EventParticipation setEvent(Event event) {
         this.event = event;
+        return this;
     }
 
     public String getSummary() {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public EventParticipation setSummary(String summary) {
         this.summary = summary;
+        return this;
     }
 
     public List<PointHistory> getPointHistories() {
         return pointHistories;
     }
 
-    public void setPointHistories(List<PointHistory> pointHistories) {
+    public EventParticipation setPointHistories(List<PointHistory> pointHistories) {
         this.pointHistories = pointHistories;
+        return this;
     }
 }

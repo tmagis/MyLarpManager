@@ -18,15 +18,17 @@ public class SetSummaryRequest {
         return eventParticipationUuid;
     }
 
-    public void setEventParticipationUuid(String eventParticipationUuid) {
+    public SetSummaryRequest setEventParticipationUuid(String eventParticipationUuid) {
         this.eventParticipationUuid = eventParticipationUuid;
+        return this;
     }
 
     public String getSummary() {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public SetSummaryRequest setSummary(String summary) {
         this.summary = summary;
+        return this;
     }
 }

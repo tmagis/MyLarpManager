@@ -14,8 +14,9 @@ public class ChangePointHistoryDetailsRequest extends CreatePointHistoryRequest 
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangePointHistoryDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 
     public ChangePointHistoryDetailsRequest() {

@@ -16,15 +16,17 @@ public class AddCharacterSkillRequest {
         return characterUuid;
     }
 
-    public void setCharacterUuid(String characterUuid) {
+    public AddCharacterSkillRequest setCharacterUuid(String characterUuid) {
         this.characterUuid = characterUuid;
+        return this;
     }
 
     public String getSkillUuid() {
         return skillUuid;
     }
 
-    public void setSkillUuid(String skillUuid) {
+    public AddCharacterSkillRequest setSkillUuid(String skillUuid) {
         this.skillUuid = skillUuid;
+        return this;
     }
 }

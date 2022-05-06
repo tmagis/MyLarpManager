@@ -15,12 +15,14 @@ public abstract class UuidModel {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public UuidModel setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 
-    public void setUuid(){
+    public UuidModel setUuid(){
         this.uuid = getRandomUuid();
+        return this;
     }
 
     private String getRandomUuid() {

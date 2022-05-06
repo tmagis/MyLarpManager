@@ -73,13 +73,13 @@ public class IntegrationTest {
 
     @Test
     public void step_03_admin_creates_user() throws Exception {
-        CreateUserRequest createUserRequest = new CreateUserRequest();
-        createUserRequest.setFirstName("Bobby");
-        createUserRequest.setLastName("Von Bobbleson");
-        createUserRequest.setPassword(SEKWET);
-        createUserRequest.setPasswordConfirmation(SEKWET);
-        createUserRequest.setUsername(LOGIN);
-        createUserRequest.setEmail("thelegend.27@yopmail.com");
+        CreateUserRequest createUserRequest = new CreateUserRequest()
+                .setFirstName("Bobby")
+                .setLastName("Von Bobbleson")
+                .setPassword(SEKWET)
+                .setPasswordConfirmation(SEKWET)
+                .setUsername(LOGIN)
+                .setEmail("thelegend.27@yopmail.com");
         MvcResult mvcResult = getMvcResult("/api/v1/user/create", createUserRequest);
         String response = mvcResult.getResponse().getContentAsString();
         ChangeUserDetailsRequest changeUserDetailsRequest = gson.fromJson(response, ChangeUserDetailsRequest.class);
@@ -93,14 +93,14 @@ public class IntegrationTest {
     public void step_04_admin_creates_nation() throws Exception {
         String nationNameFr = "Les chaussettes";
         String fullDescription = "C'est l'histoire racontée par des chaussettes. C'est très marrant. Ce texte fait un petit peu plus que 255 caractères. Quelle belle cueillette nous fîmes : quelques hyménomycètes, des hypholomes, des helvelles, des polypores versicoles, des géasters fimbriés, de superbes coulemelles et un hydne imbriqué ma foi fort appétissant.";
-        CreateNationRequest createNationRequest = new CreateNationRequest();
-        createNationRequest.setContributionMandatory(false);
-        createNationRequest.setContributionInCents(9000);
-        createNationRequest.setFamilyFriendly(false);
-        createNationRequest.setName(new TranslatedItem().setFr(nationNameFr));
-        createNationRequest.setFullDescription(new TranslatedItem().setFr(fullDescription));
-        createNationRequest.setIntroText(new TranslatedItem().setFr("C'est l'histoire racontée par des chaussettes. C'est très marrant."));
-        createNationRequest.setInternationalFriendly(true);
+        CreateNationRequest createNationRequest = new CreateNationRequest()
+                .setContributionMandatory(false)
+                .setContributionInCents(9000)
+                .setFamilyFriendly(false)
+                .setName(new TranslatedItem().setFr(nationNameFr))
+                .setFullDescription(new TranslatedItem().setFr(fullDescription))
+                .setIntroText(new TranslatedItem().setFr("C'est l'histoire racontée par des chaussettes. C'est très marrant."))
+                .setInternationalFriendly(true);
         MvcResult mvcResult = getMvcResult("/api/v1/nation/create", createNationRequest);
         String response = mvcResult.getResponse().getContentAsString();
         ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(response, ChangeNationDetailsRequest.class);
@@ -110,17 +110,17 @@ public class IntegrationTest {
 
     @Test
     public void step_05_admin_forces_new_user_join_new_nation() throws Exception {
-        ForceJoinNationRequest forceJoinNationRequest = new ForceJoinNationRequest();
-        forceJoinNationRequest.setNationUuid(nationUuid);
-        forceJoinNationRequest.setPlayerUuid(userUuid);
+        ForceJoinNationRequest forceJoinNationRequest = new ForceJoinNationRequest()
+                .setNationUuid(nationUuid)
+                .setPlayerUuid(userUuid);
         getMvcResult("/api/v1/nation/forcejoinnation", forceJoinNationRequest);
     }
 
     @Test
     public void step_06_admin_design_new_user_nation_admin() throws Exception {
-        SetRoleRequest setRoleRequest = new SetRoleRequest();
-        setRoleRequest.setRole(Role.NATION_ADMIN.name());
-        setRoleRequest.setUserUuid(userUuid);
+        SetRoleRequest setRoleRequest = new SetRoleRequest()
+                .setRole(Role.NATION_ADMIN.name())
+                .setUserUuid(userUuid);
         getMvcResult("/api/v1/user/setrole", setRoleRequest);
     }
 
@@ -166,9 +166,9 @@ public class IntegrationTest {
     @Test
     public void step_11_admin_promotes_other_admin() throws Exception {
         login("admin", "changeme");
-        SetRoleRequest setRoleRequest = new SetRoleRequest();
-        setRoleRequest.setRole(String.valueOf(Role.ADMIN));
-        setRoleRequest.setUserUuid(userUuid);
+        SetRoleRequest setRoleRequest = new SetRoleRequest()
+                .setRole(String.valueOf(Role.ADMIN))
+                .setUserUuid(userUuid);
         getMvcResult("/api/v1/user/setrole", setRoleRequest);
         login(LOGIN, SEKWET);
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
@@ -178,9 +178,9 @@ public class IntegrationTest {
 
     @Test
     public void step_12_admin_change_his_role_to_error() throws Exception {
-        SetRoleRequest setRoleRequest = new SetRoleRequest();
-        setRoleRequest.setRole("POTATO_ADMIN");
-        setRoleRequest.setUserUuid(userUuid);
+        SetRoleRequest setRoleRequest = new SetRoleRequest()
+                .setRole("POTATO_ADMIN")
+                .setUserUuid(userUuid);
         postError("/api/v1/user/setrole", setRoleRequest);
         MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
@@ -189,12 +189,12 @@ public class IntegrationTest {
 
     @Test
     public void step_13_admin_creates_character() throws Exception {
-        CreateCharacterRequest createCharacterRequest = new CreateCharacterRequest();
-        createCharacterRequest.setAge(300);
-        createCharacterRequest.setName("Jean-Pierre");
-        createCharacterRequest.setBackground("Jean-Pierre Delavergemolle est un grand artiste.");
-        createCharacterRequest.setRace("Humain");
-        createCharacterRequest.setPictureURL("https://cornhub.website/");
+        CreateCharacterRequest createCharacterRequest = new CreateCharacterRequest()
+                .setAge(300)
+                .setName("Jean-Pierre")
+                .setBackground("Jean-Pierre Delavergemolle est un grand artiste.")
+                .setRace("Humain")
+                .setPictureURL("https://cornhub.website/");
         ChangeCharacterDetailsRequest changeCharacterDetailsRequest = gson.fromJson(getMvcResult("/api/v1/character/create", createCharacterRequest).getResponse().getContentAsString(), ChangeCharacterDetailsRequest.class);
         assertEquals(changeCharacterDetailsRequest.getName(), "Jean-Pierre");
         assertNotNull(changeCharacterDetailsRequest.getUuid());
@@ -204,21 +204,21 @@ public class IntegrationTest {
 
     @Test
     public void step_14_admin_creates_skillTree_and_skill() throws Exception {
-        CreateSkillTreeRequest createSkillTreeRequest = new CreateSkillTreeRequest();
-        createSkillTreeRequest.setBlessing(new TranslatedItem().setFr("Bénédiction"));
-        createSkillTreeRequest.setName(new TranslatedItem().setFr("Nom bidon"));
-        createSkillTreeRequest.setDescription(new TranslatedItem().setFr("Une chouette description"));
+        CreateSkillTreeRequest createSkillTreeRequest = new CreateSkillTreeRequest()
+                .setBlessing(new TranslatedItem().setFr("Bénédiction"))
+                .setName(new TranslatedItem().setFr("Nom bidon"))
+                .setDescription(new TranslatedItem().setFr("Une chouette description"));
         ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skilltree/create", createSkillTreeRequest).getResponse().getContentAsString(), ChangeSkillTreeDetailsRequest.class);
         assertNotNull(changeSkillTreeDetailsRequest.getUuid());
         skillTreeUuid = changeSkillTreeDetailsRequest.getUuid();
-        CreateSkillRequest createSkillRequest = new CreateSkillRequest();
-        createSkillRequest.setDescription(new TranslatedItem().setFr("Desc"));
-        createSkillRequest.setName(new TranslatedItem().setFr("Nice skill name"));
-        createSkillRequest.setSkillTreeUuid(skillTreeUuid);
-        createSkillRequest.setCost(5);
-        createSkillRequest.setAllowMultiple(true);
-        createSkillRequest.setHidden(false);
-        createSkillRequest.setLevel(1);
+        CreateSkillRequest createSkillRequest = new CreateSkillRequest()
+                .setDescription(new TranslatedItem().setFr("Desc"))
+                .setName(new TranslatedItem().setFr("Nice skill name"))
+                .setSkillTreeUuid(skillTreeUuid)
+                .setCost(5)
+                .setAllowMultiple(true)
+                .setHidden(false)
+                .setLevel(1);
         ChangeSkillDetailsRequest changeSkillDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skill/create", createSkillRequest).getResponse().getContentAsString(), ChangeSkillDetailsRequest.class);
         assertNotNull(changeSkillDetailsRequest.getUuid());
         skillUuid = changeSkillDetailsRequest.getUuid();
@@ -239,6 +239,10 @@ public class IntegrationTest {
         assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
         postError("/api/v1/character/addskill", addCharacterSkillRequest);
         assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/removeskill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
     }
 
     @Test
@@ -247,13 +251,14 @@ public class IntegrationTest {
         assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
     }
 
-    private MvcResult deleteRequest(String url, String uuid) throws Exception{
-        return mvc.perform(delete(url+"/"+uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
+    private MvcResult deleteRequest(String url, String uuid) throws Exception {
+        return mvc.perform(delete(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
     }
 
-    private MvcResult getRequest(String url, String uuid) throws Exception{
-        return mvc.perform(get(url+"/"+uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
+    private MvcResult getRequest(String url, String uuid) throws Exception {
+        return mvc.perform(get(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
     }
+
     private MvcResult getMvcResult(String url) throws Exception {
         MvcResult mvcResult;
         mvcResult = mvc.perform(get(url)
@@ -290,7 +295,6 @@ public class IntegrationTest {
                 .andExpect(status().isOk()).andReturn();
         return mvcResult;
     }
-
 
 
     private void extractToken(MvcResult mvcResult) throws UnsupportedEncodingException {

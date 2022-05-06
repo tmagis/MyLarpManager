@@ -11,7 +11,8 @@ public class JoinNationRequest extends ForceJoinNationRequest{
         return motivation;
     }
 
-    public void setMotivation(String motivation) {
+    public JoinNationRequest setMotivation(String motivation) {
         this.motivation = motivation;
+        return this;
     }
 }

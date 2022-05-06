@@ -16,15 +16,17 @@ public class ForceJoinNationRequest {
         return nationUuid;
     }
 
-    public void setNationUuid(String nationUuid) {
+    public ForceJoinNationRequest setNationUuid(String nationUuid) {
         this.nationUuid = nationUuid;
+        return this;
     }
 
     public String getPlayerUuid() {
         return playerUuid;
     }
 
-    public void setPlayerUuid(String playerUuid) {
+    public ForceJoinNationRequest setPlayerUuid(String playerUuid) {
         this.playerUuid = playerUuid;
+        return this;
     }
 }

@@ -1,11 +1,6 @@
 package be.larp.mylarpmanager.requests;
 
-
-import be.larp.mylarpmanager.models.TranslatedItem;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 public class ParticipateEventRequest {
 
@@ -22,15 +17,17 @@ public class ParticipateEventRequest {
         return eventUuid;
     }
 
-    public void setEventUuid(String eventUuid) {
+    public ParticipateEventRequest setEventUuid(String eventUuid) {
         this.eventUuid = eventUuid;
+        return this;
     }
 
     public String getNationUuid() {
         return nationUuid;
     }
 
-    public void setNationUuid(String nationUuid) {
+    public ParticipateEventRequest setNationUuid(String nationUuid) {
         this.nationUuid = nationUuid;
+        return this;
     }
 }

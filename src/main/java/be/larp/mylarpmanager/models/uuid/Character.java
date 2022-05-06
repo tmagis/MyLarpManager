@@ -66,72 +66,81 @@ public class Character extends UuidModel {
         return pictureURL;
     }
 
-    public void setPictureURL(String picture) {
+    public Character setPictureURL(String picture) {
         this.pictureURL = picture;
+        return this;
     }
 
     public String getBackground() {
         return background;
     }
 
-    public void setBackground(String background) {
+    public Character setBackground(String background) {
         this.background = background;
+        return this;
     }
 
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public Character setAge(int age) {
         this.age = age;
+        return this;
     }
 
     public int getNumberOfEventsPlayed() {
         return numberOfEventsPlayed;
     }
 
-    public void setNumberOfEventsPlayed(int numberOfEventsPlayed) {
+    public Character setNumberOfEventsPlayed(int numberOfEventsPlayed) {
         this.numberOfEventsPlayed = numberOfEventsPlayed;
+        return this;
     }
 
     public String getRace() {
         return race;
     }
 
-    public void setRace(String race) {
+    public Character setRace(String race) {
         this.race = race;
+        return this;
     }
 
     public boolean isAlive() {
         return isAlive;
     }
 
-    public void setAlive(boolean alive) {
+    public Character setAlive(boolean alive) {
         isAlive = alive;
+        return this;
     }
 
     public String getReasonOfDeath() {
         return reasonOfDeath;
     }
 
-    public void setReasonOfDeath(String reasonOfDeath) {
+    public Character setReasonOfDeath(String reasonOfDeath) {
         this.reasonOfDeath = reasonOfDeath;
+        return this;
     }
 
     public LocalDateTime getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(LocalDateTime creationTime) {
+    public Character setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
+        return this;
     }
 
     public LocalDateTime getLastModificationTime() {
         return lastModificationTime;
     }
 
-    public void setLastModificationTime(LocalDateTime lastModificationTime) {
+    public Character setLastModificationTime(LocalDateTime lastModificationTime) {
         this.lastModificationTime = lastModificationTime;
+        return this;
     }
 
     @JsonIgnore
@@ -139,24 +148,27 @@ public class Character extends UuidModel {
         return player;
     }
 
-    public void setPlayer(User player) {
+    public Character setPlayer(User player) {
         this.player = player;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Character setName(String name) {
         this.name = name;
+        return this;
     }
 
     public boolean isNPC() {
         return isNPC;
     }
 
-    public void setNPC(boolean npc) {
+    public Character setNPC(boolean npc) {
         isNPC = npc;
+        return this;
     }
 
     @JsonIgnore
@@ -164,8 +176,9 @@ public class Character extends UuidModel {
         return skills;
     }
 
-    public void setSkills(Collection<Skill> skills) {
+    public Character setSkills(Collection<Skill> skills) {
         this.skills = skills;
+        return this;
     }
 
     @Override

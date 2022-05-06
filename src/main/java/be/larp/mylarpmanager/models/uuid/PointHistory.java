@@ -36,48 +36,54 @@ public class PointHistory extends UuidModel {
         return points;
     }
 
-    public void setPoints(int points) {
+    public PointHistory setPoints(int points) {
         this.points = points;
+        return this;
     }
 
     public LocalDateTime getGainedOn() {
         return gainedOn;
     }
 
-    public void setGainedOn(LocalDateTime gainedOn) {
+    public PointHistory setGainedOn(LocalDateTime gainedOn) {
         this.gainedOn = gainedOn;
+        return this;
     }
 
     public User getAwardedBy() {
         return awardedBy;
     }
 
-    public void setAwardedBy(User awardedBy) {
+    public PointHistory setAwardedBy(User awardedBy) {
         this.awardedBy = awardedBy;
+        return this;
     }
 
     public String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public PointHistory setReason(String reason) {
         this.reason = reason;
+        return this;
     }
 
     public EventParticipation getEventParticipation() {
         return eventParticipation;
     }
 
-    public void setEventParticipation(EventParticipation eventParticipation) {
+    public PointHistory setEventParticipation(EventParticipation eventParticipation) {
         this.eventParticipation = eventParticipation;
+        return this;
     }
 
     public Character getAwardedTo() {
         return awardedTo;
     }
 
-    public void setAwardedTo(Character awardedTo) {
+    public PointHistory setAwardedTo(Character awardedTo) {
         this.awardedTo = awardedTo;
+        return this;
     }
 
     public PointHistory() {

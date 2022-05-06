@@ -20,8 +20,9 @@ public class CreateCharacterRequest {
         return race;
     }
 
-    public void setRace(String race) {
+    public CreateCharacterRequest setRace(String race) {
         this.race = race;
+        return this;
     }
 
     public String getName() {
@@ -29,32 +30,36 @@ public class CreateCharacterRequest {
     }
 
 
-    public void setName(String name) {
+    public CreateCharacterRequest setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getPictureURL() {
         return pictureURL;
     }
 
-    public void setPictureURL(String pictureURL) {
+    public CreateCharacterRequest setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
+        return this;
     }
 
     public String getBackground() {
         return background;
     }
 
-    public void setBackground(String background) {
+    public CreateCharacterRequest setBackground(String background) {
         this.background = background;
+        return this;
     }
 
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public CreateCharacterRequest setAge(int age) {
         this.age = age;
+        return this;
     }
 
     public CreateCharacterRequest() {

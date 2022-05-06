@@ -34,16 +34,18 @@ public class SkillTree extends UuidModel {
         return description;
     }
 
-    public void setDescription(TranslatedItem description) {
+    public SkillTree setDescription(TranslatedItem description) {
         this.description = description;
+        return this;
     }
 
     public TranslatedItem getBlessing() {
         return blessing;
     }
 
-    public void setBlessing(TranslatedItem blessing) {
+    public SkillTree setBlessing(TranslatedItem blessing) {
         this.blessing = blessing;
+        return this;
     }
 
     @JsonIgnore
@@ -51,16 +53,18 @@ public class SkillTree extends UuidModel {
         return skills;
     }
 
-    public void setSkills(Collection<Skill> skills) {
+    public SkillTree setSkills(Collection<Skill> skills) {
         this.skills = skills;
+        return this;
     }
 
     public TranslatedItem getName() {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public SkillTree setName(TranslatedItem name) {
         this.name = name;
+        return this;
     }
 
     @Override

@@ -15,8 +15,9 @@ public class KillCharacterRequest implements GenericUuidBasedRequest{
         return reasonOfDeath;
     }
 
-    public void setReasonOfDeath(String reasonOfDeath) {
+    public KillCharacterRequest setReasonOfDeath(String reasonOfDeath) {
         this.reasonOfDeath = reasonOfDeath;
+        return this;
     }
 
     @Override
@@ -25,7 +26,8 @@ public class KillCharacterRequest implements GenericUuidBasedRequest{
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public KillCharacterRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 }

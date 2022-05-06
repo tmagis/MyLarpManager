@@ -14,16 +14,18 @@ public class SetRoleRequest {
         return userUuid;
     }
 
-    public void setUserUuid(String userUuid) {
+    public SetRoleRequest setUserUuid(String userUuid) {
         this.userUuid = userUuid;
+        return this;
     }
 
     public String getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public SetRoleRequest setRole(String role) {
         this.role = role;
+        return this;
     }
 
     public SetRoleRequest() {

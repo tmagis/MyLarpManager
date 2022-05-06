@@ -99,28 +99,50 @@ public class CharacterController extends Controller {
                 .orElseThrow(() -> new NoSuchElementException("Character with uuid " + addCharacterSkillRequest.getCharacterUuid() + " not found."));
         Skill skill = skillRepository.findByUuid(addCharacterSkillRequest.getSkillUuid())
                 .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + addCharacterSkillRequest.getSkillUuid() + " not found."));
-        if(skill.isHidden() && !(requesterIsAdmin() || requesterIsOrga())){
-            throw new BadPrivilegesException();
-        }
-        if(!getRequestUser().equals(character.getPlayer()) && !(requesterIsAdmin() || requesterIsOrga())){
-            throw new BadPrivilegesException();
-        }
+        checkConstraints(character, skill);
         addSkill(character, skill);
         trace(getRequestUser(), "add skill", character);
         return ResponseEntity.ok(character);
     }
 
+    @PostMapping("/removeskill")
+    public ResponseEntity<?> removeSkill(@Valid @RequestBody AddCharacterSkillRequest removeCharacterSkillRequest) {
+        Character character = characterRepository.findByUuid(removeCharacterSkillRequest.getCharacterUuid())
+                .orElseThrow(() -> new NoSuchElementException("Character with uuid " + removeCharacterSkillRequest.getCharacterUuid() + " not found."));
+        Skill skill = skillRepository.findByUuid(removeCharacterSkillRequest.getSkillUuid())
+                .orElseThrow(() -> new NoSuchElementException("Skill with uuid " + removeCharacterSkillRequest.getSkillUuid() + " not found."));
+        checkConstraints(character, skill);
+        removeSkill(character, skill);
+        trace(getRequestUser(), "remove skill", character);
+        return ResponseEntity.ok(character);
+    }
+
+    private void checkConstraints(Character character, Skill skill) {
+        if (skill.isHidden() && !(requesterIsAdmin() || requesterIsOrga())) {
+            throw new BadPrivilegesException();
+        }
+        if (!getRequestUser().equals(character.getPlayer()) && !(requesterIsAdmin() || requesterIsOrga())) {
+            throw new BadPrivilegesException();
+        }
+    }
+
+    private void removeSkill(Character character, Skill skill) {
+        if (!character.getSkills().remove(skill)) {
+            throw new BadRequestException("The character don't have that skill.");
+        }
+        characterRepository.saveAndFlush(character);
+    }
+
     private void addSkill(Character character, Skill skill) {
         Collection<Skill> skills = character.getSkills();
         int credit = skillPoints - getPointsUsed(skills);
-        if(!character.isNPC() && skill.getCost() > credit){
-            throw new BadRequestException("You cannot afford this skill. (cost: "+skill.getCost()+" while only "+credit+"is available).");
+        if (!character.isNPC() && skill.getCost() > credit) {
+            throw new BadRequestException("You cannot afford this skill. (cost: " + skill.getCost() + " while only " + credit + "is available).");
         }
-        if(!skill.isAllowMultiple() && skills.contains(skill)){
+        if (!skill.isAllowMultiple() && skills.contains(skill)) {
             throw new BadRequestException("This skill is allowed only once.");
         }
         skills.add(skill);
-        character.setSkills(skills);
         characterRepository.saveAndFlush(character);
     }
 

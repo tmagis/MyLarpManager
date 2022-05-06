@@ -13,8 +13,9 @@ public class ChangeNationDetailsRequest extends CreateNationRequest implements G
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangeNationDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 
     public ChangeNationDetailsRequest() {

@@ -35,48 +35,45 @@ public class FirstSetup implements InitializingBean {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public void afterPropertiesSet(){
+    public void afterPropertiesSet() {
         if (userRepository.count() == 0) {
-            Nation nation = new Nation();
-            nation.setName(
-                    new TranslatedItem()
-                            .setEn("Sausage")
-                            .setFr("Saucisse")
-                            .setNl("Worst")
-            );
-            nation.setContributionMandatory(false);
-            nation.setInternationalFriendly(false);
-            nation.setFamilyFriendly(false);
-            nation.setUuid(UUID.randomUUID().toString());
+            Nation nation = new Nation()
+                    .setName(
+                            new TranslatedItem()
+                                    .setEn("Sausage")
+                                    .setFr("Saucisse")
+                                    .setNl("Worst")
+                    )
+                    .setContributionMandatory(false)
+                    .setInternationalFriendly(false)
+                    .setFamilyFriendly(false);
             nationRepository.saveAndFlush(nation);
             String username = "admin";
             String password = "changeme";
             String email = "admin@admin.be";
             String firstName = "Gaspard";
             String lastName = "Délicieux";
-            User defaultUser = new User();
-            defaultUser.setRole(Role.ADMIN);
-            defaultUser.setEnabled(true);
-            defaultUser.setUsername(username);
-            defaultUser.setPassword(passwordEncoder.encode(password));
-            defaultUser.setEmail(email);
-            defaultUser.setLastName(lastName);
-            defaultUser.setFirstName(firstName);
-            defaultUser.setUuid(UUID.randomUUID().toString());
-            defaultUser.setNation(nation);
+            User defaultUser = new User()
+                    .setRole(Role.ADMIN)
+                    .setEnabled(true)
+                    .setUsername(username)
+                    .setPassword(passwordEncoder.encode(password))
+                    .setEmail(email)
+                    .setLastName(lastName)
+                    .setFirstName(firstName)
+                    .setNation(nation);
             userRepository.saveAndFlush(defaultUser);
             String chname = "Bobby";
             String background = "Once upon a time, me.";
             String race = "Half Human half stupid";
-            Character character = new Character();
-            character.setName(chname);
-            character.setBackground(background);
-            character.setRace(race);
-            character.setAlive(true);
-            character.setCreationTime(LocalDateTime.now());
-            character.setLastModificationTime(LocalDateTime.now());
-            character.setUuid(UUID.randomUUID().toString());
-            character.setPlayer(defaultUser);
+            Character character = new Character()
+                    .setName(chname)
+                    .setBackground(background)
+                    .setRace(race)
+                    .setAlive(true)
+                    .setCreationTime(LocalDateTime.now())
+                    .setLastModificationTime(LocalDateTime.now())
+                    .setPlayer(defaultUser);
             characterRepository.saveAndFlush(character);
             logger.info("============================================================================================================");
             logger.info(" \\ \\        / /          | |");

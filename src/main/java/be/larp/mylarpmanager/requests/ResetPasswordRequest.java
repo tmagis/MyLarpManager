@@ -14,7 +14,8 @@ public class ResetPasswordRequest {
         return email;
     }
 
-    public void setEmail(String email) {
+    public ResetPasswordRequest setEmail(String email) {
         this.email = email;
+        return this;
     }
 }

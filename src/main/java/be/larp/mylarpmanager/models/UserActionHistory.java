@@ -33,23 +33,26 @@ public class UserActionHistory {
         return user;
     }
 
-    public void setUser(User user) {
+    public UserActionHistory setUser(User user) {
         this.user = user;
+        return this;
     }
 
     public String getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public UserActionHistory setAction(String action) {
         this.action = action;
+        return this;
     }
 
     public LocalDateTime getActionTime() {
         return actionTime;
     }
 
-    public void setActionTime(LocalDateTime actionTime) {
+    public UserActionHistory setActionTime(LocalDateTime actionTime) {
         this.actionTime = actionTime;
+        return this;
     }
 }

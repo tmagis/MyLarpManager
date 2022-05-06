@@ -14,8 +14,9 @@ public class ChangeSkillDetailsRequest extends CreateSkillRequest implements Gen
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public ChangeSkillDetailsRequest setUuid(String uuid) {
         this.uuid = uuid;
+        return this;
     }
 
     public ChangeSkillDetailsRequest() {

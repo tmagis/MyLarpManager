@@ -18,23 +18,26 @@ public class SetPasswordRequest {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
+    public SetPasswordRequest setNewPassword(String newPassword) {
         this.newPassword = newPassword;
+        return this;
     }
 
     public String getNewPasswordConfirmation() {
         return newPasswordConfirmation;
     }
 
-    public void setNewPasswordConfirmation(String newPasswordConfirmation) {
+    public SetPasswordRequest setNewPasswordConfirmation(String newPasswordConfirmation) {
         this.newPasswordConfirmation = newPasswordConfirmation;
+        return this;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public SetPasswordRequest setToken(String token) {
         this.token = token;
+        return this;
     }
 }

@@ -49,32 +49,36 @@ public class Nation extends UuidModel {
         return joinNationDemands;
     }
 
-    public void setJoinNationDemands(List<JoinNationDemand> joinNationDemands) {
+    public Nation setJoinNationDemands(List<JoinNationDemand> joinNationDemands) {
         this.joinNationDemands = joinNationDemands;
+        return this;
     }
 
     public TranslatedItem getName() {
         return name;
     }
 
-    public void setName(TranslatedItem name) {
+    public Nation setName(TranslatedItem name) {
         this.name = name;
+        return this;
     }
 
     public TranslatedItem getIntroText() {
         return introText;
     }
 
-    public void setIntroText(TranslatedItem introText) {
+    public Nation setIntroText(TranslatedItem introText) {
         this.introText = introText;
+        return this;
     }
 
     public TranslatedItem getFullDescription() {
         return fullDescription;
     }
 
-    public void setFullDescription(TranslatedItem fullDescription) {
+    public Nation setFullDescription(TranslatedItem fullDescription) {
         this.fullDescription = fullDescription;
+        return this;
     }
 
     @JsonIgnore
@@ -82,48 +86,54 @@ public class Nation extends UuidModel {
         return players;
     }
 
-    public void setPlayers(List<User> players) {
+    public Nation setPlayers(List<User> players) {
         this.players = players;
+        return this;
     }
 
     public boolean isFamilyFriendly() {
         return familyFriendly;
     }
 
-    public void setFamilyFriendly(boolean familyFriendly) {
+    public Nation setFamilyFriendly(boolean familyFriendly) {
         this.familyFriendly = familyFriendly;
+        return this;
     }
 
     public boolean isInternationalFriendly() {
         return internationalFriendly;
     }
 
-    public void setInternationalFriendly(boolean internationalFriendly) {
+    public Nation setInternationalFriendly(boolean internationalFriendly) {
         this.internationalFriendly = internationalFriendly;
+        return this;
     }
 
     public int getContributionInCents() {
         return contributionInCents;
     }
 
-    public void setContributionInCents(int contributionInCents) {
+    public Nation setContributionInCents(int contributionInCents) {
         this.contributionInCents = contributionInCents;
+        return this;
     }
 
     public boolean isContributionMandatory() {
         return contributionMandatory;
     }
 
-    public void setContributionMandatory(boolean contributionMandatory) {
+    public Nation setContributionMandatory(boolean contributionMandatory) {
         this.contributionMandatory = contributionMandatory;
+        return this;
     }
 
     public String getMainDeity() {
         return mainDeity;
     }
 
-    public void setMainDeity(String mainDeity) {
+    public Nation setMainDeity(String mainDeity) {
         this.mainDeity = mainDeity;
+        return this;
     }
 
     @Override
