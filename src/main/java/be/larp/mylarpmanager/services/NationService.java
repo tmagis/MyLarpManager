@@ -16,7 +16,7 @@ public class NationService {
     @Autowired
     private NationRepository nationRepository;
 
-    public Nation getSkillByUuid(String uuid) {
+    public Nation getNationByUuid(String uuid) {
         return nationRepository.findByUuid(uuid)
                 .orElseThrow(() -> new NoSuchElementException("Nation with uuid " + uuid + " not found."));
     }

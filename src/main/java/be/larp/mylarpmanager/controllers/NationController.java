@@ -30,7 +30,7 @@ public class NationController extends Controller {
     @PostMapping("/changedetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
         User user = getRequestUser();
-        Nation nation = nationService.getSkillByUuid(changeNationDetailsRequest.getUuid());
+        Nation nation = nationService.getNationByUuid(changeNationDetailsRequest.getUuid());
         if (requesterIsAdmin() || (user.getNation() != null && user.getNation().getUuid().equals(nation.getUuid()) && user.getRole().equals(Role.NATION_ADMIN))) {
             setNationValues(nation, changeNationDetailsRequest);
             trace(user, "update nation", nation);
@@ -103,7 +103,7 @@ public class NationController extends Controller {
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ForceJoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga()) {
-            Nation nation = nationService.getSkillByUuid(joinNationRequest.getNationUuid());
+            Nation nation = nationService.getNationByUuid(joinNationRequest.getNationUuid());
             User userToChange = userService.getUserByUuid(joinNationRequest.getPlayerUuid());
             cancelPendingRequests(userToChange);
             userToChange.setNation(nation);
@@ -119,7 +119,7 @@ public class NationController extends Controller {
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ProcessDemandRequest processDemandRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga() || requester.isNationSheriff() || requester.isNationAdmin()) {
-            JoinNationDemand joinNationDemand = joinNationDemandService.getSkillByUuid(processDemandRequest.getUuid());
+            JoinNationDemand joinNationDemand = joinNationDemandService.getJoinNationDemandByUuid(processDemandRequest.getUuid());
             switch (Status.valueOf(processDemandRequest.getStatus())) {
                 case APPROVED:
                     joinNationDemand.setStatus(Status.APPROVED)
@@ -153,7 +153,7 @@ public class NationController extends Controller {
     public ResponseEntity<?> joinNation(@Valid @RequestBody JoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga() || requester.getUuid().equals(joinNationRequest.getPlayerUuid())) {
-            Nation nation = nationService.getSkillByUuid(joinNationRequest.getNationUuid());
+            Nation nation = nationService.getNationByUuid(joinNationRequest.getNationUuid());
             User candidate = userService.getUserByUuid(joinNationRequest.getPlayerUuid());
             if (candidate.getNation() != null) {
                 trace(requester, "autoleave nation", candidate);
@@ -178,7 +178,7 @@ public class NationController extends Controller {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteNation(@PathVariable String uuid) {
         if (requesterIsAdmin()) {
-            Nation nation = nationService.getSkillByUuid(uuid);
+            Nation nation = nationService.getNationByUuid(uuid);
             nationService.delete(nation);
             return ResponseEntity.ok().build();
         } else {

@@ -60,7 +60,7 @@ public class EventController extends Controller {
     public ResponseEntity<?> participate(@Valid @RequestBody ParticipateEventRequest participateEventRequest) {
         if (requesterIsAdmin() || requesterIsNationAdmin() || requesterIsOrga()) {
             Event event = eventService.getEventByUuid(participateEventRequest.getEventUuid());
-            Nation nation = nationService.getSkillByUuid(participateEventRequest.getNationUuid());
+            Nation nation = nationService.getNationByUuid(participateEventRequest.getNationUuid());
             EventParticipation eventParticipation = new EventParticipation();
             eventParticipation.setEvent(event);
             eventParticipation.setNation(nation);

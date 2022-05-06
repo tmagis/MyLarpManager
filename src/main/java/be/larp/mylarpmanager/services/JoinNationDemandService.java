@@ -15,7 +15,7 @@ public class JoinNationDemandService {
     @Autowired
     private JoinNationDemandRepository joinNationDemandRepository;
 
-    public JoinNationDemand getSkillByUuid(String uuid) {
+    public JoinNationDemand getJoinNationDemandByUuid(String uuid) {
         return joinNationDemandRepository.findByUuid(uuid)
                 .orElseThrow(() -> new NoSuchElementException("JoinNationDemand with uuid " + uuid + " not found."));
     }
