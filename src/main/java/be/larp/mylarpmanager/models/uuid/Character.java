@@ -24,7 +24,24 @@ public class Character extends UuidModel {
     @Column(name = "PICTURE_URL", columnDefinition = "LONGTEXT")
     private String pictureURL;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade =
+                    {
+                            CascadeType.DETACH,
+                            CascadeType.MERGE,
+                            CascadeType.REFRESH,
+                            CascadeType.PERSIST
+                    },
+            targetEntity = Skill.class)
+    @JoinTable(name = "SKILL_CHARACTER",
+            inverseJoinColumns = @JoinColumn(name = "SKILL_ID",
+                    nullable = false,
+                    updatable = false),
+            joinColumns = @JoinColumn(name = "CHARACTER_ID",
+                    nullable = false,
+                    updatable = false),
+            foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT),
+            inverseForeignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
     private Collection<Skill> skills;
 
     @Column(name = "BACKGROUND", columnDefinition = "LONGTEXT")

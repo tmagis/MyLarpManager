@@ -249,7 +249,47 @@ public class IntegrationTest {
     public void step_16_admin_deletes_skill_already_assigned_to_character() throws Exception {
         deleteRequest("/api/v1/skill", skillUuid);
         assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        CreateSkillRequest createSkillRequest = new CreateSkillRequest()
+                .setDescription(new TranslatedItem().setFr("Desc"))
+                .setName(new TranslatedItem().setFr("Nice skill name"))
+                .setSkillTreeUuid(skillTreeUuid)
+                .setCost(5)
+                .setAllowMultiple(true)
+                .setHidden(false)
+                .setLevel(1);
+        ChangeSkillDetailsRequest changeSkillDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skill/create", createSkillRequest).getResponse().getContentAsString(), ChangeSkillDetailsRequest.class);
+        assertNotNull(changeSkillDetailsRequest.getUuid());
+        skillUuid = changeSkillDetailsRequest.getUuid();
+        AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
+        addCharacterSkillRequest.setSkillUuid(skillUuid);
+        addCharacterSkillRequest.setCharacterUuid(characterUuid);
+        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
     }
+
+    @Test
+    public void step_17_admin_deletes_character_having_a_skill() throws Exception {
+        deleteRequest("/api/v1/character", characterUuid);
+        getRequestError4xx("/api/v1/character/getpointsavailable", characterUuid);
+        CreateCharacterRequest createCharacterRequest = new CreateCharacterRequest()
+                .setAge(300)
+                .setName("Jean-Pierre")
+                .setBackground("Jean-Pierre Delavergemolle est un grand artiste.")
+                .setRace("Humain")
+                .setPictureURL("https://cornhub.website/");
+        ChangeCharacterDetailsRequest changeCharacterDetailsRequest = gson.fromJson(getMvcResult("/api/v1/character/create", createCharacterRequest).getResponse().getContentAsString(), ChangeCharacterDetailsRequest.class);
+        assertEquals(changeCharacterDetailsRequest.getName(), "Jean-Pierre");
+        assertNotNull(changeCharacterDetailsRequest.getUuid());
+        characterUuid = changeCharacterDetailsRequest.getUuid();
+        AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
+        addCharacterSkillRequest.setSkillUuid(skillUuid);
+        addCharacterSkillRequest.setCharacterUuid(characterUuid);
+        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+    }
+
+    //################################################################################################################################################################
+
 
     private MvcResult deleteRequest(String url, String uuid) throws Exception {
         return mvc.perform(delete(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
@@ -258,7 +298,9 @@ public class IntegrationTest {
     private MvcResult getRequest(String url, String uuid) throws Exception {
         return mvc.perform(get(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
     }
-
+    private MvcResult getRequestError4xx(String url, String uuid) throws Exception {
+        return mvc.perform(get(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().is4xxClientError()).andReturn();
+    }
     private MvcResult getMvcResult(String url) throws Exception {
         MvcResult mvcResult;
         mvcResult = mvc.perform(get(url)

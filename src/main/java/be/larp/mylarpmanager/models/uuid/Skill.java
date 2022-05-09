@@ -1,8 +1,10 @@
 package be.larp.mylarpmanager.models.uuid;
 
 import be.larp.mylarpmanager.models.TranslatedItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "SKILL")
@@ -29,6 +31,26 @@ public class Skill extends UuidModel {
 
     @Column(name = "ALLOW_MULTIPLE", nullable = false)
     private boolean allowMultiple;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade =
+                    {
+                            CascadeType.DETACH,
+                            CascadeType.MERGE,
+                            CascadeType.REFRESH,
+                            CascadeType.PERSIST
+                    },
+            targetEntity = Character.class)
+    @JoinTable(name = "SKILL_CHARACTER",
+            joinColumns = @JoinColumn(name = "SKILL_ID",
+                    nullable = false,
+                    updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "CHARACTER_ID",
+                    nullable = false,
+                    updatable = false),
+            foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT),
+            inverseForeignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
+    private Collection<Character> characters;
 
     @Column(name = "LEVEL", nullable = false)
     private int level;
@@ -109,6 +131,16 @@ public class Skill extends UuidModel {
 
     public Skill setHidden(boolean hidden) {
         this.hidden = hidden;
+        return this;
+    }
+
+    @JsonIgnore
+    public Collection<Character> getCharacters() {
+        return characters;
+    }
+
+    public Skill setCharacters(Collection<Character> characters) {
+        this.characters = characters;
         return this;
     }
 
