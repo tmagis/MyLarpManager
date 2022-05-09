@@ -2,6 +2,7 @@ import be.larp.mylarpmanager.WardenApplication;
 import be.larp.mylarpmanager.controllers.UserController;
 import be.larp.mylarpmanager.models.Role;
 import be.larp.mylarpmanager.models.TranslatedItem;
+import be.larp.mylarpmanager.models.uuid.JoinNationDemand;
 import be.larp.mylarpmanager.requests.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -254,7 +255,7 @@ public class IntegrationTest {
                 .setName(new TranslatedItem().setFr("Nice skill name"))
                 .setSkillTreeUuid(skillTreeUuid)
                 .setCost(5)
-                .setAllowMultiple(true)
+                .setAllowMultiple(false)
                 .setHidden(false)
                 .setLevel(1);
         ChangeSkillDetailsRequest changeSkillDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skill/create", createSkillRequest).getResponse().getContentAsString(), ChangeSkillDetailsRequest.class);
@@ -288,6 +289,50 @@ public class IntegrationTest {
         assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
     }
 
+    @Test
+    public void step_18_error_on_second_time_skill_not_allowed_multiple_times() throws Exception{
+        AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
+        addCharacterSkillRequest.setSkillUuid(skillUuid);
+        addCharacterSkillRequest.setCharacterUuid(characterUuid);
+        postError("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+    }
+
+    @Test
+    public void step_19_delete_nation_having_player() throws Exception{
+        deleteRequest("/api/v1/nation", nationUuid);
+        CreateNationRequest createNationRequest = new CreateNationRequest()
+                .setContributionMandatory(false)
+                .setContributionInCents(9000)
+                .setFamilyFriendly(false)
+                .setName(new TranslatedItem().setFr("nationNameFr"))
+                .setFullDescription(new TranslatedItem().setFr("fullDescription"))
+                .setIntroText(new TranslatedItem().setFr("C'est l'histoire racontée par des chaussettes. C'est très marrant."))
+                .setInternationalFriendly(true);
+        MvcResult mvcResult = getMvcResult("/api/v1/nation/create", createNationRequest);
+        String response = mvcResult.getResponse().getContentAsString();
+        ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(response, ChangeNationDetailsRequest.class);
+        assertEquals("nationNameFr", changeNationDetailsRequest.getName().getFr());
+        nationUuid = changeNationDetailsRequest.getUuid();
+        mvcResult = getRequestError4xx("/api/v1/nation/getmynation");
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("The user does not belong to a nation."));
+    }
+
+    @Test
+    public void step_20_demand_nation_join() throws Exception{
+        JoinNationRequest joinNationRequest = (JoinNationRequest) new JoinNationRequest().setPlayerUuid(userUuid).setNationUuid(nationUuid);
+        getMvcResult("/api/v1/nation/joinnation", joinNationRequest);
+        getMvcResult("/api/v1/nation/joinnation", joinNationRequest);
+    }
+
+    @Test
+    public void step_21_spam_renew() throws Exception{
+        for(int i=0;i<100;i++) {
+            MvcResult mvcResult = getMvcResult("/api/v1/auth/renew");
+            extractToken(mvcResult);
+        }
+    }
+
     //################################################################################################################################################################
 
 
@@ -298,8 +343,13 @@ public class IntegrationTest {
     private MvcResult getRequest(String url, String uuid) throws Exception {
         return mvc.perform(get(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().isOk()).andReturn();
     }
+
     private MvcResult getRequestError4xx(String url, String uuid) throws Exception {
         return mvc.perform(get(url + "/" + uuid).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().is4xxClientError()).andReturn();
+    }
+
+    private MvcResult getRequestError4xx(String url) throws Exception {
+        return mvc.perform(get(url ).accept(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token)).andExpect(status().is4xxClientError()).andReturn();
     }
     private MvcResult getMvcResult(String url) throws Exception {
         MvcResult mvcResult;
