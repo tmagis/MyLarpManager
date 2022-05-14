@@ -25,7 +25,7 @@ public class SkillController extends Controller {
     @Autowired
     private SkillTreeService skillTreeService;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> changeSkillDetails(@Valid @RequestBody ChangeSkillDetailsRequest changeSkillDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             Skill skill = skillService.getSkillByUuid(changeSkillDetailsRequest.getUuid());
@@ -51,7 +51,7 @@ public class SkillController extends Controller {
         }
     }
 
-    @GetMapping("/getallskilltreeskills/{skillTreeUuid}")
+    @GetMapping("/getAllSkillTreeSkills/{skillTreeUuid}")
     public ResponseEntity<?> getAllSkillTreeSkills(@PathVariable String skillTreeUuid) {
         if (requesterIsAdmin()) {
             SkillTree skillTree = skillTreeService.getSkillTreeByUuid(skillTreeUuid);

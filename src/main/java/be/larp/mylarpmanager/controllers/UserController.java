@@ -27,7 +27,7 @@ public class UserController extends Controller {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> changeDetails(@Valid @RequestBody ChangeUserDetailsRequest changeUserDetailsRequest) {
         User requester = getRequestUser();
         if (requester.isOrga() || requester.isAdmin() || requester.getUuid().equals(changeUserDetailsRequest.getUuid())) {
@@ -81,7 +81,7 @@ public class UserController extends Controller {
     }
 
     //TODO improve readability
-    @PostMapping("/setrole")
+    @PostMapping("/setRole")
     public ResponseEntity<?> setRole(@Valid @RequestBody SetRoleRequest setRoleRequest) {
         User requester = getRequestUser();
         User userToChange = userService.getUserByUuid(setRoleRequest.getUserUuid());
@@ -166,7 +166,7 @@ public class UserController extends Controller {
         userService.save(userToChange);
     }
 
-    @GetMapping("/getmycharacters")
+    @GetMapping("/getMyCharacters")
     public ResponseEntity<?> getMyCharacters() {
         User user = getRequestUser();
         return ResponseEntity.ok(user.getCharacters());

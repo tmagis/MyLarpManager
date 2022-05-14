@@ -29,7 +29,7 @@ public class CharacterController extends Controller {
     @Autowired
     private CharacterService characterService;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> updateCharacter(@Valid @RequestBody ChangeCharacterDetailsRequest changeCharacterDetailsRequest) {
         Character character = characterService.getCharacterByUuid(changeCharacterDetailsRequest.getUuid());
         if (requesterIsAdmin() || requesterIsOrga() || character.getPlayer().getUuid().equals(getRequestUser().getUuid())) {
@@ -75,13 +75,13 @@ public class CharacterController extends Controller {
         return ResponseEntity.ok(character);
     }
 
-    @GetMapping("/getpointsavailable/{uuid}")
+    @GetMapping("/getPointsAvailable/{uuid}")
     public ResponseEntity<?> addSkill(@PathVariable String uuid) {
         Character character = characterService.getCharacterByUuid(uuid);
         return ResponseEntity.ok(skillPoints - getPointsUsed(character.getSkills()));
     }
 
-    @PostMapping("/addskill")
+    @PostMapping("/addSkill")
     public ResponseEntity<?> addSkill(@Valid @RequestBody AddCharacterSkillRequest addCharacterSkillRequest) {
         Character character = characterService.getCharacterByUuid(addCharacterSkillRequest.getCharacterUuid());
         Skill skill = skillService.getSkillByUuid(addCharacterSkillRequest.getSkillUuid());
@@ -91,7 +91,7 @@ public class CharacterController extends Controller {
         return ResponseEntity.ok(character);
     }
 
-    @PostMapping("/removeskill")
+    @PostMapping("/removeSkill")
     public ResponseEntity<?> removeSkill(@Valid @RequestBody AddCharacterSkillRequest removeCharacterSkillRequest) {
         Character character = characterService.getCharacterByUuid(removeCharacterSkillRequest.getCharacterUuid());
         Skill skill = skillService.getSkillByUuid(removeCharacterSkillRequest.getSkillUuid());

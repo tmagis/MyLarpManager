@@ -33,7 +33,7 @@ public class EventController extends Controller {
     @Autowired
     private CharacterService characterService;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> changeEventDetails(@Valid @RequestBody ChangeEventDetailsRequest changeEventDetailsRequest) {
         if (requesterIsAdmin()) {
             Event event = eventService.getEventByUuid(changeEventDetailsRequest.getUuid());
@@ -71,7 +71,7 @@ public class EventController extends Controller {
         }
     }
 
-    @PostMapping("/setchosenone")
+    @PostMapping("/setChosenOne")
     public ResponseEntity<?> setChosenOne(@Valid @RequestBody SetChosenOneRequest setChosenOneRequest) {
         if (requesterIsAdmin() || requesterIsNationAdmin() || requesterIsOrga()) {
             EventParticipation eventParticipation = eventParticipationService.getEventParticipationByUuid(setChosenOneRequest.getEventParticipationUuid());
@@ -88,7 +88,7 @@ public class EventController extends Controller {
         }
     }
 
-    @PostMapping("/setsummary")
+    @PostMapping("/setSummary")
     public ResponseEntity<?> setConclusion(@Valid @RequestBody SetSummaryRequest setSummaryRequest) {
         if (requesterIsAdmin() || requesterIsNationAdmin() || requesterIsOrga()) {
             EventParticipation eventParticipation = eventParticipationService.getEventParticipationByUuid(setSummaryRequest.getEventParticipationUuid());

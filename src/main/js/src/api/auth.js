@@ -2,7 +2,7 @@ import axios from "axios";
 
 const AuthApi = {
     WhoAmI: function(token) {
-        return axios.get("/api/v1/auth/whoami", {
+        return axios.get("/api/v1/auth/whoAmI", {
             headers: {
                 Authorization: "Bearer " + token
             }

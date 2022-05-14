@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/skilltree")
+@RequestMapping("/api/v1/skillTree")
 public class SkillTreeController extends Controller {
 
     @Autowired
     private SkillTreeService skillTreeService;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> changeSkillTreeDetails(@Valid @RequestBody ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             SkillTree skillTree = skillTreeService.getSkillTreeByUuid(changeSkillTreeDetailsRequest.getUuid());
@@ -53,7 +53,7 @@ public class SkillTreeController extends Controller {
         }
     }
 
-    @GetMapping("/getall")
+    @GetMapping("/getAll")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(skillTreeService.getAll());
     }

@@ -27,7 +27,7 @@ public class PointHistoryController extends Controller {
     @Autowired
     private EventParticipationService eventParticipationService;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> changePointHistory(@Valid @RequestBody ChangePointHistoryDetailsRequest changePointHistoryDetailsRequest) {
         if (requesterIsAdmin() || requesterIsOrga()) {
             PointHistory pointHistory = pointHistoryService.getPointHistoryByUuid(changePointHistoryDetailsRequest.getUuid());

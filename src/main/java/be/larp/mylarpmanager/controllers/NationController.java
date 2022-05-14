@@ -27,7 +27,7 @@ public class NationController extends Controller {
     @Autowired
     private NationService nationService;
 
-    @PostMapping("/changedetails")
+    @PostMapping("/changeDetails")
     public ResponseEntity<?> changeNationDetails(@Valid @RequestBody ChangeNationDetailsRequest changeNationDetailsRequest) {
         User user = getRequestUser();
         Nation nation = nationService.getNationByUuid(changeNationDetailsRequest.getUuid());
@@ -64,7 +64,7 @@ public class NationController extends Controller {
         nationService.save(nation);
     }
 
-    @GetMapping("/getmynationplayers")
+    @GetMapping("/getMyNationPlayers")
     public ResponseEntity<?> getMyNationPlayers() {
         User requester = getRequestUser();
         checkMemberOfNation(requester);
@@ -73,7 +73,7 @@ public class NationController extends Controller {
     }
 
 
-    @GetMapping("/getmynationrequests")
+    @GetMapping("/getMyNationRequests")
     public ResponseEntity<?> getMyNationRequest() {
         User requester = getRequestUser();
         Nation nation = requester.getNation();
@@ -86,20 +86,20 @@ public class NationController extends Controller {
         }
     }
 
-    @GetMapping("/getallnations")
+    @GetMapping("/getAllNations")
     public ResponseEntity<?> getAllNations() {
         return ResponseEntity.ok(nationService.getAll());
     }
 
 
-    @GetMapping("/getmynation")
+    @GetMapping("/getMyNation")
     public ResponseEntity<?> getMyNation() {
         User requester = getRequestUser();
         checkMemberOfNation(requester);
         return ResponseEntity.ok(requester.getNation());
     }
 
-    @PostMapping("/forcejoinnation")
+    @PostMapping("/forceJoinNation")
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ForceJoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga()) {
@@ -115,7 +115,7 @@ public class NationController extends Controller {
         }
     }
 
-    @PostMapping("/processdemand")
+    @PostMapping("/processDemand")
     public ResponseEntity<?> forceJoinNation(@Valid @RequestBody ProcessDemandRequest processDemandRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga() || requester.isNationSheriff() || requester.isNationAdmin()) {
@@ -149,7 +149,7 @@ public class NationController extends Controller {
         }
     }
 
-    @PostMapping("/joinnation")
+    @PostMapping("/joinNation")
     public ResponseEntity<?> joinNation(@Valid @RequestBody JoinNationRequest joinNationRequest) {
         User requester = getRequestUser();
         if (requester.isAdmin() || requester.isOrga() || requester.getUuid().equals(joinNationRequest.getPlayerUuid())) {
@@ -201,7 +201,7 @@ public class NationController extends Controller {
                 });
     }
 
-    @GetMapping("/leavenation/{playerUuid}")
+    @GetMapping("/leaveNation/{playerUuid}")
     public ResponseEntity<?> leaveNation(@PathVariable String playerUuid) {
         User requester = getRequestUser();
         if (requesterIsAdmin() || requesterIsOrga() || requester.getUuid().equals(playerUuid)) {

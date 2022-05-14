@@ -63,7 +63,7 @@ public class AuthController extends Controller {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/changepassword")
+    @PostMapping("/changePassword")
     public ResponseEntity<?> reset(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         User user = getRequestUser();
         if (encoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
@@ -74,7 +74,7 @@ public class AuthController extends Controller {
         }
     }
 
-    @PostMapping("/resetpassword")
+    @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         User user = userService.getUserByEmail(resetPasswordRequest.getEmail());
         eventPublisher.publishEvent(new OnPasswordResetEvent(user, getHost(request), request.getLocale()));
@@ -89,7 +89,7 @@ public class AuthController extends Controller {
     }
 
 
-    @PostMapping("/setpassword")
+    @PostMapping("/setPassword")
     public ResponseEntity<?> setPassword(@Valid @RequestBody SetPasswordRequest setPasswordRequest) {
         ActionToken actionToken = getActionToken(setPasswordRequest.getToken(), ActionType.PASSWORD_RESET);
         changePassword(setPasswordRequest.getNewPassword(), setPasswordRequest.getNewPasswordConfirmation(), actionToken.getUser());
@@ -108,7 +108,7 @@ public class AuthController extends Controller {
         return actionToken;
     }
 
-    @GetMapping("/signoff")
+    @GetMapping("/signOff")
     public ResponseEntity<?> signOff() {
         User requester = getRequestUser();
         requester.setCurrentToken(null);
@@ -117,7 +117,7 @@ public class AuthController extends Controller {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/massivesignoff")
+    @GetMapping("/massiveSignOff")
     public ResponseEntity<?> massiveSignOff() {
         User requester = getRequestUser();
         if (requester.isAdmin()) {
@@ -132,7 +132,7 @@ public class AuthController extends Controller {
         }
     }
 
-    @GetMapping("/whoami")
+    @GetMapping("/whoAmI")
     public ResponseEntity<?> whoAmI() {
         User requester = getRequestUser();
         trace(requester, "load his details.", null);

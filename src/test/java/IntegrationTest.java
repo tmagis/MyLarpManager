@@ -53,7 +53,7 @@ public class IntegrationTest {
         login("admin", "changeme");
         String response;
         MvcResult mvcResult;
-        mvcResult = getMvcResult("/api/v1/auth/whoami");
+        mvcResult = getMvcResult("/api/v1/auth/whoAmI");
         response = mvcResult.getResponse().getContentAsString();
         assertTrue(response.contains("admin"));
     }
@@ -65,9 +65,9 @@ public class IntegrationTest {
         MvcResult mvcResult = getMvcResult("/api/v1/auth/renew");
         extractToken(mvcResult);
         assertNotEquals(oldToken, token);
-        mvcResult = getMvcResult("/api/v1/auth/whoami");
+        mvcResult = getMvcResult("/api/v1/auth/whoAmI");
         assertTrue(mvcResult.getResponse().getContentAsString().contains("admin"));
-        mvc.perform(get("/api/v1/auth/whoami")
+        mvc.perform(get("/api/v1/auth/whoAmI")
                         .header("Authorization", "Bearer " + oldToken))
                 .andExpect(status().is4xxClientError());
     }
@@ -114,7 +114,7 @@ public class IntegrationTest {
         ForceJoinNationRequest forceJoinNationRequest = new ForceJoinNationRequest()
                 .setNationUuid(nationUuid)
                 .setPlayerUuid(userUuid);
-        getMvcResult("/api/v1/nation/forcejoinnation", forceJoinNationRequest);
+        getMvcResult("/api/v1/nation/forceJoinNation", forceJoinNationRequest);
     }
 
     @Test
@@ -122,13 +122,13 @@ public class IntegrationTest {
         SetRoleRequest setRoleRequest = new SetRoleRequest()
                 .setRole(Role.NATION_ADMIN.name())
                 .setUserUuid(userUuid);
-        getMvcResult("/api/v1/user/setrole", setRoleRequest);
+        getMvcResult("/api/v1/user/setRole", setRoleRequest);
     }
 
     @Test
     public void step_07_admin_logout() throws Exception {
         getMvcResult("/api/v1/auth/logout");
-        mvc.perform(get("/api/v1/auth/whoami")
+        mvc.perform(get("/api/v1/auth/whoAmI")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is4xxClientError());
     }
@@ -140,12 +140,12 @@ public class IntegrationTest {
 
     @Test
     public void step_09_nation_admin_updates_nation() throws Exception {
-        MvcResult mvcResult = getMvcResult("/api/v1/nation/getmynation");
+        MvcResult mvcResult = getMvcResult("/api/v1/nation/getMyNation");
         ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(mvcResult.getResponse().getContentAsString(), ChangeNationDetailsRequest.class);
         assertFalse(changeNationDetailsRequest.isFamilyFriendly());
         changeNationDetailsRequest.setFamilyFriendly(true);
-        getMvcResult("/api/v1/nation/changedetails", changeNationDetailsRequest);
-        mvcResult = getMvcResult("/api/v1/nation/getmynation");
+        getMvcResult("/api/v1/nation/changeDetails", changeNationDetailsRequest);
+        mvcResult = getMvcResult("/api/v1/nation/getMyNation");
         changeNationDetailsRequest = gson.fromJson(mvcResult.getResponse().getContentAsString(), ChangeNationDetailsRequest.class);
         assertTrue(changeNationDetailsRequest.isFamilyFriendly());
 
@@ -153,13 +153,13 @@ public class IntegrationTest {
 
     @Test
     public void step_10_nation_admin_leave_nation() throws Exception {
-        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
+        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoAmI");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
-        getRequest("/api/v1/nation/leavenation", userUuid);
-        mvc.perform(get("/api/v1/nation/getmynation")
+        getRequest("/api/v1/nation/leaveNation", userUuid);
+        mvc.perform(get("/api/v1/nation/getMyNation")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is4xxClientError());
-        mvcResult = getMvcResult("/api/v1/auth/whoami");
+        mvcResult = getMvcResult("/api/v1/auth/whoAmI");
         assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.PLAYER.name()));
     }
@@ -170,9 +170,9 @@ public class IntegrationTest {
         SetRoleRequest setRoleRequest = new SetRoleRequest()
                 .setRole(String.valueOf(Role.ADMIN))
                 .setUserUuid(userUuid);
-        getMvcResult("/api/v1/user/setrole", setRoleRequest);
+        getMvcResult("/api/v1/user/setRole", setRoleRequest);
         login(LOGIN, SEKWET);
-        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
+        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoAmI");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
         assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
     }
@@ -182,8 +182,8 @@ public class IntegrationTest {
         SetRoleRequest setRoleRequest = new SetRoleRequest()
                 .setRole("POTATO_ADMIN")
                 .setUserUuid(userUuid);
-        postError("/api/v1/user/setrole", setRoleRequest);
-        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoami");
+        postError("/api/v1/user/setRole", setRoleRequest);
+        MvcResult mvcResult = getMvcResult("/api/v1/auth/whoAmI");
         assertTrue(mvcResult.getResponse().getContentAsString().contains(Role.ADMIN.name()));
         assertFalse(mvcResult.getResponse().getContentAsString().contains(Role.NATION_ADMIN.name()));
     }
@@ -209,7 +209,7 @@ public class IntegrationTest {
                 .setBlessing(new TranslatedItem().setFr("Bénédiction"))
                 .setName(new TranslatedItem().setFr("Nom bidon"))
                 .setDescription(new TranslatedItem().setFr("Une chouette description"));
-        ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skilltree/create", createSkillTreeRequest).getResponse().getContentAsString(), ChangeSkillTreeDetailsRequest.class);
+        ChangeSkillTreeDetailsRequest changeSkillTreeDetailsRequest = gson.fromJson(getMvcResult("/api/v1/skillTree/create", createSkillTreeRequest).getResponse().getContentAsString(), ChangeSkillTreeDetailsRequest.class);
         assertNotNull(changeSkillTreeDetailsRequest.getUuid());
         skillTreeUuid = changeSkillTreeDetailsRequest.getUuid();
         CreateSkillRequest createSkillRequest = new CreateSkillRequest()
@@ -231,25 +231,25 @@ public class IntegrationTest {
         AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
         addCharacterSkillRequest.setSkillUuid(skillUuid);
         addCharacterSkillRequest.setCharacterUuid(characterUuid);
-        assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
-        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/addSkill", addCharacterSkillRequest);
 
-        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
-        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/addSkill", addCharacterSkillRequest);
 
-        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
-        postError("/api/v1/character/addskill", addCharacterSkillRequest);
-        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
-        getMvcResult("/api/v1/character/removeskill", addCharacterSkillRequest);
-        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
-        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
-        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
+        postError("/api/v1/character/addSkill", addCharacterSkillRequest);
+        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/removeSkill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/addSkill", addCharacterSkillRequest);
+        assertEquals(0, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
     }
 
     @Test
     public void step_16_admin_deletes_skill_already_assigned_to_character() throws Exception {
         deleteRequest("/api/v1/skill", skillUuid);
-        assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        assertEquals(10, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
         CreateSkillRequest createSkillRequest = new CreateSkillRequest()
                 .setDescription(new TranslatedItem().setFr("Desc"))
                 .setName(new TranslatedItem().setFr("Nice skill name"))
@@ -264,14 +264,14 @@ public class IntegrationTest {
         AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
         addCharacterSkillRequest.setSkillUuid(skillUuid);
         addCharacterSkillRequest.setCharacterUuid(characterUuid);
-        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
-        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/addSkill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
     }
 
     @Test
     public void step_17_admin_deletes_character_having_a_skill() throws Exception {
         deleteRequest("/api/v1/character", characterUuid);
-        getRequestError4xx("/api/v1/character/getpointsavailable", characterUuid);
+        getRequestError4xx("/api/v1/character/getPointsAvailable", characterUuid);
         CreateCharacterRequest createCharacterRequest = new CreateCharacterRequest()
                 .setAge(300)
                 .setName("Jean-Pierre")
@@ -285,8 +285,8 @@ public class IntegrationTest {
         AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
         addCharacterSkillRequest.setSkillUuid(skillUuid);
         addCharacterSkillRequest.setCharacterUuid(characterUuid);
-        getMvcResult("/api/v1/character/addskill", addCharacterSkillRequest);
-        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        getMvcResult("/api/v1/character/addSkill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
     }
 
     @Test
@@ -294,8 +294,8 @@ public class IntegrationTest {
         AddCharacterSkillRequest addCharacterSkillRequest = new AddCharacterSkillRequest();
         addCharacterSkillRequest.setSkillUuid(skillUuid);
         addCharacterSkillRequest.setCharacterUuid(characterUuid);
-        postError("/api/v1/character/addskill", addCharacterSkillRequest);
-        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getpointsavailable", characterUuid).getResponse().getContentAsString()));
+        postError("/api/v1/character/addSkill", addCharacterSkillRequest);
+        assertEquals(5, Integer.parseInt(getRequest("/api/v1/character/getPointsAvailable", characterUuid).getResponse().getContentAsString()));
     }
 
     @Test
@@ -314,15 +314,15 @@ public class IntegrationTest {
         ChangeNationDetailsRequest changeNationDetailsRequest = gson.fromJson(response, ChangeNationDetailsRequest.class);
         assertEquals("nationNameFr", changeNationDetailsRequest.getName().getFr());
         nationUuid = changeNationDetailsRequest.getUuid();
-        mvcResult = getRequestError4xx("/api/v1/nation/getmynation");
+        mvcResult = getRequestError4xx("/api/v1/nation/getMyNation");
         assertTrue(mvcResult.getResponse().getContentAsString().contains("The user does not belong to a nation."));
     }
 
     @Test
     public void step_20_demand_nation_join() throws Exception{
         JoinNationRequest joinNationRequest = (JoinNationRequest) new JoinNationRequest().setPlayerUuid(userUuid).setNationUuid(nationUuid);
-        getMvcResult("/api/v1/nation/joinnation", joinNationRequest);
-        getMvcResult("/api/v1/nation/joinnation", joinNationRequest);
+        getMvcResult("/api/v1/nation/joinNation", joinNationRequest);
+        getMvcResult("/api/v1/nation/joinNation", joinNationRequest);
     }
 
     @Test
