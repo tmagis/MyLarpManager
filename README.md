@@ -9,7 +9,7 @@
 ### Frontend :
 * NodeJS (maven installs it in the project folder)
 
-Build and run the whole app in the "Warden-dev" directory:
+Build and run the whole app in the "MyLarpManager" directory:
 
 `mvn spring-boot:run`
 
